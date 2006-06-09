@@ -1,11 +1,12 @@
 /*
- * $Id: krdb.c,v 1.2 2006-06-09 13:02:50 oops Exp $
+ * $Id: krdb.c,v 1.3 2006-06-09 13:57:03 oops Exp $
  */
 
 #include <krispcommon.h>
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #if defined(HAVE_LIBSQLITE3)
 #include <sqlite3.h>
 #else
