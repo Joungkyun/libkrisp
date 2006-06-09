@@ -1,6 +1,8 @@
 /*
- * $Id: krdb.c,v 1.1.1.1 2006-06-08 19:31:52 oops Exp $
+ * $Id: krdb.c,v 1.2 2006-06-09 13:02:50 oops Exp $
  */
+
+#include <krispcommon.h>
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -10,7 +12,6 @@
 #include <sqlite.h>
 #endif
 
-#include <krispcommon.h>
 #include <krdb.h>
 
 char dberr[1024];

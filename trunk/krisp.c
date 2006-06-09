@@ -1,11 +1,10 @@
 /*
- * $Id: krisp.c,v 1.3 2006-06-09 11:30:50 oops Exp $
+ * $Id: krisp.c,v 1.4 2006-06-09 13:02:50 oops Exp $
  */
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <sqlite.h>
 
 #include <sys/socket.h>
 #include <netinet/in.h>
