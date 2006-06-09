@@ -1,5 +1,5 @@
 /*
- * $Id: krisp.c,v 1.1.1.1 2006-06-08 19:31:52 oops Exp $
+ * $Id: krisp.c,v 1.2 2006-06-09 09:12:45 oops Exp $
  */
 
 #include <stdio.h>
@@ -39,12 +39,12 @@ int kr_netmask (struct db_argument *db, char *aclass, struct netmasks *n) {
 
 	masks = (char **) malloc (sizeof (char *) * 32);
 	n->mask = masks;
+	*masks = NULL;
 
 	sprintf (sql, "SELECT subnet FROM netmask WHERE net = '%s'", aclass);
 
-	if ( kr_dbQuery (db, sql) ) {
+	if ( kr_dbQuery (db, sql) )
 		return 1;
-	}
 
 	n->nums = 0;
 	while ( ! (r = kr_dbFetch (db) ) ) {
@@ -76,7 +76,7 @@ int kr_netmask (struct db_argument *db, char *aclass, struct netmasks *n) {
 }
 
 int getISPinfo (struct db_argument *db, char *key, struct netinfos *n) {
-	char sql[64];
+	char sql[64] = { 0, };
 	int r;
 
 	sprintf (sql, "SELECT * FROM isp WHERE longip = '%s'", key);
@@ -89,11 +89,9 @@ int getISPinfo (struct db_argument *db, char *key, struct netinfos *n) {
 
 	for ( r=0; r<db->cols; r++ ) {
 		switch (r) {
-			/*
 			case 0 :
-				strcpy (n->key, db->rowdata[r]);
+				//strcpy (n->key, db->rowdata[r]);
 				break;
-			*/
 			case 1 :
 				strcpy (n->network, db->rowdata[r]);
 				break;
@@ -190,14 +188,16 @@ int search (char *ip, struct netinfos *isp, struct db_argument *db) {
 
 	if ( kr_netmask (db, aclass, &n) ) {
 		r = 0;
+		free (aclass);
+		kr_free_array (n.mask);
 		goto geoip_section;
 	}
 
 	free (aclass);
 
 	if ( ! n.nums ) {
-		kr_free_array (n.mask);
 		r = 0;
+		kr_free_array (n.mask);
 		goto geoip_section;
 	}
 

@@ -1,11 +1,12 @@
 Changelog
 
-$Id: Changes,v 1.2 2006-06-09 04:35:49 oops Exp $
+$Id: Changes,v 1.3 2006-06-09 09:12:45 oops Exp $
 
 * 0.0.2
 
 Fri, Jun 9 2006 JoungKyun.Kim <http://www.oops.org>
 	- fixed libtool problems
+	- fixed memory leak
 
 * 0.0.1
 
