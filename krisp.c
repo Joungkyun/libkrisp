@@ -1,5 +1,5 @@
 /*
- * $Id: krisp.c,v 1.2 2006-06-09 09:12:45 oops Exp $
+ * $Id: krisp.c,v 1.3 2006-06-09 11:30:50 oops Exp $
  */
 
 #include <stdio.h>
@@ -87,30 +87,34 @@ int getISPinfo (struct db_argument *db, char *key, struct netinfos *n) {
 	if ( (r = kr_dbFetch (db)) != 0 )
 		return 1;
 
-	for ( r=0; r<db->cols; r++ ) {
-		switch (r) {
-			case 0 :
-				//strcpy (n->key, db->rowdata[r]);
-				break;
-			case 1 :
-				strcpy (n->network, db->rowdata[r]);
-				break;
-			case 2 :
-				strcpy (n->broadcast, db->rowdata[r]);
-				break;
-			case 3 :
-				strcpy (n->netmask, db->rowdata[r]);
-				break;
-			case 4 :
-				strcpy (n->org, db->rowdata[r]);
-				break;
-			case 5 :
-				strcpy (n->serv, db->rowdata[r]);
-				break;
+	while ( ! (r = kr_dbFetch (db) ) ) {
+		for ( r=0; r<db->cols; r++ ) {
+			switch (r) {
+				case 0 :
+					//strcpy (n->key, db->rowdata[r]);
+					break;
+				case 1 :
+					strcpy (n->network, db->rowdata[r]);
+					break;
+				case 2 :
+					strcpy (n->broadcast, db->rowdata[r]);
+					break;
+				case 3 :
+					strcpy (n->netmask, db->rowdata[r]);
+					break;
+				case 4 :
+					strcpy (n->org, db->rowdata[r]);
+					break;
+				case 5 :
+					strcpy (n->serv, db->rowdata[r]);
+					break;
+			}
 		}
 	}
-
 	kr_dbFree (db);
+
+	if ( r == -1 )
+		return 1;
 
 	return 0;
 }
@@ -210,9 +214,8 @@ int search (char *ip, struct netinfos *isp, struct db_argument *db) {
 		cp.network = cp.ip & cp.mask;
 		sprintf (isp->key, "%lu", cp.network);
 
-		if ( getISPinfo (db, isp->key, isp) ) {
+		if ( getISPinfo (db, isp->key, isp) )
 			continue;
-		}
 
 		compare = cp.ip & ip2long (isp->netmask);
 
