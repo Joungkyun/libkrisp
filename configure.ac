@@ -1,7 +1,7 @@
 # Process this file with autoconf to produce a configure script.
 # Configure template for krisp library
 #
-# $Id: configure.ac,v 1.4 2006-06-09 12:43:59 oops Exp $
+# $Id: configure.ac,v 1.5 2006-06-09 12:52:28 oops Exp $
 
 #
 AC_PREREQ(2.59)
@@ -77,7 +77,7 @@ if test "x$with_sqlite" != "x"; then
 		do
 			if test -f "$i/lib/lib${j}.so" -o -f "$i/lib/lib${j}.a"; then
 				sqlitelib_tmp="L$i/lib"
-			else if test -f -f "$i/lib64/lib${j}.so" -o -f "$i/lib64/lib${j}.a"; then
+			elif test -f -f "$i/lib64/lib${j}.so" -o -f "$i/lib64/lib${j}.a"; then
 				sqlitelib_tmp="L$i/lib64"
 			fi
 
@@ -123,7 +123,7 @@ if test "x$with_geoip" != "x"; then
 	do
 		if test -f "$i/lib/libGeoIP.so" -o -f "$i/lib/libGeoIP.a"; then
 			export LDFLAGS="-L$i/lib $LDFLAGS"
-		else if test -f "$i/lib64/libGeoIP.so" -o -f "$i/lib64/libGeoIP.a"; then
+		elif test -f "$i/lib64/libGeoIP.so" -o -f "$i/lib64/libGeoIP.a"; then
 			export LDFLAGS="-L$i/lib64 $LDFLAGS"
 		fi
 
