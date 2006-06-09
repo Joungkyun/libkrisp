@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 1.2 2006-06-09 04:35:08 oops Exp $
+# $Id: Makefile.in,v 1.3 2006-06-09 05:00:21 oops Exp $
 srcdir          = @srcdir@
 top_srcdir      = @top_srcdir@
 builddir        = @builddir@
@@ -76,8 +76,8 @@ krisplookup.lo: krisplookup.c krispcommon.h
 
 libs:
 	$(LINK) -o lib$(PROG).la $(OBJECT) $(LDFLAGS)
-	$(PERL) -pi -e 's! /[^ ]*libsqlite.la! -lsqlite!g' libkrisp.la
-	$(PERL) -pi -e 's! /[^ ]*libGeoIP.la! -lGeoIP!g' libkrisp.la
+	$(PERL) -pi -e 's! /[^ ]*libsqlite.la! -lsqlite!g' .libs/libkrisp.la* libkrisp.la
+	$(PERL) -pi -e 's! /[^ ]*libGeoIP.la! -lGeoIP!g' .libs/libkrisp.la* libkrisp.la
 
 krisp-config:
 	$(INSTALL) -m755 $(PROG)-config.in $(PROG)-config ; \
