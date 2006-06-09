@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 1.5 2006-06-09 11:44:10 oops Exp $
+# $Id: Makefile.in,v 1.6 2006-06-09 13:02:50 oops Exp $
 srcdir          = @srcdir@
 top_srcdir      = @top_srcdir@
 builddir        = @builddir@
@@ -116,7 +116,7 @@ install-header:
 	done
 
 clean:
-	-$(RM) -r *.o *.lo *.la $(PROG)lookup .libs $(PROG)-config krdb.h lib$(PROG).spec
+	-$(RM) -r *.o *.lo* *.la* $(PROG)lookup .libs $(PROG)-config krdb.h lib$(PROG).spec
 
 distclean: clean
 	-$(RM) -r libtool config.log config.status Makefile
