@@ -49,6 +49,9 @@ rm -rf $RPM_BUILD_ROOT
 
 %{__make} %{?_smp_mflags}
 
+# create database
+%{__make} db
+
 %install
 %{__make} DESTDIR=${RPM_BUILD_ROOT} install
 
