@@ -1,7 +1,7 @@
 #!/usr/bin/php
 <?
 #
-# $Id: krisp_mksql.php,v 1.2 2006-06-10 18:18:51 oops Exp $
+# $Id: krisp_mksql.php,v 1.3 2006-06-10 19:29:41 oops Exp $
 #
 # get Korea ISP information to text format and make krisp database sql
 #
@@ -200,7 +200,9 @@ class mkSQL {
 			ksort ($_IPNETWORK[$ipa]);
 
 			foreach ( $_IPNETWORK[$ipa] AS $k=>$arr ) :
-				$sql = "INSERT INTO isp (longip, network, broadcast, netmask, organization, servicename) " .
+				#$sql = "INSERT INTO isp (longip, network, broadcast, netmask, organization, servicename) " .
+				#		"VALUES ('$k', '$arr[0]', '$arr[1]', '$arr[2]', '$arr[3]', '$arr[4]');";
+				$sql = "INSERT INTO isp " .
 						"VALUES ('$k', '$arr[0]', '$arr[1]', '$arr[2]', '$arr[3]', '$arr[4]');";
 				echo $sql."\n";
 			endforeach;
