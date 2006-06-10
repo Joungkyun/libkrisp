@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 1.10 2006-06-10 19:50:56 oops Exp $
+# $Id: Makefile.in,v 1.11 2006-06-10 19:57:19 oops Exp $
 srcdir          = @srcdir@
 top_srcdir      = @top_srcdir@
 builddir        = @builddir@
@@ -116,7 +116,7 @@ install: install-header install-data
 
 install-data:
 	$(MKDIR) $(DESTDIR)$(datadir)/$(PROG)
-	for i in krisp.db iplist.txt sql.txt ; do \
+	for i in krisp.dat iplist.txt sql.txt ; do \
 		$(D_LIBTOOL) db/$$i $(DESTDIR)$(datadir)/$(PROG)/ ; \
 	done
 
