@@ -1,6 +1,6 @@
 libkrisp 설치 문서
 
-$Id: INSTALL,v 1.1 2006-06-10 19:41:56 oops Exp $
+$Id: INSTALL,v 1.2 2006-06-10 19:50:56 oops Exp $
 
 
 1. Quick Install
@@ -22,7 +22,7 @@ libkrisp 의 configure 는 GNU autoconf 를 이용한다.  옵션은 gnu configu
 
 그냥 하면 된다.
 
-4. make db
+4. make data
 
 db/sql.txt 를 이용하여, sqlite database 를 생성한다. db/krisp.dat 가 존재한다면,
 생략해도 무방하다. 없으면 해 주어야 한다.  db/krisp.dat 를 생성하는데, 이 파일이
