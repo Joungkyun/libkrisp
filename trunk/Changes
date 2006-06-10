@@ -1,6 +1,6 @@
 Changelog
 
-$Id: Changes,v 1.7 2006-06-10 11:45:53 oops Exp $
+$Id: Changes,v 1.8 2006-06-10 12:13:02 oops Exp $
 
 
 * 0.0.3
@@ -8,6 +8,7 @@ $Id: Changes,v 1.7 2006-06-10 11:45:53 oops Exp $
 Sat, Jun 10 2006 JountKyun.Kim <http://www.oops.org>
 	- fixed can't get kroea isp information
 	- fixed 64bit link error
+	- added print_version api
 
 Fri, Jun  9 2006 JoungKyun.Kim <http://www.oops.org>
 	- support 64bit architecture

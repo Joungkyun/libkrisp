@@ -1,5 +1,5 @@
 /*
- * $Id: krisp.c,v 1.5 2006-06-10 11:24:30 oops Exp $
+ * $Id: krisp.c,v 1.6 2006-06-10 12:13:02 oops Exp $
  */
 
 #include <stdio.h>
@@ -21,6 +21,14 @@ extern GeoIP *gi;
 #endif
 
 extern char dberr[1024];
+
+char *krisp_version (void) {
+	printf ("%s\n", VERSION);
+}
+
+char *krisp_uversion (void) {
+	printf ("%s\n", UVERSION);
+}
 
 int kr_open (struct db_argument *db) {
 	if ( kr_dbConnect (db) ) {
