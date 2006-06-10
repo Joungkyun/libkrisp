@@ -1,5 +1,5 @@
 /*
- * $Id: krversion.h,v 1.2 2006-06-10 12:13:51 oops Exp $
+ * $Id: krversion.h,v 1.3 2006-06-10 12:21:13 oops Exp $
  */
 
 #ifndef VERSION_H
@@ -17,4 +17,4 @@
  * End:
  * vim600: noet sw=4 ts=4 fdm=marker
  * vim<600: noet sw=4 ts=4
- *
+ */
