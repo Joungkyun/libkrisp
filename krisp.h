@@ -1,10 +1,11 @@
 /*
- * $Id: krisp.h,v 1.1.1.1 2006-06-08 19:31:52 oops Exp $
+ * $Id: krisp.h,v 1.2 2006-06-10 12:13:02 oops Exp $
  */
 
 #ifndef KRIP_H
 #define KRIP_H
 
+#include <version.h>
 #include <krispcommon.h>
 
 /*
@@ -12,6 +13,12 @@
  * user level function prototype
  *
  */
+
+/*
+ * print krisp version
+ */
+char *krisp_version (void);
+char *krisp_uversion (void);
 
 /*
  * open krisp database
