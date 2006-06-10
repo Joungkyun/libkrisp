@@ -1,5 +1,5 @@
 /*
- * $Id: krisp.h,v 1.2 2006-06-10 12:13:02 oops Exp $
+ * $Id: krisp.h,v 1.3 2006-06-10 19:41:56 oops Exp $
  */
 
 #ifndef KRIP_H
@@ -23,7 +23,7 @@ char *krisp_uversion (void);
 /*
  * open krisp database
  */
-int kr_open (struct db_argument *);
+int kr_open (struct db_argument *, char *);
 
 /*
  * close krisp database

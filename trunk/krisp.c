@@ -1,5 +1,5 @@
 /*
- * $Id: krisp.c,v 1.7 2006-06-10 12:21:13 oops Exp $
+ * $Id: krisp.c,v 1.8 2006-06-10 19:41:56 oops Exp $
  */
 
 #include <stdio.h>
@@ -30,8 +30,8 @@ char *krisp_uversion (void) {
 	return UVERSION;
 }
 
-int kr_open (struct db_argument *db) {
-	if ( kr_dbConnect (db) ) {
+int kr_open (struct db_argument *db, char *file) {
+	if ( kr_dbConnect (db, file) ) {
 		return 1;
 	}
 
