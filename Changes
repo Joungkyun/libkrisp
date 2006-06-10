@@ -1,12 +1,13 @@
 Changelog
 
-$Id: Changes,v 1.6 2006-06-10 11:24:30 oops Exp $
+$Id: Changes,v 1.7 2006-06-10 11:45:53 oops Exp $
 
 
 * 0.0.3
 
 Sat, Jun 10 2006 JountKyun.Kim <http://www.oops.org>
 	- fixed can't get kroea isp information
+	- fixed 64bit link error
 
 Fri, Jun  9 2006 JoungKyun.Kim <http://www.oops.org>
 	- support 64bit architecture
