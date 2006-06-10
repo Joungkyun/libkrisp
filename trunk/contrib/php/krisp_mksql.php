@@ -1,7 +1,7 @@
 #!/usr/bin/php
 <?
 #
-# $Id: krisp_mksql.php,v 1.1 2006-06-10 18:12:47 oops Exp $
+# $Id: krisp_mksql.php,v 1.2 2006-06-10 18:18:51 oops Exp $
 #
 # get Korea ISP information to text format and make krisp database sql
 #
@@ -209,27 +209,27 @@ class mkSQL {
 		//print_r ($ipas);
 		//print_r ($_IPNETWORK);
 
-		echo $total.' '.$me."\n";
+		#echo $total.' '.$me."\n";
 	}
 
 	function makeTable () {
-		echo "CREATE TABLE netmask\n" .
-			"(\n" .
-			"   no integer NOT NULL DEFAULT '0',\n" .
-			"   net integer NOT NULL DEFAULT '0',\n" .
-			"   subnet char(15) NOT NULL DEFAULT '0.0.0.0',\n" .
-			"   PRIMARY KEY (no)\n" .
+		echo "CREATE TABLE netmask " .
+			"(" .
+			"   no integer NOT NULL DEFAULT '0'," .
+			"   net integer NOT NULL DEFAULT '0'," .
+			"   subnet char(15) NOT NULL DEFAULT '0.0.0.0'," .
+			"   PRIMARY KEY (no)" .
 			");\n\n";
 
-		echo "CREATE TABLE isp\n" .
-			"(\n" .
-			"   longip char(10) NOT NULL DEFAULT '0',\n" .
-			"   network char(15) NOT NULL DEFAULT '0.0.0.0',\n" .
-			"   broadcast char(15) NOT NULL DEFAULT '0.0.0.0',\n" .
-			"   netmask char(15) NOT NULL DEFAULT '0.0.0.0',\n" .
-			"   organization varchar,\n" .
-			"   servicename varchar,\n" .
-			"   PRIMARY KEY (longip)\n" .
+		echo "CREATE TABLE isp " .
+			"(" .
+			"   longip char(10) NOT NULL DEFAULT '0'," .
+			"   network char(15) NOT NULL DEFAULT '0.0.0.0'," .
+			"   broadcast char(15) NOT NULL DEFAULT '0.0.0.0'," .
+			"   netmask char(15) NOT NULL DEFAULT '0.0.0.0'," .
+			"   organization varchar," .
+			"   servicename varchar," .
+			"   PRIMARY KEY (longip)" .
 			");\n\n";
 	}
 

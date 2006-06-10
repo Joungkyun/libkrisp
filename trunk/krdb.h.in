@@ -1,15 +1,11 @@
 /*
- * $Id: krdb.h.in,v 1.1.1.1 2006-06-08 19:31:53 oops Exp $
+ * $Id: krdb.h.in,v 1.2 2006-06-10 18:18:51 oops Exp $
  */
 
 #ifndef KRDB_H
 #define KRDB_H
 
-#if defined(HAVE_LIBSQLITE3)
-#define DBPATH "@dbpath@/krisp-sqlite3.dat"
-#else
-#define DBPATH "@dbpath@/krisp-sqlite.dat"
-#endif
+#define DBPATH "@dbpath@/krisp.dat"
 
 #if defined(HAVE_LIBSQLITE3)
 void kr_dbError (int code, const char *err);
