@@ -64,6 +64,7 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(0755,root,root)
 %{_bindir}/krisplookup
+%{_bindir}/krispmkdb
 %{_libdir}/libkrisp.so.*
 %{_datadir}/krisp/*.dat
 

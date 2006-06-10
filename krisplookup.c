@@ -1,5 +1,5 @@
 /*
- * $Id: krisplookup.c,v 1.3 2006-06-10 12:21:13 oops Exp $
+ * $Id: krisplookup.c,v 1.4 2006-06-10 19:41:56 oops Exp $
  */
 
 #include <stdio.h>
@@ -30,7 +30,7 @@ int main (int argc, char ** argv) {
 	ip = argv[1];
 
 	/* database open */
-	if ( kr_open (&db) ) {
+	if ( kr_open (&db, NULL) ) {
 		fprintf (stderr, "ERROR Connect: %s\n", dberr);
 		return 1;
 	}

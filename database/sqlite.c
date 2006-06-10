@@ -1,5 +1,5 @@
 /*
- * $Id: sqlite.c,v 1.1.1.1 2006-06-08 19:31:53 oops Exp $
+ * $Id: sqlite.c,v 1.2 2006-06-10 19:41:56 oops Exp $
  */
 
 void kr_dbError (struct db_argument *db) {
@@ -13,8 +13,8 @@ int kr_dbFree (struct db_argument *db) {
 	return 0;
 }
 
-int kr_dbConnect (struct db_argument *db) {
-	db->c = sqlite_open (DBPATH, 0644, &db->err);
+int kr_dbConnect (struct db_argument *db, char *file) {
+	db->c = sqlite_open ((file != NULL) ? file : DBPATH, 0644, &db->err);
 
 	if ( db->c == NULL ) {
 		kr_dbError (db);

@@ -1,6 +1,6 @@
 Changelog
 
-$Id: Changes,v 1.9 2006-06-10 18:12:31 oops Exp $
+$Id: Changes,v 1.10 2006-06-10 19:41:56 oops Exp $
 
 
 * 0.0.3
@@ -9,6 +9,7 @@ Sun, Jun 11 2006 JoungKyun.Kim <http://www.oops.org>
 	- add krisp_mksql.php contrib php script
 	- add db sql file
 	- add origianl db format file
+	- add database creating utility
 
 Sat, Jun 10 2006 JountKyun.Kim <http://www.oops.org>
 	- fixed can't get kroea isp information
