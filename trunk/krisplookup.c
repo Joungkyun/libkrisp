@@ -1,5 +1,5 @@
 /*
- * $Id: krisplookup.c,v 1.2 2006-06-10 12:13:02 oops Exp $
+ * $Id: krisplookup.c,v 1.3 2006-06-10 12:21:13 oops Exp $
  */
 
 #include <stdio.h>
@@ -13,7 +13,7 @@ GeoIP *gi = NULL;
 extern char dberr[1024];
 
 void usage (char *prog) {
-	fprintf (stderr, "krisplookup v%s: Resoved korea range ISP inforamtion\n", VERSION);
+	fprintf (stderr, "krisplookup v%s: Resoved korea range ISP inforamtion\n", krisp_version ());
 	fprintf (stderr, "Usage: %s ip-address\n", prog);
 
 	exit (1);
