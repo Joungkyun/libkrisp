@@ -1,5 +1,5 @@
 /*
- * $Id: krisp.c,v 1.4 2006-06-09 13:02:50 oops Exp $
+ * $Id: krisp.c,v 1.5 2006-06-10 11:24:30 oops Exp $
  */
 
 #include <stdio.h>
@@ -81,9 +81,6 @@ int getISPinfo (struct db_argument *db, char *key, struct netinfos *n) {
 	sprintf (sql, "SELECT * FROM isp WHERE longip = '%s'", key);
 
 	if  ( kr_dbQuery (db, sql) )
-		return 1;
-
-	if ( (r = kr_dbFetch (db)) != 0 )
 		return 1;
 
 	while ( ! (r = kr_dbFetch (db) ) ) {

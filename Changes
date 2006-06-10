@@ -1,21 +1,27 @@
 Changelog
 
-$Id: Changes,v 1.5 2006-06-09 13:02:50 oops Exp $
+$Id: Changes,v 1.6 2006-06-10 11:24:30 oops Exp $
+
 
 * 0.0.3
 
-Fri, Jun 9 2006 JoungKyun.Kim <http://www.oops.org>
+Sat, Jun 10 2006 JountKyun.Kim <http://www.oops.org>
+	- fixed can't get kroea isp information
+
+Fri, Jun  9 2006 JoungKyun.Kim <http://www.oops.org>
 	- support 64bit architecture
 	- fixed sqlite header location
 
+
 * 0.0.2
 
-Fri, Jun 9 2006 JoungKyun.Kim <http://www.oops.org>
+Fri, Jun  9 2006 JoungKyun.Kim <http://www.oops.org>
 	- fixed libtool problems
 	- fixed memory leak
 
+
 * 0.0.1
 
-Fri, Jun 9 2006 JoungKyun.Kim <http://www.oops.org>
+Fri, Jun  9 2006 JoungKyun.Kim <http://www.oops.org>
 	- first release 0.0.1
 
