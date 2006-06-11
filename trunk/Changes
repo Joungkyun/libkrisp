@@ -1,6 +1,6 @@
 Changelog
 
-$Id: Changes,v 1.14 2006-06-11 16:37:49 oops Exp $
+$Id: Changes,v 1.15 2006-06-11 16:42:41 oops Exp $
 
 
 * 0.0.3
@@ -10,6 +10,7 @@ Mon, Jun 12 2006 JoungKyun.Kim <http://www.oops.org>
 	- fixed reallcation failed problem
 	- added getopt krisplookup and krispmkdb
 	- changed geoip declare method
+	- changed proto type of search api
 
 Sun, Jun 11 2006 JoungKyun.Kim <http://www.oops.org>
 	- add krisp_mksql.php contrib php script
