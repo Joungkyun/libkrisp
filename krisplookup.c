@@ -1,5 +1,5 @@
 /*
- * $Id: krisplookup.c,v 1.7 2006-06-11 16:37:49 oops Exp $
+ * $Id: krisplookup.c,v 1.8 2006-06-11 16:42:41 oops Exp $
  */
 
 #include <krisp.h>
@@ -75,7 +75,8 @@ int main (int argc, char ** argv) {
 	gi = GeoIP_new (GEOIP_MEMORY_CACHE);
 #endif
 
-	search (ip, &isp, &db, gi);
+	strcpy (isp.ip, ip);
+	search (&isp, &db, gi);
 
 	printf ("%s(%s) %s %s %s %s",
 			ip, isp.ip, isp.serv, isp.network, isp.broadcast, isp.org);

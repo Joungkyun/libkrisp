@@ -1,5 +1,5 @@
 /*
- * $Id: krisp.c,v 1.12 2006-06-11 16:37:49 oops Exp $
+ * $Id: krisp.c,v 1.13 2006-06-11 16:42:41 oops Exp $
  */
 
 #include <stdio.h>
@@ -148,7 +148,7 @@ void initStruct (struct netinfos *n) {
 #endif
 }
 
-int search (char *ip, struct netinfos *isp, struct db_argument *db, GeoIP *gi) {
+int search (struct netinfos *isp, struct db_argument *db, GeoIP *gi) {
 	int r = 0, i;
 	char * aclass;
 	char * aclass_tmp;
@@ -161,11 +161,9 @@ int search (char *ip, struct netinfos *isp, struct db_argument *db, GeoIP *gi) {
 
 	initStruct (isp);
 
-	hp = gethostbyname(ip);
+	hp = gethostbyname(isp->ip);
 
-	if ( !hp || !*(hp->h_addr_list) ) {
-		strcpy (isp->ip, ip);
-	} else {
+	if ( hp && *(hp->h_addr_list) ) {
 		memcpy(&s.s_addr, *(hp->h_addr_list), sizeof(s.s_addr));
 		strcpy (isp->ip, inet_ntoa (s));
 	}
