@@ -1,5 +1,5 @@
 /*
- * $Id: krisp.c,v 1.11 2006-06-11 16:01:16 oops Exp $
+ * $Id: krisp.c,v 1.12 2006-06-11 16:37:49 oops Exp $
  */
 
 #include <stdio.h>
@@ -14,10 +14,6 @@
 #include <krispcommon.h>
 #include <krdb.h>
 #include <krisp.h>
-
-#ifdef HAVE_LIBGEOIP
-extern GeoIP *gi;
-#endif
 
 extern char dberr[1024];
 
@@ -152,7 +148,7 @@ void initStruct (struct netinfos *n) {
 #endif
 }
 
-int search (char *ip, struct netinfos *isp, struct db_argument *db) {
+int search (char *ip, struct netinfos *isp, struct db_argument *db, GeoIP *gi) {
 	int r = 0, i;
 	char * aclass;
 	char * aclass_tmp;

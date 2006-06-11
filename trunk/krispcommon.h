@@ -1,5 +1,5 @@
 /*
- * $Id: krispcommon.h,v 1.2 2006-06-11 15:45:09 oops Exp $
+ * $Id: krispcommon.h,v 1.3 2006-06-11 16:37:49 oops Exp $
  */
 
 #ifndef COMMON_H
@@ -9,16 +9,28 @@
 #include <krisp-config.h>
 #endif
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+
 #if defined(HAVE_LIBSQLITE3)
 #include <sqlite3.h>
 #else
 #include <sqlite.h>
 #endif
 
+/*
+ * GeoIP extension start
+ */
 #ifdef HAVE_LIBGEOIP
 #ifdef HAVE_GEOIP_H 
 #include <GeoIP.h>
-#else
+#define INCLUDE_GEOIP_HEADER_OK
+#endif
+#endif
+
+#ifndef INCLUDE_GEOIP_HEADER_OK
 typedef struct GeoIPTag {
 	FILE *GeoIPDatabase;
 	char *file_path;
@@ -31,8 +43,23 @@ typedef struct GeoIPTag {
 	char record_length;
 	int record_iter; /* used in GeoIP_next_record */
 } GeoIP;
+
+#define GEOIP_API
+GEOIP_API GeoIP* GeoIP_new(int flags);
+GEOIP_API int GeoIP_id_by_name (GeoIP* gi, const char *host);
+extern const char GeoIP_country_code[247][3];
+extern const char * GeoIP_country_name[247];
+
+typedef enum { 
+	GEOIP_STANDARD = 0,
+	GEOIP_MEMORY_CACHE = 1,
+	GEOIP_CHECK_CACHE = 2,
+	GEOIP_INDEX_CACHE = 4,
+} GeoIPOptions;
 #endif
-#endif
+/*
+ * GeoIP extension end
+ */
 
 struct netmasks {
 	int				nums;
