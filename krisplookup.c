@@ -1,8 +1,11 @@
 /*
- * $Id: krisplookup.c,v 1.10 2006-06-11 17:51:44 oops Exp $
+ * $Id: krisplookup.c,v 1.11 2006-06-11 18:51:00 oops Exp $
  */
 
 #include <krisp.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
 
 #ifdef HAVE_GETOPT_H
 #include <getopt.h>
@@ -36,8 +39,9 @@ void usage (char *prog) {
 int main (int argc, char ** argv) {
 	struct db_argument db;
 	struct netinfos isp;
+	struct stat f;
 	char * ip;
-	int opt;
+	int opt, r;
 	char *datafile = NULL;
 	GeoIP *gi = NULL;
 
@@ -57,6 +61,18 @@ int main (int argc, char ** argv) {
 
 	if ( argc - optind < 1 || argc == 1 ) {
 		usage (PNAME);
+		return 1;
+	}
+
+	f.st_size = 0;
+	if ( stat ((datafile != NULL) ? datafile : DBPATH, &f) == -1 ) {
+		fprintf (stderr, "ERROR: Can't find data file (%s)\n",
+				(datafile != NULL) ? datafile : DBPATH);
+		return 1;
+	}
+
+	if ( f.st_size < 1 ) {
+		fprintf (stderr, "ERROR: %s size is zero\n", file);
 		return 1;
 	}
 

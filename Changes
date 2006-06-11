@@ -1,6 +1,6 @@
 Changelog
 
-$Id: Changes,v 1.18 2006-06-11 18:25:14 oops Exp $
+$Id: Changes,v 1.19 2006-06-11 18:51:00 oops Exp $
 
 
 * 1.0.0
@@ -8,6 +8,7 @@ $Id: Changes,v 1.18 2006-06-11 18:25:14 oops Exp $
 Mon, Jun 12 2006 JoungKyun.Kim <http://www.oops.org>
 	- major update to 1.0.0
 	- add man page
+	- add db open exception
 
 
 * 0.0.3

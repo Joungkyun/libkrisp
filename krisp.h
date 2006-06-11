@@ -1,5 +1,5 @@
 /*
- * $Id: krisp.h,v 1.5 2006-06-11 16:42:41 oops Exp $
+ * $Id: krisp.h,v 1.6 2006-06-11 18:51:00 oops Exp $
  */
 
 #ifndef KRIP_H
@@ -7,6 +7,7 @@
 
 #include <version.h>
 #include <krispcommon.h>
+#include <krdb.h>
 
 /*
  *
