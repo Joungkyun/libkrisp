@@ -1,9 +1,16 @@
 Changelog
 
-$Id: Changes,v 1.17 2006-06-11 18:18:36 oops Exp $
+$Id: Changes,v 1.18 2006-06-11 18:25:14 oops Exp $
 
 
 * 1.0.0
+
+Mon, Jun 12 2006 JoungKyun.Kim <http://www.oops.org>
+	- major update to 1.0.0
+	- add man page
+
+
+* 0.0.3
 
 Mon, Jun 12 2006 JoungKyun.Kim <http://www.oops.org>
 	- moved geoip header file to krisp.h
@@ -12,7 +19,6 @@ Mon, Jun 12 2006 JoungKyun.Kim <http://www.oops.org>
 	- changed geoip declare method
 	- changed proto type of search api
 	- chagend output format of krisplookup
-	- major update to 1.0.0
 
 Sun, Jun 11 2006 JoungKyun.Kim <http://www.oops.org>
 	- add krisp_mksql.php contrib php script
