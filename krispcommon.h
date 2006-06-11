@@ -1,5 +1,5 @@
 /*
- * $Id: krispcommon.h,v 1.1.1.1 2006-06-08 19:31:52 oops Exp $
+ * $Id: krispcommon.h,v 1.2 2006-06-11 15:45:09 oops Exp $
  */
 
 #ifndef COMMON_H
@@ -13,6 +13,25 @@
 #include <sqlite3.h>
 #else
 #include <sqlite.h>
+#endif
+
+#ifdef HAVE_LIBGEOIP
+#ifdef HAVE_GEOIP_H 
+#include <GeoIP.h>
+#else
+typedef struct GeoIPTag {
+	FILE *GeoIPDatabase;
+	char *file_path;
+	unsigned char *cache;
+	unsigned char *index_cache;
+	unsigned int *databaseSegments;
+	char databaseType;
+	time_t mtime;
+	int flags;
+	char record_length;
+	int record_iter; /* used in GeoIP_next_record */
+} GeoIP;
+#endif
 #endif
 
 struct netmasks {
