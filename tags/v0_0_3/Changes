@@ -1,0 +1,43 @@
+Changelog
+
+$Id: Changes,v 1.16 2006-06-11 17:18:39 oops Exp $
+
+
+* 0.0.3
+
+Mon, Jun 12 2006 JoungKyun.Kim <http://www.oops.org>
+	- moved geoip header file to krisp.h
+	- fixed reallcation failed problem
+	- added getopt krisplookup and krispmkdb
+	- changed geoip declare method
+	- changed proto type of search api
+	- chagend output format of krisplookup
+
+Sun, Jun 11 2006 JoungKyun.Kim <http://www.oops.org>
+	- add krisp_mksql.php contrib php script
+	- add db sql file
+	- add origianl db format file
+	- add database creating utility
+
+Sat, Jun 10 2006 JountKyun.Kim <http://www.oops.org>
+	- fixed can't get kroea isp information
+	- fixed 64bit link error
+	- added print_version api
+
+Fri, Jun  9 2006 JoungKyun.Kim <http://www.oops.org>
+	- support 64bit architecture
+	- fixed sqlite header location
+
+
+* 0.0.2
+
+Fri, Jun  9 2006 JoungKyun.Kim <http://www.oops.org>
+	- fixed libtool problems
+	- fixed memory leak
+
+
+* 0.0.1
+
+Fri, Jun  9 2006 JoungKyun.Kim <http://www.oops.org>
+	- first release 0.0.1
+
