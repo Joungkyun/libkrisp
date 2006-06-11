@@ -1,16 +1,11 @@
 /*
- * $Id: krisplookup.c,v 1.6 2006-06-11 16:12:32 oops Exp $
+ * $Id: krisplookup.c,v 1.7 2006-06-11 16:37:49 oops Exp $
  */
 
-#include <stdio.h>
 #include <krisp.h>
 
 #ifdef HAVE_GETOPT_H
 #include <getopt.h>
-#endif
-
-#ifdef HAVE_LIBGEOIP
-GeoIP *gi = NULL;
 #endif
 
 #define PNAME "krisplookup"
@@ -44,6 +39,7 @@ int main (int argc, char ** argv) {
 	char * ip;
 	int opt;
 	char *datafile = NULL;
+	GeoIP *gi = NULL;
 
 #ifdef HAVE_GETOPT_LONG
 	while ( (opt = getopt_long (argc, argv, "f:h", long_options, (int *) 0)) != EOF ) {
@@ -79,7 +75,7 @@ int main (int argc, char ** argv) {
 	gi = GeoIP_new (GEOIP_MEMORY_CACHE);
 #endif
 
-	search (ip, &isp, &db);
+	search (ip, &isp, &db, gi);
 
 	printf ("%s(%s) %s %s %s %s",
 			ip, isp.ip, isp.serv, isp.network, isp.broadcast, isp.org);

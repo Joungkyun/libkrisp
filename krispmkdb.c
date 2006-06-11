@@ -1,5 +1,5 @@
 /*
- * $Id: krispmkdb.c,v 1.3 2006-06-11 16:12:32 oops Exp $
+ * $Id: krispmkdb.c,v 1.4 2006-06-11 16:37:49 oops Exp $
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -27,13 +27,6 @@ static struct option long_options [] = {
 	{ "savepath", required_argument, NULL, 's' },
 	{ 0, 0, 0, 0 }
 };
-#endif
-
-#ifdef HAVE_LIBGEOIP
-/*
- * for geoip link (but, really don't use)
- */
-GeoIP *gi = NULL;
 #endif
 
 extern char dberr[1024];
