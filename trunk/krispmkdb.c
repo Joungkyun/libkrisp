@@ -1,5 +1,5 @@
 /*
- * $Id: krispmkdb.c,v 1.2 2006-06-11 15:45:09 oops Exp $
+ * $Id: krispmkdb.c,v 1.3 2006-06-11 16:12:32 oops Exp $
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -11,10 +11,28 @@
 #include <krisp.h>
 #include <krdb.h>
 
+#ifdef HAVE_GETOPT_H
+#include <getopt.h>
+#endif
+
 #define FILEBUF 1024
 #define DEFSAVE "./krisp-new.dat"
 
+#ifdef HAVE_GETOPT_LONG
+static struct option long_options [] = {
+	/* Options without arguments: */
+	{ "help", no_argument, NULL, 'h' },
+			    
+	/* Options accepting an argument: */
+	{ "savepath", required_argument, NULL, 's' },
+	{ 0, 0, 0, 0 }
+};
+#endif
+
 #ifdef HAVE_LIBGEOIP
+/*
+ * for geoip link (but, really don't use)
+ */
 GeoIP *gi = NULL;
 #endif
 
@@ -22,7 +40,10 @@ extern char dberr[1024];
 
 void usage (void) {
 	fprintf (stderr, "krmakedb v%s: Make libkrisp database utility\n", VERSION);
-	fprintf (stderr, "USAGE: krmakedb [ip list sql file path] [save db path]\n");
+	fprintf (stderr, "USAGE: krmakedb [option] ip_list_sql_file_path\n");
+	fprintf (stderr, "Options:\n");
+	fprintf (stderr, "    -s path, --savepath=path   save data file path (def: ./krisp-new.dat)\n");
+	fprintf (stderr, "    -h, --help                 print this message\n");
 
 	exit (1);
 }
@@ -72,13 +93,29 @@ int main (int argc, char **argv) {
 	char *buf, *sql, *sql_t;
 	int r, len;
 	char output[80];
+	int opt;
 
-	if ( argc != 2 && argc != 3 )
+#ifdef HAVE_GETOPT_LONG
+	while ( (opt = getopt_long (argc, argv, "s:h", long_options, (int *) 0)) != EOF ) {
+#else
+	while ( (opt = getopt (argc, argv, "s:h")) != EOF ) {
+#endif
+		switch (opt) {
+			case 's' :
+				savedb = optarg;
+				break;
+			default:
+				usage ();
+				return 1;
+		}
+	}
+
+	if ( argc - optind < 1 || argc == 1 ) {
 		usage ();
+		return 1;
+	}
 
-	ipfile = argv[1];
-	if ( argv[2] )
-		savedb = argv[2];
+	ipfile = argv[optind];
 
 	if ( kr_open (&db, (savedb != NULL ) ? savedb : DEFSAVE) ) {
 		fprintf (stderr, "ERROR: DB connect failed (%s)\n", dberr);
