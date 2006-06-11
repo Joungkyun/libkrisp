@@ -1,5 +1,5 @@
 /*
- * $Id: krisp.c,v 1.9 2006-06-11 15:45:09 oops Exp $
+ * $Id: krisp.c,v 1.10 2006-06-11 15:47:33 oops Exp $
  */
 
 #include <stdio.h>
@@ -63,6 +63,8 @@ int kr_netmask (struct db_argument *db, char *aclass, struct netmasks *n) {
 					strcpy (dberr, "masks relocation failed\n");
 					return 1;
 				}
+
+				n->masks = new;
 			}
 
 			//*masks = (char *) malloc (sizeof (char) * 16);
