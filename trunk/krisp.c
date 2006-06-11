@@ -1,5 +1,5 @@
 /*
- * $Id: krisp.c,v 1.8 2006-06-10 19:41:56 oops Exp $
+ * $Id: krisp.c,v 1.9 2006-06-11 15:45:09 oops Exp $
  */
 
 #include <stdio.h>
@@ -16,7 +16,6 @@
 #include <krisp.h>
 
 #ifdef HAVE_LIBGEOIP
-#include <GeoIP.h>
 extern GeoIP *gi;
 #endif
 

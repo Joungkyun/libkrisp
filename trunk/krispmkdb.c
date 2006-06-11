@@ -1,5 +1,5 @@
 /*
- * $Id: krispmkdb.c,v 1.1 2006-06-10 19:41:56 oops Exp $
+ * $Id: krispmkdb.c,v 1.2 2006-06-11 15:45:09 oops Exp $
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -15,7 +15,6 @@
 #define DEFSAVE "./krisp-new.dat"
 
 #ifdef HAVE_LIBGEOIP
-#include <GeoIP.h>
 GeoIP *gi = NULL;
 #endif
 

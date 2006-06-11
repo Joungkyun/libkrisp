@@ -1,9 +1,12 @@
 Changelog
 
-$Id: Changes,v 1.10 2006-06-10 19:41:56 oops Exp $
+$Id: Changes,v 1.11 2006-06-11 15:45:09 oops Exp $
 
 
 * 0.0.3
+
+Mon, Jun 12 2006 JoungKyun.Kim <http://www.oops.org>
+	- moved geoip header file to krisp.h
 
 Sun, Jun 11 2006 JoungKyun.Kim <http://www.oops.org>
 	- add krisp_mksql.php contrib php script

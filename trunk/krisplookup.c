@@ -1,12 +1,11 @@
 /*
- * $Id: krisplookup.c,v 1.4 2006-06-10 19:41:56 oops Exp $
+ * $Id: krisplookup.c,v 1.5 2006-06-11 15:45:09 oops Exp $
  */
 
 #include <stdio.h>
 #include <krisp.h>
 
 #ifdef HAVE_LIBGEOIP
-#include <GeoIP.h>
 GeoIP *gi = NULL;
 #endif
 
@@ -36,6 +35,9 @@ int main (int argc, char ** argv) {
 	}
 
 #ifdef HAVE_LIBGEOIP
+	/*
+	 * If you don't want to use geoip, set 'gi = NULL'.
+	 */
 	gi = GeoIP_new (GEOIP_MEMORY_CACHE);
 #endif
 
