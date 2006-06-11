@@ -1,7 +1,7 @@
 # Process this file with autoconf to produce a configure script.
 # Configure template for krisp library
 #
-# $Id: configure.ac,v 1.5 2006-06-09 12:52:28 oops Exp $
+# $Id: configure.ac,v 1.6 2006-06-11 16:12:32 oops Exp $
 
 #
 AC_PREREQ(2.59)
@@ -140,7 +140,8 @@ AC_HEADER_STDC
 
 #sqlite.h
 #sqlite3.h
-AC_CHECK_HEADERS([arpa/inet.h netinet/in.h stdio.h stdlib.h string.h sys/socket.h sqlite3.h sqlite.h])
+AC_CHECK_HEADERS([arpa/inet.h getopt.h netinet/in.h stdio.h stdlib.h \
+					string.h sys/socket.h sqlite3.h sqlite.h])
 if test "xwith_geoip" != "x"; then
 	AC_CHECK_HEADERS([GeoIP.h])
 fi
@@ -153,6 +154,7 @@ AC_HEADER_TIME
 # Checks for library functions.
 AC_FUNC_MALLOC
 AC_FUNC_STAT
+AC_CHECK_FUNCS([getopt_long])
 
 AC_CONFIG_FILES([Makefile])
 AC_OUTPUT

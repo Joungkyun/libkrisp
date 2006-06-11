@@ -1,5 +1,5 @@
 /* krisp-config.h.in.  Generated from configure.ac by autoheader.  */
-/* $Id: krisp-config.h.in,v 1.2 2006-06-09 12:43:59 oops Exp $ */
+/* $Id: krisp-config.h.in,v 1.3 2006-06-11 16:12:32 oops Exp $ */
 #ifndef KRISP_CONFIG_H
 #define KRISP_CONFIG_H
 
@@ -16,6 +16,12 @@
 
 /* Define to 1 if you have the <GeoIP.h> header file. */
 #undef HAVE_GEOIP_H
+
+/* Define to 1 if you have the <getopt.h> header file. */
+#undef HAVE_GETOPT_H
+
+/* Define to 1 if you have the `getopt_long' function. */
+#undef HAVE_GETOPT_LONG
 
 /* Define to 1 if you have the <inttypes.h> header file. */
 #undef HAVE_INTTYPES_H
