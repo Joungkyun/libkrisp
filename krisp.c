@@ -1,5 +1,5 @@
 /*
- * $Id: krisp.c,v 1.10 2006-06-11 15:47:33 oops Exp $
+ * $Id: krisp.c,v 1.11 2006-06-11 16:01:16 oops Exp $
  */
 
 #include <stdio.h>
@@ -64,7 +64,7 @@ int kr_netmask (struct db_argument *db, char *aclass, struct netmasks *n) {
 					return 1;
 				}
 
-				n->masks = new;
+				n->mask = new;
 			}
 
 			//*masks = (char *) malloc (sizeof (char) * 16);
