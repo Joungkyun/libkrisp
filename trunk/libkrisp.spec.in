@@ -70,6 +70,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_bindir}/krispmkdb
 %{_libdir}/libkrisp.so.*
 %attr (0644, root, root) %{_datadir}/krisp/*.dat
+%{_mandir}/ko/man1/*.1*
 
 %files devel
 %defattr(0644,root,root,0755)
@@ -78,6 +79,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/*.a
 %{_libdir}/*.la
 %{_includedir}/*.h
+%{_mandir}/ko/man3/*.3*
 
 %changelog
 * @date@ JoungKyun.Kim <http://www.oops.org> - @version@
