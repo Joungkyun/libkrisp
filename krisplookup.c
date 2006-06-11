@@ -1,5 +1,5 @@
 /*
- * $Id: krisplookup.c,v 1.8 2006-06-11 16:42:41 oops Exp $
+ * $Id: krisplookup.c,v 1.9 2006-06-11 17:18:39 oops Exp $
  */
 
 #include <krisp.h>
@@ -78,13 +78,14 @@ int main (int argc, char ** argv) {
 	strcpy (isp.ip, ip);
 	search (&isp, &db, gi);
 
-	printf ("%s(%s) %s %s %s %s",
-			ip, isp.ip, isp.serv, isp.network, isp.broadcast, isp.org);
+	printf ("%s (%s): %s (%s)\n", ip, isp.ip, isp.org, isp.serv);
+	printf ("SUBNET : %s\n", isp.netmask);
+	printf ("NETWORK: %s\n", isp.network);
+	printf ("BCAST  : %s\n", isp.broadcast);
 
 #ifdef HAVE_LIBGEOIP
-	printf (" %s %s", isp.code, isp.nation);
+	printf ("NATION : %s (%s)\n", isp.nation, isp.code);
 #endif
-	printf ("\n");
 
 	/* database close */
 	kr_close (&db);
