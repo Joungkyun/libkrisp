@@ -1,5 +1,5 @@
 /*
- * $Id: krisp.c,v 1.18 2006-06-12 16:17:01 oops Exp $
+ * $Id: krisp.c,v 1.19 2006-06-12 19:47:50 oops Exp $
  */
 
 #include <stdio.h>
@@ -152,7 +152,7 @@ void initStruct (struct netinfos *n) {
 #endif
 }
 
-int kr_search (struct netinfos *isp, struct db_argument *db, GeoIP *gi) {
+int kr_search (struct netinfos *isp, struct db_argument *db) {
 	int r = 0, i;
 	char * aclass;
 	char * aclass_tmp;
@@ -234,10 +234,10 @@ int kr_search (struct netinfos *isp, struct db_argument *db, GeoIP *gi) {
 
 geoip_section:
 #ifdef HAVE_LIBGEOIP
-	if ( gi != NULL ) {
+	if ( db->gi != NULL ) {
 		int country_id = 0;
 
-		country_id = GeoIP_id_by_name (gi, isp->ip);
+		country_id = GeoIP_id_by_name (db->gi, isp->ip);
 		strcpy (isp->code,
 				GeoIP_country_code[country_id] ? GeoIP_country_code[country_id] : "--");
 		strcpy (isp->nation,
