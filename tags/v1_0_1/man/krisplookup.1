@@ -1,0 +1,44 @@
+.TH KRISPLOOKUP 1 "12 Jun 2006"
+.UC 4
+.SH 이름
+krisplookup - 한국의 IP 주소나 호스트 이름을 잉요하여 IPS 정보를 구하는 응용 프로그램
+.SH 사용법
+krisplookup [-t database file] <ipaddress|hostname>
+.SH 설명
+krisplookup 은 한국의 IP 주소나 호스트 이름에 대하여, libkrisp 라이브러리를
+이용하여, ISP 정보를 얻기 위한 유틸리티이다.
+.PP
+예를 들어,
+.PP
+.I krisplookup oops.org
+.PP
+명령은 다음의 정보를 반환한다.
+.PP
+.I oops.org (210.124.122.26): (주)데이콤 (BORANET)
+.br
+.I SUBNET : 255.255.0.0
+.br
+.I NETWORK: 210.124.0.0
+.br
+.I BCAST  : 210.124.255.255
+.br
+.I NATION : Korea, Republic of (KR)
+.br
+.PP
+.SH 옵션
+.IP "-f"
+기본적으로 krisplookup 은 Hard coding 되어진 database path 를 이용하다. 만약
+업데이트된 database file 을 테스트 하기 위하여, default database 대신 -f 옵션을
+사용할 수 있다.
+.IP "-h"
+krisplookup 의 사용법을 출력한다.
+.SH 저자
+김정균
+.SH 버그 리포트
+<http://www.oops.org> 의 QnA 게시판을 이용한다.
+.SH 저작권
+Copyright (c) 2006 OOPS Development Organization
+
+이 프로그램은 LGPL 을 따르며, 사용시의 어떠한 문제에 대하여 보증하지 않는다.
+.SH "참고"
+krispmkdb(1), krisp_version(3), kr_open(3), kr_close(3), kr_search(3)
