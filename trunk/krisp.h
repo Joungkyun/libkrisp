@@ -1,11 +1,11 @@
 /*
- * $Id: krisp.h,v 1.7 2006-06-12 03:10:43 oops Exp $
+ * $Id: krisp.h,v 1.8 2006-06-12 05:34:59 oops Exp $
  */
 
 #ifndef KRIP_H
 #define KRIP_H
 
-#include <version.h>
+#include <krversion.h>
 #include <krispcommon.h>
 #include <krdb.h>
 

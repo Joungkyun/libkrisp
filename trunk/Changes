@@ -1,6 +1,6 @@
 Changelog
 
-$Id: Changes,v 1.19 2006-06-11 18:51:00 oops Exp $
+$Id: Changes,v 1.20 2006-06-12 05:34:59 oops Exp $
 
 
 * 1.0.0
@@ -9,6 +9,7 @@ Mon, Jun 12 2006 JoungKyun.Kim <http://www.oops.org>
 	- major update to 1.0.0
 	- add man page
 	- add db open exception
+	- change search api name to kr_search
 
 
 * 0.0.3
