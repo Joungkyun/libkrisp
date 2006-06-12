@@ -1,5 +1,5 @@
 /*
- * $Id: krispmkdb.c,v 1.4 2006-06-11 16:37:49 oops Exp $
+ * $Id: krispmkdb.c,v 1.5 2006-06-12 16:17:01 oops Exp $
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -32,7 +32,7 @@ static struct option long_options [] = {
 extern char dberr[1024];
 
 void usage (void) {
-	fprintf (stderr, "krmakedb v%s: Make libkrisp database utility\n", VERSION);
+	fprintf (stderr, "krmakedb v%s: Make libkrisp database utility\n", KRISP_VERSION);
 	fprintf (stderr, "USAGE: krmakedb [option] ip_list_sql_file_path\n");
 	fprintf (stderr, "Options:\n");
 	fprintf (stderr, "    -s path, --savepath=path   save data file path (def: ./krisp-new.dat)\n");

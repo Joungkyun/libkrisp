@@ -1,5 +1,5 @@
 /*
- * $Id: krisp.c,v 1.17 2006-06-12 10:04:59 oops Exp $
+ * $Id: krisp.c,v 1.18 2006-06-12 16:17:01 oops Exp $
  */
 
 #include <stdio.h>
@@ -18,11 +18,11 @@
 extern char dberr[1024];
 
 char *krisp_version (void) {
-	return VERSION;
+	return KRISP_VERSION;
 }
 
 char *krisp_uversion (void) {
-	return UVERSION;
+	return KRISP_UVERSION;
 }
 
 int kr_open (struct db_argument *db, char *file) {
