@@ -1,11 +1,12 @@
 Changelog
 
-$Id: Changes,v 1.21 2006-06-12 09:34:10 oops Exp $
+$Id: Changes,v 1.22 2006-06-12 10:04:59 oops Exp $
 
 * 1.0.1
 
 Mon, Jun 12 2006 JoungKyun.Kim <http://www.oops.org>
 	- fixed segfault on special ip block
+	- coordinate krisplookup and geoipo
 
 
 * 1.0.0
