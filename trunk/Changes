@@ -1,6 +1,11 @@
 Changelog
 
-$Id: Changes,v 1.20 2006-06-12 05:34:59 oops Exp $
+$Id: Changes,v 1.21 2006-06-12 09:34:10 oops Exp $
+
+* 1.0.1
+
+Mon, Jun 12 2006 JoungKyun.Kim <http://www.oops.org>
+	- fixed segfault on special ip block
 
 
 * 1.0.0
