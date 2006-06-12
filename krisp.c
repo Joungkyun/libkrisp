@@ -1,5 +1,5 @@
 /*
- * $Id: krisp.c,v 1.15 2006-06-12 09:32:43 oops Exp $
+ * $Id: krisp.c,v 1.16 2006-06-12 09:54:23 oops Exp $
  */
 
 #include <stdio.h>
@@ -243,7 +243,7 @@ geoip_section:
 	}
 #endif
 
-	if ( r == 0 )
+	if ( r == 0 || ! strlen (isp->serv) )
 		strcpy (isp->serv, "N/A");
 
 	return 0;
