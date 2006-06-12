@@ -1,0 +1,20 @@
+
+CREATE TABLE netmask
+(
+	no integer NOT NULL DEFAULT '0',
+	net integer NOT NULL DEFAULT '0',
+	subnet char(15) NOT NULL DEFAULT '0.0.0.0',
+	PRIMARY KEY (no)
+);
+
+CREATE TABLE isp
+(
+	longip char(10) NOT NULL DEFAULT '0',
+	network char(15) NOT NULL DEFAULT '0.0.0.0',
+	broadcast char(15) NOT NULL DEFAULT '0.0.0.0',
+	netmask char(15) NOT NULL DEFAULT '0.0.0.0',
+	organization varchar,
+	servicename varchar,
+	PRIMARY KEY (longip)
+)
+
