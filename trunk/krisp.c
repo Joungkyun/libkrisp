@@ -1,5 +1,5 @@
 /*
- * $Id: krisp.c,v 1.14 2006-06-12 03:10:43 oops Exp $
+ * $Id: krisp.c,v 1.15 2006-06-12 09:32:43 oops Exp $
  */
 
 #include <stdio.h>
@@ -49,6 +49,8 @@ int kr_netmask (struct db_argument *db, char *aclass, struct netmasks *n) {
 		return 1;
 
 	n->nums = 0;
+	db->rows = 0;
+	db->cols = 0;
 	while ( ! (r = kr_dbFetch (db) ) ) {
 		for ( i=0; i<db->cols; i++ ) {
 			if ( n->nums > 31 && (n->nums % 32 ) == 0 ) {
@@ -88,6 +90,8 @@ int getISPinfo (struct db_argument *db, char *key, struct netinfos *n) {
 	if  ( kr_dbQuery (db, sql) )
 		return 1;
 
+	db->rows = 0;
+	db->cols = 0;
 	while ( ! (r = kr_dbFetch (db) ) ) {
 		for ( r=0; r<db->cols; r++ ) {
 			switch (r) {
@@ -111,8 +115,8 @@ int getISPinfo (struct db_argument *db, char *key, struct netinfos *n) {
 					break;
 			}
 		}
+		kr_dbFree (db);
 	}
-	kr_dbFree (db);
 
 	if ( r == -1 )
 		return 1;
