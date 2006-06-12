@@ -1,5 +1,5 @@
 /*
- * $Id: krisp.h,v 1.8 2006-06-12 05:34:59 oops Exp $
+ * $Id: krisp.h,v 1.9 2006-06-12 19:47:50 oops Exp $
  */
 
 #ifndef KRIP_H
@@ -34,7 +34,7 @@ void kr_close (struct db_argument *);
 /*
  * search isp information of given ip address
  */
-int kr_search (struct netinfos *isp, struct db_argument *db, GeoIP *gi);
+int kr_search (struct netinfos *isp, struct db_argument *db);
 
 
 

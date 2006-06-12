@@ -1,5 +1,5 @@
 /*
- * $Id: krisplookup.c,v 1.13 2006-06-12 03:10:43 oops Exp $
+ * $Id: krisplookup.c,v 1.14 2006-06-12 19:47:50 oops Exp $
  */
 
 #include <krisp.h>
@@ -43,7 +43,6 @@ int main (int argc, char ** argv) {
 	char * ip;
 	int opt;
 	char *datafile = NULL;
-	GeoIP *gi = NULL;
 
 #ifdef HAVE_GETOPT_LONG
 	while ( (opt = getopt_long (argc, argv, "f:h", long_options, (int *) 0)) != EOF ) {
@@ -89,11 +88,13 @@ int main (int argc, char ** argv) {
 	/*
 	 * If you don't want to use geoip, set 'gi = NULL'.
 	 */
-	gi = GeoIP_new (GEOIP_MEMORY_CACHE);
+	db.gi = GeoIP_new (GEOIP_MEMORY_CACHE);
+#else
+	db.gi = NULL;
 #endif
 
 	strcpy (isp.ip, ip);
-	kr_search (&isp, &db, gi);
+	kr_search (&isp, &db);
 
 	printf ("%s (%s): %s (%s)\n", ip, isp.ip, isp.org, isp.serv);
 	printf ("SUBNET : %s\n", isp.netmask);

@@ -41,7 +41,8 @@ int main (void) {
     }
 
     strcpy (isp.ip, ip);
-    kr_search (&isp, &db, NULL);
+	db.gi = NULL;
+    kr_search (&isp, &db);
 
 	kr_close (&db);
 

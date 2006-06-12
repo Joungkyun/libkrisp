@@ -7,7 +7,7 @@ kr_search - libkrisp database 에서 IP 에 대한 정보를 검색하여 반환
 .SH 사용법
 .I #include <krips.h>
 .br
-.I int kr_search (struct netinfos *isp, struct db_argument *db, GeoIP *gi);
+.I int kr_search (struct netinfos *isp, struct db_argument *db);
 
 .SH 설명
 kr_search() 함수는 주어진 ip 또는 호스트이름에 대한 정보를 검색한다.
@@ -49,11 +49,13 @@ int main (void) {
     }
 
 #ifdef HAVE_LIBGEOIP
-    gi = GeoIP_new (GEOIP_MEMORY_CACHE);
+    db.gi = GeoIP_new (GEOIP_MEMORY_CACHE);
+#else
+	db.gi = NULL;
 #endif
 
     strcpy (isp.ip, ip);
-    kr_search (&isp, &db, gi);
+    kr_search (&isp, &db);
 
 	kr_close (&db);
 

@@ -1,5 +1,5 @@
 /*
- * $Id: krispcommon.h,v 1.3 2006-06-11 16:37:49 oops Exp $
+ * $Id: krispcommon.h,v 1.4 2006-06-12 19:47:50 oops Exp $
  */
 
 #ifndef COMMON_H
@@ -80,6 +80,7 @@ struct db_argument {
 	char *			err;	/* vm error message */
 	const char **	rowdata;
 	const char **	colname;
+	GeoIP *			gi;		/* GeoIP resource */
 };
 
 struct netinfos {
