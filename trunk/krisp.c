@@ -1,5 +1,5 @@
 /*
- * $Id: krisp.c,v 1.13 2006-06-11 16:42:41 oops Exp $
+ * $Id: krisp.c,v 1.14 2006-06-12 03:10:43 oops Exp $
  */
 
 #include <stdio.h>
@@ -148,7 +148,7 @@ void initStruct (struct netinfos *n) {
 #endif
 }
 
-int search (struct netinfos *isp, struct db_argument *db, GeoIP *gi) {
+int kr_search (struct netinfos *isp, struct db_argument *db, GeoIP *gi) {
 	int r = 0, i;
 	char * aclass;
 	char * aclass_tmp;

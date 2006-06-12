@@ -26,7 +26,7 @@ int main (void) {
     }
 
     strcpy (isp.ip, ip);
-    search (&isp, &db, NULL);
+    kr_search (&isp, &db, NULL);
 
 	kr_close (&db);
 
@@ -45,4 +45,4 @@ Copyright (c) 2006 OOPS Development Organization
 
 이 프로그램은 LGPL 을 따르며, 사용시의 어떠한 문제에 대하여 보증하지 않는다.
 .SH "참고"
-krispmkdb(1), krispmkdb(1), krisp_version(3), kr_open(3), search(3)
+krispmkdb(1), krispmkdb(1), krisp_version(3), kr_open(3), kr_search(3)

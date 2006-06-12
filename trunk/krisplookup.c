@@ -1,5 +1,5 @@
 /*
- * $Id: krisplookup.c,v 1.12 2006-06-11 18:55:17 oops Exp $
+ * $Id: krisplookup.c,v 1.13 2006-06-12 03:10:43 oops Exp $
  */
 
 #include <krisp.h>
@@ -93,7 +93,7 @@ int main (int argc, char ** argv) {
 #endif
 
 	strcpy (isp.ip, ip);
-	search (&isp, &db, gi);
+	kr_search (&isp, &db, gi);
 
 	printf ("%s (%s): %s (%s)\n", ip, isp.ip, isp.org, isp.serv);
 	printf ("SUBNET : %s\n", isp.netmask);

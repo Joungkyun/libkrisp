@@ -2,15 +2,15 @@
 .UC 4
 
 .SH 이름
-search - libkrisp database 에서 IP 에 대한 정보를 검색하여 반환한다.
+kr_search - libkrisp database 에서 IP 에 대한 정보를 검색하여 반환한다.
 
 .SH 사용법
 .I #include <krips.h>
 .br
-.I int search (struct netinfos *isp, struct db_argument *db, GeoIP *gi);
+.I int kr_search (struct netinfos *isp, struct db_argument *db, GeoIP *gi);
 
 .SH 설명
-search() 함수는 주어진 ip 또는 호스트이름에 대한 정보를 검색한다.
+kr_search() 함수는 주어진 ip 또는 호스트이름에 대한 정보를 검색한다.
 마지막 인자 GeoIP *gi 는 GeoIP 연동시에 사용이 된다. libkrisp 가 GeoIP 를
 link 하고 있을 경우 사용을 하며, 사용하지 않을 경우에는 NULL 로 지정을
 한다.
@@ -26,7 +26,7 @@ gi 를 정의해 주어야 한다.
 .br
 .I #endif
 .br
-.I search (&isp, &db, gi);
+.I kr_search (&isp, &db, gi);
 
 
 .SH 반환값
@@ -43,7 +43,7 @@ int main (void) {
     struct netinfos isp;
     char *ip = "168.126.63.1";
 
-    if ( search (&db) ) {
+    if ( kr_search (&db) ) {
         fprintf (stderr, "ERROR Connect: %s\\n", dberr);
         return 1;
     }
@@ -53,7 +53,7 @@ int main (void) {
 #endif
 
     strcpy (isp.ip, ip);
-    search (&isp, &db, gi);
+    kr_search (&isp, &db, gi);
 
 	kr_close (&db);
 
@@ -80,4 +80,4 @@ Copyright (c) 2006 OOPS Development Organization
 이 프로그램은 LGPL 을 따르며, 사용시의 어떠한 문제에 대하여 보증하지 않는다.
 
 .SH "참고"
-krispmkdb(1), krispmkdb(1), krisp_version(3), kr_close(3), search(3)
+krispmkdb(1), krispmkdb(1), krisp_version(3), kr_close(3), kr_search(3)
