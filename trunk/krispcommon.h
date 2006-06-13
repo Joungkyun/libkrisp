@@ -1,5 +1,5 @@
 /*
- * $Id: krispcommon.h,v 1.4 2006-06-12 19:47:50 oops Exp $
+ * $Id: krispcommon.h,v 1.5 2006-06-13 08:47:09 oops Exp $
  */
 
 #ifndef COMMON_H
@@ -85,7 +85,7 @@ struct db_argument {
 
 struct netinfos {
 	char			key[16];
-	char			ip[16];
+	char			ip[256];
 	char			netmask[16];
 	char			network[16];
 	char			broadcast[16];
