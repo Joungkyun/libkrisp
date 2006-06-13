@@ -1,5 +1,5 @@
 /*
- * $Id: krisplookup.c,v 1.14 2006-06-12 19:47:50 oops Exp $
+ * $Id: krisplookup.c,v 1.15 2006-06-13 08:47:09 oops Exp $
  */
 
 #include <krisp.h>
@@ -93,7 +93,12 @@ int main (int argc, char ** argv) {
 	db.gi = NULL;
 #endif
 
-	strcpy (isp.ip, ip);
+	if ( strlen (ip) > 255 ) {
+		strncpy (isp.ip, ip, 255);
+		isp.ip[256] = 0;
+	} else {
+		strcpy (isp.ip, ip);
+	}
 	kr_search (&isp, &db);
 
 	printf ("%s (%s): %s (%s)\n", ip, isp.ip, isp.org, isp.serv);
