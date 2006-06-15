@@ -1,5 +1,5 @@
 /*
- * $Id: krispcommon.h,v 1.5 2006-06-13 08:47:09 oops Exp $
+ * $Id: krispcommon.h,v 1.6 2006-06-15 06:54:35 oops Exp $
  */
 
 #ifndef COMMON_H
@@ -46,6 +46,7 @@ typedef struct GeoIPTag {
 
 #define GEOIP_API
 GEOIP_API GeoIP* GeoIP_new(int flags);
+GEOIP_API void GeoIP_delete(GeoIP* gi);
 GEOIP_API int GeoIP_id_by_name (GeoIP* gi, const char *host);
 extern const char GeoIP_country_code[247][3];
 extern const char * GeoIP_country_name[247];
