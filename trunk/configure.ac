@@ -1,11 +1,11 @@
 # Process this file with autoconf to produce a configure script.
 # Configure template for krisp library
 #
-# $Id: configure.ac,v 1.9 2006-06-13 08:43:02 oops Exp $
+# $Id: configure.ac,v 1.10 2006-06-15 04:24:58 oops Exp $
 
 #
 AC_PREREQ(2.59)
-AC_INIT([krisp], [1.0.2], [http://www.oops.org])
+AC_INIT([krisp], [1.0.3], [http://www.oops.org])
 AC_CONFIG_SRCDIR([krisp.h])
 AC_CONFIG_HEADER([krisp-config.h])
 AC_PREFIX_DEFAULT([/usr/local])
