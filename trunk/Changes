@@ -1,8 +1,11 @@
 Changelog
 
-$Id: Changes,v 1.27 2006-06-15 04:31:46 oops Exp $
+$Id: Changes,v 1.28 2006-06-16 12:33:24 oops Exp $
 
 * 1.0.3
+
+Fri, Jun 16 2006 JoungKyun.Kim <http://www.oops.org>
+	- changed dynamic linked krisplookup and krispmkdb
 
 Thu, Jun 15 2006 JoungKyun.Kim <http://www.oops.org>
 	- fixed GeoIP memory leak
