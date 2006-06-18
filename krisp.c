@@ -1,5 +1,5 @@
 /*
- * $Id: krisp.c,v 1.21 2006-06-15 04:48:46 oops Exp $
+ * $Id: krisp.c,v 1.22 2006-06-18 15:59:04 oops Exp $
  */
 
 #include <stdio.h>
@@ -242,6 +242,12 @@ geoip_section:
 				GeoIP_country_code[country_id] ? GeoIP_country_code[country_id] : "--");
 		strcpy (isp->nation,
 				GeoIP_country_name[country_id] ? GeoIP_country_name[country_id] : "N/A");
+
+		/* manipulated geoip null data */
+		if ( ! strcmp (isp->code, "--") && strcmp (isp->serv, "--" ) ) {
+			strcpy (isp->code, "KR");
+			strcpy (isp->nation, "Korea, Republic of");
+		}
 
 		GeoIP_delete (db->gi);
 	}
