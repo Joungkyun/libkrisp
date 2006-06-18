@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 1.17 2006-06-16 12:33:24 oops Exp $
+# $Id: Makefile.in,v 1.18 2006-06-18 15:49:14 oops Exp $
 srcdir          = @srcdir@
 top_srcdir      = @top_srcdir@
 builddir        = @builddir@
@@ -62,8 +62,8 @@ MAN3            = krisp_version kr_open kr_close kr_search
 
 
 all: $(OBJECT) krisplookup.lo krispmkdb.lo $(PROG)-config $(PROG)-spec libs
-	$(LINK) -o $(PROG)lookup $(PROG)lookup libkrisp.la
-	$(LINK) -o $(PROG)mkdb $(PROG)mkdb libkrisp.la
+	$(LINK) -o $(PROG)lookup $(PROG)lookup.c libkrisp.la
+	$(LINK) -o $(PROG)mkdb $(PROG)mkdb.c libkrisp.la
 
 krdb.lo: krdb.c database/sqlite.c database/sqlite3.c krdb.h.in krispcommon.h
 	$(INSTALL) -m644 krdb.h.in krdb.h
