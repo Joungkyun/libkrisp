@@ -1,7 +1,7 @@
 # Process this file with autoconf to produce a configure script.
 # Configure template for krisp library
 #
-# $Id: configure.ac,v 1.10 2006-06-15 04:24:58 oops Exp $
+# $Id: configure.ac,v 1.11 2006-06-18 15:33:59 oops Exp $
 
 #
 AC_PREREQ(2.59)
@@ -18,7 +18,7 @@ AC_SUBST(SONAME_REVISION)
 
 SONAME_MAJOR=0
 SONAME_MINOR=0
-SONAME_REVISION=1
+SONAME_REVISION=2
 SONAME_VERSION=$SONAME_MAJOR.$SONAME_MINOR.$SONAME_REVISION
 
 SONAME_VALUE=$(($SONAME_MAJOR + $SONAME_MINOR))
