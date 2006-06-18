@@ -1,12 +1,13 @@
 Changelog
 
-$Id: Changes,v 1.31 2006-06-18 15:59:04 oops Exp $
+$Id: Changes,v 1.32 2006-06-18 16:04:19 oops Exp $
 
 * 1.0.3
 
 Sun, Jun 19 2006 JoungKyun.Kim <http://www.oops.org>
 	- update soname revision to 2
 	- manipulated geoip null data
+	- update database krnic 20060612
 	- announced 1.0.x stable version
 
 Fri, Jun 16 2006 JoungKyun.Kim <http://www.oops.org>
