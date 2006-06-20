@@ -1,5 +1,5 @@
 /*
- * $Id: krispmkdb.c,v 1.6 2006-06-20 03:25:52 oops Exp $
+ * $Id: krispmkdb.c,v 1.7 2006-06-20 03:39:48 oops Exp $
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -80,7 +80,7 @@ char * getlist (char *file) {
 }
 
 int main (int argc, char **argv) {
-	KR_API db;
+	KR_API *db;
 	char *ipfile;
 	char *savedb = NULL;
 	char *buf, *sql, *sql_t;
@@ -110,13 +110,16 @@ int main (int argc, char **argv) {
 
 	ipfile = argv[optind];
 
-	if ( kr_open (&db, (savedb != NULL ) ? savedb : DEFSAVE) ) {
+	db = (KR_API *) malloc (sizeof (KR_API));
+
+	if ( kr_open (db, (savedb != NULL ) ? savedb : DEFSAVE) ) {
 		fprintf (stderr, "ERROR: DB connect failed (%s)\n", dberr);
 		return 1;
 	}
 	
 	if ( (buf = getlist (ipfile)) == NULL ) {
-		kr_close (&db);
+		kr_close (db);
+		free (db);
 		fprintf (stderr, "ERROR: %s is empty\n", ipfile);
 		return 1;
 	}
@@ -140,21 +143,23 @@ int main (int argc, char **argv) {
 			}
 			printf ("=> %s\n", output);
 
-			if ( kr_dbQuery (&db, sql) ) {
+			if ( kr_dbQuery (db, sql) ) {
 				fprintf (stderr, "\nERROR: query failed (%s)\n", dberr);
+				kr_close (db);
 				free (buf);
-				kr_close (&db);
+				free (db);
 				return 1;
 			}
 
-			while ( ! (r = kr_dbFetch (&db) ) ) {
+			while ( ! (r = kr_dbFetch (db) ) ) {
 				// not actions
 			}
 
 			if ( r == -1 ) {
 				fprintf (stderr, "\nERROR: fetch failed (%s)\n", dberr);
+				kr_close (db);
 				free (buf);
-				kr_close (&db);
+				free (db);
 				return 1;
 			}
 		}
@@ -162,9 +167,9 @@ int main (int argc, char **argv) {
 		sql = sql_t + 1;
 	}
 
+	kr_close (db);
 	free (buf);
-
-	kr_close (&db);
+	free (db);
 
 	return 0;
 }

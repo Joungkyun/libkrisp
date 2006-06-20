@@ -1,5 +1,5 @@
 /*
- * $Id: krisplookup.c,v 1.18 2006-06-20 03:32:11 oops Exp $
+ * $Id: krisplookup.c,v 1.19 2006-06-20 03:39:48 oops Exp $
  */
 
 #include <krisp.h>
@@ -37,7 +37,7 @@ void usage (char *prog) {
 }
 
 int main (int argc, char ** argv) {
-	KR_API db;
+	KR_API *db;
 	KRNET_API isp;
 	struct stat f;
 	char * ip;
@@ -76,8 +76,10 @@ int main (int argc, char ** argv) {
 		return 1;
 	}
 
+	db = (KR_API *) malloc (sizeof (KR_API));
+
 	/* database open */
-	if ( kr_open (&db, (datafile != NULL) ? datafile : NULL) ) {
+	if ( kr_open (db, (datafile != NULL) ? datafile : NULL) ) {
 		fprintf (stderr, "ERROR Connect: %s\n", dberr);
 		return 1;
 	}
@@ -88,9 +90,9 @@ int main (int argc, char ** argv) {
 	/*
 	 * If you don't want to use geoip, set 'gi = NULL'.
 	 */
-	db.gi = GeoIP_new (GEOIP_MEMORY_CACHE);
+	db->gi = GeoIP_new (GEOIP_MEMORY_CACHE);
 #else
-	db.gi = NULL;
+	db->gi = NULL;
 #endif
 
 	if ( strlen (ip) > 255 ) {
@@ -99,7 +101,7 @@ int main (int argc, char ** argv) {
 	} else {
 		strcpy (isp.ip, ip);
 	}
-	kr_search (&isp, &db);
+	kr_search (&isp, db);
 
 	printf ("%s (%s): %s (%s)\n", ip, isp.ip, isp.org, isp.serv);
 	printf ("SUBNET : %s\n", isp.netmask);
@@ -111,7 +113,8 @@ int main (int argc, char ** argv) {
 #endif
 
 	/* database close */
-	kr_close (&db);
+	kr_close (db);
+	free (db);
 
 	return 0;
 }
