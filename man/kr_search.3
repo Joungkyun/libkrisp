@@ -7,7 +7,7 @@ kr_search - libkrisp database 에서 IP 에 대한 정보를 검색하여 반환
 .SH 사용법
 .I #include <krips.h>
 .br
-.I int kr_search (struct netinfos *isp, struct db_argument *db);
+.I int kr_search (KRNET_API *isp, KR_API *db);
 
 .SH 설명
 kr_search() 함수는 주어진 ip 또는 호스트이름에 대한 정보를 검색한다.
@@ -39,12 +39,15 @@ gi 를 정의해 주어야 한다.
 extern char dberr[1024];
 
 int main (void) {
-    struct db_argument db;
-    struct netinfos isp;
+    KR_API db;
+    KRNET_API isp;
     char *ip = "168.126.63.1";
 
-    if ( kr_search (&db) ) {
+	db = (KR_API *) malloc (sizeof (KR_API));
+
+    if ( kr_search (db) ) {
         fprintf (stderr, "ERROR Connect: %s\\n", dberr);
+		free (db);
         return 1;
     }
 
@@ -55,9 +58,10 @@ int main (void) {
 #endif
 
     strcpy (isp.ip, ip);
-    kr_search (&isp, &db);
+    kr_search (&isp, db);
 
-	kr_close (&db);
+	kr_close (db);
+	free (db);
 
     printf ("%-15s %-15s %-20s %-15s %-15s %s\\n",
             ip, isp.ip, isp.serv, isp.network, isp.broadcast, isp.org);
