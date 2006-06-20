@@ -1,4 +1,4 @@
-$Id: README,v 1.1.1.1 2006-06-08 19:31:53 oops Exp $
+$Id: README,v 1.2 2006-06-20 07:53:17 oops Exp $
 
 class.krisp.php library 는 김칠봉님 (sna2<at>linuxchannel.net) 이 만드신 것을
 sqlite db 를 사용하도록 변경한 버전이다. 원본 코드는
@@ -20,3 +20,11 @@ http://ftp.linuxchannel.net/devel/php_krispnet/
 sqlite krisp-sqlite.dat .dump | sqlite3 krisp-sqlite3.dat
 
 명령을 실행하면 된다.
+
+다른 DB 를 위해서는 다음의 스크립트를 이용한다.
+
+krisp_mksql.php sql > krisp.sql
+
+이 명령으로 db schema file 을 생성할 수 있다. 생성된 파일에서, 각 DB 에 맞게
+create table 명령 구문만 수정해서 사용을 할 수 있다.
+
