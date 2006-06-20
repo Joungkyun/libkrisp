@@ -1,11 +1,12 @@
 Changelog
 
-$Id: Changes,v 1.35 2006-06-20 03:32:11 oops Exp $
+$Id: Changes,v 1.36 2006-06-20 03:39:48 oops Exp $
 
 * 1.0.4
 Tue, Jun 21 2006 JoungKyun.Kim <http://www.oops.org>
 	- add KR_API
 	- add KRNET_API
+	- allocate memory with malloc on KR_API structure
 
 Sun, Jun 19 2006 JoungKyun.Kim <http://www.oops.org>
 	- removed needless processing
