@@ -1,5 +1,5 @@
 /*
- * $Id: krisplookup.c,v 1.17 2006-06-20 03:25:52 oops Exp $
+ * $Id: krisplookup.c,v 1.18 2006-06-20 03:32:11 oops Exp $
  */
 
 #include <krisp.h>
@@ -38,7 +38,7 @@ void usage (char *prog) {
 
 int main (int argc, char ** argv) {
 	KR_API db;
-	struct netinfos isp;
+	KRNET_API isp;
 	struct stat f;
 	char * ip;
 	int opt;

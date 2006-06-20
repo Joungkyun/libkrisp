@@ -1,5 +1,5 @@
 /*
- * $Id: krnet.c,v 1.3 2006-06-11 16:37:49 oops Exp $
+ * $Id: krnet.c,v 1.4 2006-06-20 03:32:11 oops Exp $
  */
 
 #include <krispcommon.h>
@@ -34,7 +34,7 @@ char * long2ip (unsigned long num) {
 	return inet_ntoa (addr);
 }
 
-int makeNetworkInfo (char *ip, struct netinfos *n) {
+int makeNetworkInfo (char *ip, KRNET_API *n) {
 	struct in_addr addr, mddr, tddr;
 	int tmp;
 

@@ -1,5 +1,5 @@
 /*
- * $Id: krisp.c,v 1.24 2006-06-20 03:25:52 oops Exp $
+ * $Id: krisp.c,v 1.25 2006-06-20 03:32:11 oops Exp $
  */
 
 #include <stdio.h>
@@ -81,7 +81,7 @@ int kr_netmask (KR_API *db, char *aclass, struct netmasks *n) {
 	return 0;
 }
 
-int getISPinfo (KR_API *db, char *key, struct netinfos *n) {
+int getISPinfo (KR_API *db, char *key, KRNET_API *n) {
 	char sql[64] = { 0, };
 	int r;
 
@@ -139,7 +139,7 @@ void kr_free_array (char **p) {
 	free (p);
 }
 
-void initStruct (struct netinfos *n) {
+void initStruct (KRNET_API *n) {
 	strcpy (n->key, "");
 	strcpy (n->network, "");
 	strcpy (n->broadcast, "");
@@ -152,7 +152,7 @@ void initStruct (struct netinfos *n) {
 #endif
 }
 
-int kr_search (struct netinfos *isp, KR_API *db) {
+int kr_search (KRNET_API *isp, KR_API *db) {
 	int r = 0, i;
 	char * aclass;
 	char * aclass_tmp;
