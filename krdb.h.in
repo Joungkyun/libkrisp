@@ -1,5 +1,5 @@
 /*
- * $Id: krdb.h.in,v 1.3 2006-06-10 19:41:56 oops Exp $
+ * $Id: krdb.h.in,v 1.4 2006-06-20 03:25:52 oops Exp $
  */
 
 #ifndef KRDB_H
@@ -10,13 +10,13 @@
 #if defined(HAVE_LIBSQLITE3)
 void kr_dbError (int code, const char *err);
 #else
-void kr_dbError (struct db_argument *);
+void kr_dbError (KR_API *);
 #endif
-int kr_dbFree (struct db_argument *);
-int kr_dbConnect (struct db_argument *, char *);
-int kr_dbQuery (struct db_argument *, char *);
-int kr_dbFetch (struct db_argument *);
-void kr_dbClose (struct db_argument *);
+int kr_dbFree (KR_API *);
+int kr_dbConnect (KR_API *, char *);
+int kr_dbQuery (KR_API *, char *);
+int kr_dbFetch (KR_API *);
+void kr_dbClose (KR_API *);
 
 #endif
 

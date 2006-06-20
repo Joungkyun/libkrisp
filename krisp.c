@@ -1,5 +1,5 @@
 /*
- * $Id: krisp.c,v 1.23 2006-06-18 19:02:00 oops Exp $
+ * $Id: krisp.c,v 1.24 2006-06-20 03:25:52 oops Exp $
  */
 
 #include <stdio.h>
@@ -25,7 +25,7 @@ char *krisp_uversion (void) {
 	return KRISP_UVERSION;
 }
 
-int kr_open (struct db_argument *db, char *file) {
+int kr_open (KR_API *db, char *file) {
 	if ( kr_dbConnect (db, file) ) {
 		return 1;
 	}
@@ -33,7 +33,7 @@ int kr_open (struct db_argument *db, char *file) {
 	return 0;
 }
 
-int kr_netmask (struct db_argument *db, char *aclass, struct netmasks *n) {
+int kr_netmask (KR_API *db, char *aclass, struct netmasks *n) {
 	char sql[64] = { 0, };
 	char **masks;
 	int r;
@@ -81,7 +81,7 @@ int kr_netmask (struct db_argument *db, char *aclass, struct netmasks *n) {
 	return 0;
 }
 
-int getISPinfo (struct db_argument *db, char *key, struct netinfos *n) {
+int getISPinfo (KR_API *db, char *key, struct netinfos *n) {
 	char sql[64] = { 0, };
 	int r;
 
@@ -124,7 +124,7 @@ int getISPinfo (struct db_argument *db, char *key, struct netinfos *n) {
 	return 0;
 }
 
-void kr_close (struct db_argument *db) {
+void kr_close (KR_API *db) {
 	kr_dbClose (db);
 }
 
@@ -152,7 +152,7 @@ void initStruct (struct netinfos *n) {
 #endif
 }
 
-int kr_search (struct netinfos *isp, struct db_argument *db) {
+int kr_search (struct netinfos *isp, KR_API *db) {
 	int r = 0, i;
 	char * aclass;
 	char * aclass_tmp;

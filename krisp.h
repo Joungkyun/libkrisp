@@ -1,5 +1,5 @@
 /*
- * $Id: krisp.h,v 1.9 2006-06-12 19:47:50 oops Exp $
+ * $Id: krisp.h,v 1.10 2006-06-20 03:25:52 oops Exp $
  */
 
 #ifndef KRIP_H
@@ -24,17 +24,17 @@ char *krisp_uversion (void);
 /*
  * open krisp database
  */
-int kr_open (struct db_argument *, char *);
+int kr_open (KR_API *, char *);
 
 /*
  * close krisp database
  */
-void kr_close (struct db_argument *);
+void kr_close (KR_API *);
 
 /*
  * search isp information of given ip address
  */
-int kr_search (struct netinfos *isp, struct db_argument *db);
+int kr_search (struct netinfos *isp, KR_API *db);
 
 
 
@@ -50,12 +50,12 @@ int kr_search (struct netinfos *isp, struct db_argument *db);
 /*
  * get netmask of each A class ip from db
  */
-int kr_netmask (struct db_argument *, char *, struct netmasks *);
+int kr_netmask (KR_API *, char *, struct netmasks *);
 
 /*
  * get ISP information of each network from db
  */
-int getISPinfo (struct db_argument *, char *, struct netinfos *);
+int getISPinfo (KR_API *, char *, struct netinfos *);
 
 /*
  * free memory that used db query function
