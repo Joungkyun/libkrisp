@@ -1,6 +1,6 @@
 Changelog
 
-$Id: Changes,v 1.37 2006-06-20 05:00:11 oops Exp $
+$Id: Changes,v 1.38 2006-06-20 06:05:50 oops Exp $
 
 * 1.0.4
 Tue, Jun 20 2006 JoungKyun.Kim <http://www.oops.org>
@@ -9,9 +9,6 @@ Tue, Jun 20 2006 JoungKyun.Kim <http://www.oops.org>
 	- allocate memory with malloc on KR_API structure
 	- update database krnic 20060620
 	- fixed problem db->gi value init
-
-Sun, Jun 19 2006 JoungKyun.Kim <http://www.oops.org>
-	- removed needless processing
 
 
 * 1.0.3
