@@ -1,5 +1,5 @@
 /*
- * $Id: krisp.c,v 1.26 2006-06-20 05:00:11 oops Exp $
+ * $Id: krisp.c,v 1.27 2006-06-20 06:05:50 oops Exp $
  */
 
 #include <stdio.h>
@@ -224,8 +224,15 @@ int kr_search (KRNET_API *isp, KR_API *db) {
 		cp.network = cp.ip & cp.mask;
 		sprintf (isp->key, "%lu", cp.network);
 
-		if ( ! getISPinfo (db, isp->key, isp) )
+		if ( getISPinfo (db, isp->key, isp) )
+			continue;
+
+		compare = cp.ip & ip2long (isp->netmask);
+
+		if ( cp.network == compare ) {
+			r = 1;
 			break;
+		}
 	}
 
 	kr_free_array (n.mask);
@@ -249,7 +256,7 @@ geoip_section:
 	}
 #endif
 
-	if ( ! strlen (isp->serv) ) {
+	if ( r == 0 || ! strlen (isp->serv) ) {
 		strcpy (isp->serv, "--");
 		strcpy (isp->org, "N/A");
 	}
