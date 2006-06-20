@@ -1,5 +1,5 @@
 /*
- * $Id: krisp.c,v 1.25 2006-06-20 03:32:11 oops Exp $
+ * $Id: krisp.c,v 1.26 2006-06-20 05:00:11 oops Exp $
  */
 
 #include <stdio.h>
@@ -125,6 +125,11 @@ int getISPinfo (KR_API *db, char *key, KRNET_API *n) {
 }
 
 void kr_close (KR_API *db) {
+#ifdef HAVE_LIBGEOIP
+	if ( db->gi != NULL )
+		GeoIP_delete (db->gi);
+#endif;
+
 	kr_dbClose (db);
 }
 
@@ -241,8 +246,6 @@ geoip_section:
 			strcpy (isp->code, "KR");
 			strcpy (isp->nation, "Korea, Republic of");
 		}
-
-		GeoIP_delete (db->gi);
 	}
 #endif
 
