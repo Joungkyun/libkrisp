@@ -1,5 +1,5 @@
 /*
- * $Id: sqlite3.c,v 1.2 2006-06-10 19:41:56 oops Exp $
+ * $Id: sqlite3.c,v 1.3 2006-06-20 03:25:52 oops Exp $
  */
 
 void kr_dbError (int code, const char *err) {
@@ -8,7 +8,7 @@ void kr_dbError (int code, const char *err) {
 		strcpy (dberr, err);
 }
 
-int kr_dbFree (struct db_argument *db) {
+int kr_dbFree (KR_API *db) {
 	int i;
 
 	for ( i=0; i<db->cols; i++ ) {
@@ -22,7 +22,7 @@ int kr_dbFree (struct db_argument *db) {
 	return 0;
 }
 
-int kr_dbConnect (struct db_argument *db, char *file) {
+int kr_dbConnect (KR_API *db, char *file) {
 	if ( (db->r = sqlite3_open ((file != NULL) ? file : DBPATH, &db->c)) ) {
 		kr_dbError (sqlite3_errcode(db->c), sqlite3_errmsg(db->c));
 		return -1;
@@ -31,7 +31,7 @@ int kr_dbConnect (struct db_argument *db, char *file) {
 	return 0;
 }
 
-int kr_dbQuery (struct db_argument *db, char * sql) {
+int kr_dbQuery (KR_API *db, char * sql) {
 	db->r = sqlite3_prepare (db->c, sql, strlen (sql), &db->vm, NULL);
 
 	if ( db->r != SQLITE_OK ) {
@@ -42,7 +42,7 @@ int kr_dbQuery (struct db_argument *db, char * sql) {
 	return 0;
 }
 
-int kr_dbFetch (struct db_argument *db) {
+int kr_dbFetch (KR_API *db) {
 	int i;
 	char colname[128] = { 0, };
 	char rowdata[128] = { 0, };
@@ -88,7 +88,7 @@ int kr_dbFetch (struct db_argument *db) {
 	return 0;
 }
 
-void kr_dbClose (struct db_argument *db) {
+void kr_dbClose (KR_API *db) {
 	if ( db->c != NULL )
 		sqlite3_close (db->c);
 }

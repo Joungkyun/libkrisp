@@ -1,10 +1,14 @@
 Changelog
 
-$Id: Changes,v 1.33 2006-06-18 19:02:00 oops Exp $
+$Id: Changes,v 1.34 2006-06-20 03:27:36 oops Exp $
 
 * 1.0.4
+Tue, Jun 21 2006 JoungKyun.Kim <http://www.oops.org>
+	- add KR_API type
+
 Sun, Jun 19 2006 JoungKyun.Kim <http://www.oops.org>
 	- removed needless processing
+
 
 * 1.0.3
 

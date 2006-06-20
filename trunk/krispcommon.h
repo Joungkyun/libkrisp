@@ -1,5 +1,5 @@
 /*
- * $Id: krispcommon.h,v 1.6 2006-06-15 06:54:35 oops Exp $
+ * $Id: krispcommon.h,v 1.7 2006-06-20 03:25:52 oops Exp $
  */
 
 #ifndef COMMON_H
@@ -67,7 +67,7 @@ struct netmasks {
 	char **			mask;
 };
 
-struct db_argument {
+typedef struct db_argument {
 #if defined(HAVE_LIBSQLITE3)
 	sqlite3			*c;		/* db resource */
 	sqlite3_stmt	*vm;	/* sqlite vm */
@@ -82,9 +82,9 @@ struct db_argument {
 	const char **	rowdata;
 	const char **	colname;
 	GeoIP *			gi;		/* GeoIP resource */
-};
+} KR_API;
 
-struct netinfos {
+typedef struct netinfos {
 	char			key[16];
 	char			ip[256];
 	char			netmask[16];

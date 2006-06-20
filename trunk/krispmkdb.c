@@ -1,5 +1,5 @@
 /*
- * $Id: krispmkdb.c,v 1.5 2006-06-12 16:17:01 oops Exp $
+ * $Id: krispmkdb.c,v 1.6 2006-06-20 03:25:52 oops Exp $
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -80,7 +80,7 @@ char * getlist (char *file) {
 }
 
 int main (int argc, char **argv) {
-	struct db_argument db;
+	KR_API db;
 	char *ipfile;
 	char *savedb = NULL;
 	char *buf, *sql, *sql_t;
