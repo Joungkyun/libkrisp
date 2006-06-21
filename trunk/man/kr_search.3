@@ -11,22 +11,23 @@ kr_search - libkrisp database 에서 IP 에 대한 정보를 검색하여 반환
 
 .SH 설명
 kr_search() 함수는 주어진 ip 또는 호스트이름에 대한 정보를 검색한다.
-마지막 인자 GeoIP *gi 는 GeoIP 연동시에 사용이 된다. libkrisp 가 GeoIP 를
-link 하고 있을 경우 사용을 하며, 사용하지 않을 경우에는 NULL 로 지정을
-한다.
+libkrisp 가 GeoIP 를 link 하고 있을 경우, GeoIP database 를 검색을 하려면,
+db_argument structure 의 gi 변수에 GeoIP_new 를 선언해 주고, 검색을 하지
+않으려면, NULL 을 지정을 한다. GeoIP link 가 되어 있지 않을 경우에도,
+gi 변수에 대해서 NULL 로 초기화를 해 주어야만 한다.
 
-GeoIP 관련 주의할 것은, libkrisp 가 geoip 를 링크하지 않을 경우에는 마지막
-인자를 무조건 NULL 로 지정을 해야 한다는 점이며, link 가 되어 있을 경우에는
-사용하고 싶지 않을 경우, NULL 로 지정을 하며, 사용을 할 경우에는 다음과 같이
-gi 를 정의해 주어야 한다.
 .PP
 .I #ifdef HAVE_LIBGEOIP
 .br
-.I gi = GeoIP_new (GEOIP_MEMORY_CACHE);
+.I db->gi = GeoIP_new (GEOIP_MEMORY_CACHE);
+.br
+.I #else
+.br
+.I db->gi = NULL;
 .br
 .I #endif
 .br
-.I kr_search (&isp, &db, gi);
+.I kr_search (&isp, db);
 
 
 .SH 반환값
@@ -45,16 +46,16 @@ int main (void) {
 
 	db = (KR_API *) malloc (sizeof (KR_API));
 
-    if ( kr_search (db) ) {
+    if ( kr_open (db) ) {
         fprintf (stderr, "ERROR Connect: %s\\n", dberr);
 		free (db);
         return 1;
     }
 
 #ifdef HAVE_LIBGEOIP
-    db.gi = GeoIP_new (GEOIP_MEMORY_CACHE);
+    db->gi = GeoIP_new (GEOIP_MEMORY_CACHE);
 #else
-	db.gi = NULL;
+	db->gi = NULL;
 #endif
 
     strcpy (isp.ip, ip);
