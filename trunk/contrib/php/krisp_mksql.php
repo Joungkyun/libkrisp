@@ -1,7 +1,7 @@
 #!/usr/bin/php
 <?
 #
-# $Id: krisp_mksql.php,v 1.3 2006-06-10 19:29:41 oops Exp $
+# $Id: krisp_mksql.php,v 1.4 2006-06-21 09:06:35 oops Exp $
 #
 # get Korea ISP information to text format and make krisp database sql
 #
@@ -9,8 +9,8 @@
 class domesticIP {
 	var $url = "http://member.nic.or.kr/link/ISPAllocation.jsp";
 
-	function domesticIP () {
-		$r = $this->getpage ();
+	function domesticIP ($f = '') {
+		$r = $this->getpage ($f);
 		$this->r = $this->makeArray ($r);
 	}
 
@@ -19,27 +19,44 @@ class domesticIP {
 	# form is follows:
 	# "korean-ispname  6KANet  203.254.0.0  203.254.63.255  19940401"
 	#
-	function getpage () {
-		$v = file_get_contents ($this->url);
+	function getpage ($f = '') {
+		$v = @file_get_contents ($f ? $f : $this->url);
 
-		# remove carage return
-		$_src[] = "/\r/";
-		$_des[] = '';
+		if ( $v === FALSE ) :
+			error_log ("ERROR: URL open failed ($this->url)", 0);
+			exit (1);
+		endif;
 
-		# removed html code
-		$_src[] = '/<[^>]+>/';
-		$_des[] = '';
+		if ( ! preg_match ('/6KANet|한국전산원/', $v) ) :
+			error_log ("ERROR: invalid data format", 0);
+			exit (1);
+		endif;
 
-		# remove header
-		$_src[] = '/.*배정일자/s';
-		$_des[] = '';
+		if ( ! $f ) :
+			# remove carage return
+			$_src[] = "/\r/";
+			$_des[] = '';
 
-		$_src[] = "/^\s*&nbsp;\s*/m";
-		$_des[] = '';
-		$_src[] = '/^[\s]+([0-9])/m';
-		$_des[] = "\\1";
+			# removed html code
+			$_src[] = '/<[^>]+>/';
+			$_des[] = '';
 
-		return trim (preg_replace ($_src, $_des, $v));
+			# remove header
+			$_src[] = '/.*배정일자/s';
+			$_des[] = '';
+
+			$_src[] = "/^\s*&nbsp;\s*/m";
+			$_des[] = '';
+			$_src[] = '/^[\s]+([0-9])/m';
+			$_des[] = "\\1";
+		else :
+			$_src[] = '/[\t]+/';
+			$_des[] = "\n";
+		endif;
+
+		$r = trim (preg_replace ($_src, $_des, $v));
+
+		return $r;
 	}
 
 	function makeArray ($v) {
@@ -49,8 +66,17 @@ class domesticIP {
 
 		foreach ($p as $_v) :
 			$_v = trim ($_v);
+
 			if ( preg_match ('/^[0-9]+$/', $_v) ) :
 				$r[$i] .= $_v;
+
+				# array check
+				$chk = split ("[\t]+", $r[$i]);
+				if ( count ($chk) != 5 ) :
+					error_log ("ERROR: invalid data format", 0);
+					exit (1);
+				endif;
+
 				$i++;
 			else :
 				$r[$i] .= "$_v\t";
@@ -77,6 +103,16 @@ class mkSQL {
 
 			if ( preg_match ('/^#/', $kblock) || ! $kblock ) :
 				continue;
+			endif;
+
+			if ( ! $s || preg_match ('/[^0-9.]|^[0-9]+$/', $s) ) :
+				error_log ("ERROR: invalide data format\n", 0);
+				exit (1);
+			endif;
+
+			if ( ! $e || preg_match ('/[^0-9.]|^[0-9]+$/', $e) ) :
+				error_log ("ERROR: invalide data format\n", 0);
+				exit (1);
 			endif;
 
 			$s = $this->inet_aton ($s);
@@ -268,22 +304,39 @@ class mkSQL {
 }
 
 function usage ($prog) {
-	echo "USAGE: ${prog} [type]\n";
-	echo "Option: type\n";
-	echo "        txt => original text format\n";
-	echo "        sql => parse sql qeury format\n";
+	error_log ("USAGE: ${prog} [type]", 0);
+	error_log ("       ${prog} txt", 0);
+	error_log ("       ${prog} sql", 0);
+	error_log ("       ${prog} sql /path/txtformat", 0);
+	error_log ("Option: type", 0);
+	error_log ("        txt => original text format", 0);
+	error_log ("        sql => parse sql qeury format", 0);
 
 	exit (1);
 }
 
 
-
-
-
-
-if ( $argc != 2 ) :
+if ( $argc != 2 && $argc != 3 ) :
 	usage ($argv[0]);
 endif;
+
+if ( $argc == 3 ) :
+	if ( $argv[1] != 'sql' ) :
+		usage ($argv[0]);
+	endif;
+
+	if ( $argv[2] ) :
+		if ( ! file_exists ($argv[2]) ) :
+			error_log ("ERROR: {$argv[2]} is not found", 0);
+			exit (1);
+		else :
+			$txtformat = $argv[2];
+		endif;
+	else :
+		$txtformat = '';
+	endif;
+endif;
+
 
 $_type = $argv[1];
 
@@ -291,7 +344,7 @@ if ( $_type != 'txt' && $_type != 'sql' ) :
 	usage ($argv[0]);
 endif;
 
-$ip = new domesticIP;
+$ip = new domesticIP ($txtformat);
 
 if ( $_type == 'txt' ) :
 	foreach ( $ip->r as $v ) :
@@ -301,7 +354,7 @@ if ( $_type == 'txt' ) :
 endif;
 
 if ( ! count ($ip->r) ) :
-	echo "ERROR: ip list array is empty\n";
+	error_log ("ERROR: ip list array is empty\n", 0);
 	exit (1);
 endif;
 
