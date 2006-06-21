@@ -8,7 +8,8 @@ kr_close - libkrisp 의 database 를 닫는다.
 .I void kr_close (KR_API *db);
 .SH 설명
 kr_close() 함수는 libkrisp 를 링크하여 kr_open () 에 의해 열려진 db handler 를
-닫는데 사용을 한다.
+닫는데 사용을 한다. geoip handler 역시 kr_close() 함수에서 처리가 된다. geoip
+handler 가 null 일 경우는 skip 이 된다.
 .PP
 .SH 예제
 .nf
