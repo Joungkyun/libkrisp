@@ -1,0 +1,68 @@
+.TH KR_OPEN 1 "12 Jun 2006"
+.UC 4
+.SH 이름
+kr_open - libkrisp 의 database 를 연다.
+.SH 사용법
+.I #include <krips.h>
+.br
+.I int kr_open (KR_API *db, char *path)
+.SH 설명
+kr_open() 함수는 libkrisp 를 링크하여 databse 파일을 열기 위해 사용한다.
+kr_open() 함수의 argument 는 database 연결에 사용되는 db_argument structure 와
+database 파일의 경로를 지정을 한다.
+.PP
+db_argument structure 는 krispcommon.h 에 정의가 되어 있으며, kr_open 을 호출하기
+전에 다음과 같이 정의 되어 있어야 하며, db error 를 처리하기 위하여 전역 변수로
+extern char dberr[] 이 정의 되어져야 한다. (예제를 참고한다.)
+.PP
+.I KR_API db;
+.br
+.I if ( kr_open (&db, NULL) ) {
+.br
+.I ..
+.br
+.I }
+.PP
+.SH 반환값
+성공시에 0 을 반환하며, 실패시에 1 을 반환한다.
+.SH 예제
+.nf
+#include <krisp.h>
+extern char dberr[1024];
+
+int main (void) {
+    KR_API db;
+    KRNET_API isp;
+    char *ip = "168.126.63.1";
+
+	db = (KR_API *) malloc (sizeof (KR_API));
+
+    if ( kr_open (db) ) {
+        fprintf (stderr, "ERROR Connect: %s\\n", dberr);
+		free (db);
+        return 1;
+    }
+
+    strcpy (isp.ip, ip);
+	db.gi = NULL;
+    kr_search (&isp, db);
+
+	kr_close (db);
+	free (db);
+
+    printf ("%-15s %-15s %-20s %-15s %-15s %s\\n",
+            ip, isp.ip, isp.serv, isp.network, isp.broadcast, isp.org);
+
+    return 0;
+}
+.fi
+.SH 저자
+김정균
+.SH 버그 리포트
+<http://www.oops.org> 의 QnA 게시판을 이용한다.
+.SH 저작권
+Copyright (c) 2006 OOPS Development Organization
+
+이 프로그램은 LGPL 을 따르며, 사용시의 어떠한 문제에 대하여 보증하지 않는다.
+.SH "참고"
+krispmkdb(1), krispmkdb(1), krisp_version(3), kr_close(3), kr_search(3)
