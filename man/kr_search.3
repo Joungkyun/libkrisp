@@ -65,10 +65,10 @@ int main (void) {
 	free (db);
 
     printf ("%-15s %-15s %-20s %-15s %-15s %s\\n",
-            ip, isp.ip, isp.serv, isp.network, isp.broadcast, isp.org);
+            ip, isp.ip, isp.icode, isp.network, isp.broadcast, isp.iname);
 
 #ifdef HAVE_LIBGEOIP
-    printf ("NATION : %s (%s)\\n", isp.nation, isp.code);
+    printf ("NATION : %s (%s)\\n", isp.gname, isp.gcode);
 #endif
 
     return 0;
