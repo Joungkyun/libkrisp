@@ -1,5 +1,5 @@
 /* krisp-config.h.in.  Generated from configure.ac by autoheader.  */
-/* $Id: krisp-config.h.in,v 1.7 2006-06-22 04:36:01 oops Exp $ */
+/* $Id: krisp-config.h.in,v 1.8 2006-06-22 05:45:54 oops Exp $ */
 #ifndef KRISP_CONFIG_H
 #define KRISP_CONFIG_H
 
