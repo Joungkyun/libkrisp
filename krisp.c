@@ -1,5 +1,5 @@
 /*
- * $Id: krisp.c,v 1.28 2006-06-22 04:33:01 oops Exp $
+ * $Id: krisp.c,v 1.29 2006-06-22 05:47:16 oops Exp $
  */
 
 #include <stdio.h>
@@ -128,7 +128,7 @@ void kr_close (KR_API *db) {
 #ifdef HAVE_LIBGEOIP
 	if ( db->gi != NULL )
 		GeoIP_delete (db->gi);
-#endif;
+#endif
 
 	kr_dbClose (db);
 }
