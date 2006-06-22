@@ -1,5 +1,5 @@
 /*
- * $Id: krisplookup.c,v 1.19 2006-06-20 03:39:48 oops Exp $
+ * $Id: krisplookup.c,v 1.20 2006-06-22 04:33:01 oops Exp $
  */
 
 #include <krisp.h>
@@ -103,13 +103,13 @@ int main (int argc, char ** argv) {
 	}
 	kr_search (&isp, db);
 
-	printf ("%s (%s): %s (%s)\n", ip, isp.ip, isp.org, isp.serv);
+	printf ("%s (%s): %s (%s)\n", ip, isp.ip, isp.iname, isp.icode);
 	printf ("SUBNET : %s\n", isp.netmask);
 	printf ("NETWORK: %s\n", isp.network);
 	printf ("BCAST  : %s\n", isp.broadcast);
 
 #ifdef HAVE_LIBGEOIP
-	printf ("NATION : %s (%s)\n", isp.nation, isp.code);
+	printf ("NATION : %s (%s)\n", isp.gname, isp.gcode);
 #endif
 
 	/* database close */
