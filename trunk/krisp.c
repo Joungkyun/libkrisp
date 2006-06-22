@@ -1,5 +1,5 @@
 /*
- * $Id: krisp.c,v 1.27 2006-06-20 06:05:50 oops Exp $
+ * $Id: krisp.c,v 1.28 2006-06-22 04:33:01 oops Exp $
  */
 
 #include <stdio.h>
@@ -108,10 +108,10 @@ int getISPinfo (KR_API *db, char *key, KRNET_API *n) {
 					strcpy (n->netmask, db->rowdata[r]);
 					break;
 				case 4 :
-					strcpy (n->org, db->rowdata[r]);
+					strcpy (n->iname, db->rowdata[r]);
 					break;
 				case 5 :
-					strcpy (n->serv, db->rowdata[r]);
+					strcpy (n->icode, db->rowdata[r]);
 					break;
 			}
 		}
@@ -149,11 +149,11 @@ void initStruct (KRNET_API *n) {
 	strcpy (n->network, "");
 	strcpy (n->broadcast, "");
 	strcpy (n->netmask, "");
-	strcpy (n->org, "");
-	strcpy (n->serv, "");
+	strcpy (n->icode, "");
+	strcpy (n->iname, "");
 #ifdef HAVE_LIBGEOIP
-	strcpy (n->code, "");
-	strcpy (n->nation, "");
+	strcpy (n->gcode, "");
+	strcpy (n->gname, "");
 #endif
 }
 
@@ -178,11 +178,11 @@ int kr_search (KRNET_API *isp, KR_API *db) {
 	}
 
 	if ( inet_addr (isp->ip) == -1 ) {
-		strcpy (isp->serv, "--");
-		strcpy (isp->org, "N/A");
+		strcpy (isp->icode, "--");
+		strcpy (isp->iname, "N/A");
 #ifdef HAVE_LIBGEOIP
-		strcpy (isp->code, "--");
-		strcpy (isp->nation, "N/A");
+		strcpy (isp->gcode, "--");
+		strcpy (isp->gname, "N/A");
 #endif
 		return 0;
 	}
@@ -190,11 +190,11 @@ int kr_search (KRNET_API *isp, KR_API *db) {
 	aclass = (char *) strdup (isp->ip);
 	aclass_tmp = (char *) strchr (aclass, '.');
 	if ( aclass_tmp == NULL ) {
-		strcpy (isp->serv, "--");
-		strcpy (isp->org, "N/A");
+		strcpy (isp->icode, "--");
+		strcpy (isp->iname, "N/A");
 #ifdef HAVE_LIBGEOIP
-		strcpy (isp->code, "--");
-		strcpy (isp->nation, "N/A");
+		strcpy (isp->gcode, "--");
+		strcpy (isp->gname, "N/A");
 #endif
 		return 0;
 	}
@@ -243,22 +243,22 @@ geoip_section:
 		int country_id = 0;
 
 		country_id = GeoIP_id_by_name (db->gi, isp->ip);
-		strcpy (isp->code,
+		strcpy (isp->gcode,
 				GeoIP_country_code[country_id] ? GeoIP_country_code[country_id] : "--");
-		strcpy (isp->nation,
+		strcpy (isp->gname,
 				GeoIP_country_name[country_id] ? GeoIP_country_name[country_id] : "N/A");
 
 		/* manipulated geoip null data */
-		if ( ! strcmp (isp->code, "--") && strcmp (isp->serv, "--" ) ) {
-			strcpy (isp->code, "KR");
-			strcpy (isp->nation, "Korea, Republic of");
+		if ( ! strcmp (isp->gcode, "--") && strcmp (isp->icode, "--" ) ) {
+			strcpy (isp->gcode, "KR");
+			strcpy (isp->gname, "Korea, Republic of");
 		}
 	}
 #endif
 
-	if ( r == 0 || ! strlen (isp->serv) ) {
-		strcpy (isp->serv, "--");
-		strcpy (isp->org, "N/A");
+	if ( r == 0 || ! strlen (isp->icode) ) {
+		strcpy (isp->icode, "--");
+		strcpy (isp->iname, "N/A");
 	}
 
 	return 0;
