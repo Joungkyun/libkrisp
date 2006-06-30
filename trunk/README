@@ -1,4 +1,4 @@
-$Id: README,v 1.5 2006-06-12 03:10:43 oops Exp $
+$Id: README,v 1.6 2006-06-30 06:25:08 oops Exp $
 
 libkrisp - Korea ISP library
 
@@ -15,9 +15,11 @@ libkrisp 는 한국의 ip address 에 대한 ISP 정보를 얻기 위한 라이�
 extern char dberr[1024];
 
 int main (void) {
-    struct db_argument db;
-    struct netinfos isp;
+    KR_API db;
+    KRNET_API isp;
     char *ip = "168.126.63.1";
+
+	db.gi = NULL;
 
     if ( kr_open (&db) ) {
         fprintf (stderr, "ERROR Connect: %s\n", dberr);
@@ -30,7 +32,7 @@ int main (void) {
 	kr_close (&db);
 
     printf ("%-15s %-15s %-20s %-15s %-15s %s\n",
-            ip, isp.ip, isp.serv, isp.network, isp.broadcast, isp.org);
+            ip, isp.ip, isp.icode, isp.network, isp.broadcast, isp.iname);
 
     return 0;
 }
@@ -45,11 +47,11 @@ struct netinfos {
     char            netmask[16];
     char            network[16];
     char            broadcast[16];
-    char            org[128];
-    char            serv[128];
+    char            icode[128];
+    char            iname[128];
 #ifdef HAVE_LIBGEOIP
-    char            code[4];
-    char            nation[128];
+    char            gcode[4];
+    char            gname[128];
 #endif
 };
 
