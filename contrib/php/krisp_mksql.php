@@ -1,13 +1,13 @@
 #!/usr/bin/php
 <?
 #
-# $Id: krisp_mksql.php,v 1.4 2006-06-21 09:06:35 oops Exp $
+# $Id: krisp_mksql.php,v 1.5 2006-08-17 02:18:07 oops Exp $
 #
 # get Korea ISP information to text format and make krisp database sql
 #
 
 class domesticIP {
-	var $url = "http://member.nic.or.kr/link/ISPAllocation.jsp";
+	var $url = "http://online.nida.or.kr/link/ISPAllocation.jsp";
 
 	function domesticIP ($f = '') {
 		$r = $this->getpage ($f);

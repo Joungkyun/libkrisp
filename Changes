@@ -1,11 +1,16 @@
 Changelog
 
-$Id: Changes,v 1.44 2006-06-22 05:54:54 oops Exp $
+$Id: Changes,v 1.45 2006-08-17 02:18:07 oops Exp $
 
 * 1.0.6
+
+Thu, Aug 17 2006 JoungKyun.Kim <http://www.oops.org>
+	- update url of original data on krnic
+
 Wed, Jun 21 2006 JoungKyun.Kim <http://www.oops.org>
 	- fixed typo of krisp.c
 	- fixed print miss information with private ip address
+
 
 * 1.0.5
 
