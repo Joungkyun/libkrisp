@@ -1,5 +1,5 @@
 /*
- * $Id: krdb.c,v 1.5 2006-09-04 04:23:27 oops Exp $
+ * $Id: krdb.c,v 1.6 2006-09-04 04:59:28 oops Exp $
  */
 
 #include <krispcommon.h>
@@ -20,7 +20,7 @@ char dberr[1024];
 #include <database/sqlite.c>
 #endif
 
-+GeoIPvar * krGeoIP_open (KR_API *db) {
+GeoIPvar * krGeoIP_open (KR_API *db) {
 	GeoIPvar * p;
 
 #ifndef HAVE_LIBGEOIP
