@@ -1,5 +1,5 @@
 /*
- * $Id: krispcommon.h,v 1.9 2006-06-22 04:33:01 oops Exp $
+ * $Id: krispcommon.h,v 1.10 2006-09-04 04:23:27 oops Exp $
  */
 
 #ifndef COMMON_H
@@ -26,6 +26,7 @@
 #ifdef HAVE_LIBGEOIP
 #ifdef HAVE_GEOIP_H 
 #include <GeoIP.h>
+#include <GeoIPCity.h>
 #define INCLUDE_GEOIP_HEADER_OK
 #endif
 #endif
@@ -57,7 +58,39 @@ typedef enum {
 	GEOIP_CHECK_CACHE = 2,
 	GEOIP_INDEX_CACHE = 4,
 } GeoIPOptions;
+
+typedef enum {
+	GEOIP_COUNTRY_EDITION     = 1,
+	GEOIP_REGION_EDITION_REV0 = 7,
+	GEOIP_CITY_EDITION_REV0   = 6,
+	GEOIP_ORG_EDITION         = 5,
+	GEOIP_ISP_EDITION         = 4,
+	GEOIP_CITY_EDITION_REV1   = 2,
+	GEOIP_REGION_EDITION_REV1 = 3,
+	GEOIP_PROXY_EDITION       = 8,
+	GEOIP_ASNUM_EDITION       = 9,
+	GEOIP_NETSPEED_EDITION    = 10,
+	GEOIP_DOMAIN_EDITION      = 11
+} GeoIPDBTypes;
+
+typedef struct GeoIPRecordTag {
+	char *country_code;
+	char *country_code3;
+	char *country_name;
+	char *region;
+	char *city;
+	char *postal_code;
+	float latitude;
+	float longitude;
+	int dma_code;
+	int area_code;
+} GeoIPRecord;
 #endif
+
+typedef struct GeoIPvarTag {
+	GeoIP *		gid;
+	GeoIP *		gic;
+} GeoIPvar;
 /*
  * GeoIP extension end
  */
@@ -81,7 +114,7 @@ typedef struct db_argument {
 	char *			err;	/* vm error message */
 	const char **	rowdata;
 	const char **	colname;
-	GeoIP *			gi;		/* GeoIP resource */
+	GeoIPvar *		gi;		/* GeoIP resource */
 } KR_API;
 
 typedef struct netinfos {
@@ -95,6 +128,7 @@ typedef struct netinfos {
 #ifdef HAVE_LIBGEOIP
 	char			gcode[4];
 	char			gname[128];
+	char			gcity[64];
 #endif
 } KRNET_API;
 

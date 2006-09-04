@@ -1,5 +1,5 @@
 /*
- * $Id: krisp.c,v 1.30 2006-06-22 05:54:54 oops Exp $
+ * $Id: krisp.c,v 1.31 2006-09-04 04:23:27 oops Exp $
  */
 
 #include <stdio.h>
@@ -29,6 +29,8 @@ int kr_open (KR_API *db, char *file) {
 	if ( kr_dbConnect (db, file) ) {
 		return 1;
 	}
+
+	db->gi = krGeoIP_open (db);
 
 	return 0;
 }
@@ -126,8 +128,14 @@ int getISPinfo (KR_API *db, char *key, KRNET_API *n) {
 
 void kr_close (KR_API *db) {
 #ifdef HAVE_LIBGEOIP
-	if ( db->gi != NULL )
-		GeoIP_delete (db->gi);
+	if ( db->gi != NULL ) {
+		if ( db->gi->gid != NULL )
+			GeoIP_delete (db->gi->gid);
+
+		if ( db->gi->gic != NULL )
+			GeoIP_delete (db->gi->gic);
+	}
+	free (db->gi);
 #endif
 
 	kr_dbClose (db);
@@ -154,6 +162,7 @@ void initStruct (KRNET_API *n) {
 #ifdef HAVE_LIBGEOIP
 	strcpy (n->gcode, "");
 	strcpy (n->gname, "");
+	strcpy (n->gcity, "");
 #endif
 }
 
@@ -183,6 +192,7 @@ int kr_search (KRNET_API *isp, KR_API *db) {
 #ifdef HAVE_LIBGEOIP
 		strcpy (isp->gcode, "--");
 		strcpy (isp->gname, "N/A");
+		strcpy (isp->gcity, "N/A");
 #endif
 		return 0;
 	}
@@ -195,6 +205,7 @@ int kr_search (KRNET_API *isp, KR_API *db) {
 #ifdef HAVE_LIBGEOIP
 		strcpy (isp->gcode, "--");
 		strcpy (isp->gname, "N/A");
+		strcpy (isp->gcity, "N/A");
 #endif
 		return 0;
 	}
@@ -242,7 +253,7 @@ geoip_section:
 	if ( db->gi != NULL ) {
 		int country_id = 0;
 
-		country_id = GeoIP_id_by_name (db->gi, isp->ip);
+		country_id = GeoIP_id_by_name (db->gi->gid, isp->ip);
 		strcpy (isp->gcode,
 				GeoIP_country_code[country_id] ? GeoIP_country_code[country_id] : "--");
 		strcpy (isp->gname,
@@ -252,6 +263,23 @@ geoip_section:
 		if ( ! strcmp (isp->gcode, "--") && strlen (isp->icode) ) {
 			strcpy (isp->gcode, "KR");
 			strcpy (isp->gname, "Korea, Republic of");
+		}
+
+		/* check city information
+		 * GEOIP_CITY_EDITION_REV0 2
+		 * GEOIP_CITY_EDITION_REV1 6
+		 */
+		if ( GeoIP_db_avail (GEOIP_CITY_EDITION_REV0) || GeoIP_db_avail (GEOIP_CITY_EDITION_REV0) ) {
+			GeoIPRecord *gir;
+			gir = GeoIP_record_by_name (db->gi->gic, isp->ip);
+
+			if ( gir != NULL && gir->city) {
+				if ( gir->region && ! atoi (gir->region) )
+					sprintf (isp->gcity, "%s %s", gir->region, gir->city);
+				else
+					strcpy (isp->gcity, gir->city);
+			} else
+				strcpy (isp->gcity, "UnKnown");
 		}
 	}
 #endif

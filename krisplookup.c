@@ -1,5 +1,5 @@
 /*
- * $Id: krisplookup.c,v 1.20 2006-06-22 04:33:01 oops Exp $
+ * $Id: krisplookup.c,v 1.21 2006-09-04 04:23:27 oops Exp $
  */
 
 #include <krisp.h>
@@ -86,15 +86,6 @@ int main (int argc, char ** argv) {
 
 	ip = argv[optind];
 
-#ifdef HAVE_LIBGEOIP
-	/*
-	 * If you don't want to use geoip, set 'gi = NULL'.
-	 */
-	db->gi = GeoIP_new (GEOIP_MEMORY_CACHE);
-#else
-	db->gi = NULL;
-#endif
-
 	if ( strlen (ip) > 255 ) {
 		strncpy (isp.ip, ip, 255);
 		isp.ip[255] = 0;
@@ -110,6 +101,7 @@ int main (int argc, char ** argv) {
 
 #ifdef HAVE_LIBGEOIP
 	printf ("NATION : %s (%s)\n", isp.gname, isp.gcode);
+	printf ("CITY   : %s\n", isp.gcity);
 #endif
 
 	/* database close */
