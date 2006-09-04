@@ -1,11 +1,11 @@
 #!/usr/bin/php
 <?
 #
-# $Id: get-domestic-ip,v 1.1.1.1 2006-06-08 19:31:53 oops Exp $
+# $Id: get-domestic-ip,v 1.2 2006-09-04 03:49:42 oops Exp $
 #
 # get Korea ISP information to text format
 #
-$list = file_get_contents ("http://member.nic.or.kr/link/ISPAllocation.jsp");
+$list = file_get_contents ("http://online.nida.or.kr/link/ISPAllocation.jsp");
 #$list = file_get_contents ("list.txt");
 
 # remove carage return
