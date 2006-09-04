@@ -1,5 +1,5 @@
 /*
- * $Id: krisp.h,v 1.11 2006-06-20 03:32:11 oops Exp $
+ * $Id: krisp.h,v 1.12 2006-09-04 04:23:27 oops Exp $
  */
 
 #ifndef KRIP_H
@@ -36,6 +36,10 @@ void kr_close (KR_API *);
  */
 int kr_search (KRNET_API *isp, KR_API *db);
 
+/*
+ *  krisp GeoIP database open API
+ */
+GeoIPvar * krGeoIP_open (KR_API *db);
 
 
 /* -------------------{{{ not use on user level---------------------- */

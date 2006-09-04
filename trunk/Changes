@@ -1,6 +1,12 @@
 Changelog
 
-$Id: Changes,v 1.45 2006-08-17 02:18:07 oops Exp $
+$Id: Changes,v 1.46 2006-09-04 04:23:27 oops Exp $
+
+* 2.0.0
+Mon, Sep 04 2006 JoungKyun.Kim <http://www.oops.org>
+	- skip release 1.0.6
+	- support GeoIPCity extension
+	- kr_open API support GEOIP handler
 
 * 1.0.6
 

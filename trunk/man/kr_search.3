@@ -1,4 +1,4 @@
-.TH SEARCH 1 "12 Jun 2006"
+.TH SEARCH 1 "04 Sep 2006"
 .UC 4
 
 .SH 이름
@@ -11,22 +11,13 @@ kr_search - libkrisp database 에서 IP 에 대한 정보를 검색하여 반환
 
 .SH 설명
 kr_search() 함수는 주어진 ip 또는 호스트이름에 대한 정보를 검색한다.
-libkrisp 가 GeoIP 를 link 하고 있을 경우, GeoIP database 를 검색을 하려면,
-db_argument structure 의 gi 변수에 GeoIP_new 를 선언해 주고, 검색을 하지
-않으려면, NULL 을 지정을 한다. GeoIP link 가 되어 있지 않을 경우에도,
-gi 변수에 대해서 NULL 로 초기화를 해 주어야만 한다.
+2.0 이전 버전에서 GeoIP 정보를 이용하려면 따로 db->gi 를 관리했어야 하나,
+2.0 이후 부터는 kr_open 함수 내부에서 자동으로 처리를 하게 변경이 되었다.
+.PP
+또한, isp structure member 에 gcity 가 추가가 되어, GeoIPCity database 정보
+검색이 가능할 경우, 도시 정보를 같이 제공을 한다.
 
 .PP
-.I #ifdef HAVE_LIBGEOIP
-.br
-.I db->gi = GeoIP_new (GEOIP_MEMORY_CACHE);
-.br
-.I #else
-.br
-.I db->gi = NULL;
-.br
-.I #endif
-.br
 .I kr_search (&isp, db);
 
 
@@ -52,12 +43,6 @@ int main (void) {
         return 1;
     }
 
-#ifdef HAVE_LIBGEOIP
-    db->gi = GeoIP_new (GEOIP_MEMORY_CACHE);
-#else
-	db->gi = NULL;
-#endif
-
     strcpy (isp.ip, ip);
     kr_search (&isp, db);
 
@@ -69,6 +54,7 @@ int main (void) {
 
 #ifdef HAVE_LIBGEOIP
     printf ("NATION : %s (%s)\\n", isp.gname, isp.gcode);
+    printf ("CITY   : %s\\n", isp.gcity);
 #endif
 
     return 0;
