@@ -1,5 +1,5 @@
 /*
- * $Id: krdb.c,v 1.7 2006-09-07 10:17:28 oops Exp $
+ * $Id: krdb.c,v 1.8 2006-09-07 14:21:00 oops Exp $
  */
 
 #include <krispcommon.h>
@@ -38,6 +38,7 @@ GeoIPvar * krGeoIP_open (KR_API *db) {
 	 * GEOIP_CITY_EDITION_REV1 6
 	 */
 	if ( p->gid != NULL ) {
+		_GeoIP_setup_dbfilename ();
 		if ( GeoIP_db_avail (GEOIP_CITY_EDITION_REV0) )
 			p->gic = GeoIP_open_type (GEOIP_CITY_EDITION_REV0,
 										GEOIP_MEMORY_CACHE | GEOIP_CHECK_CACHE);

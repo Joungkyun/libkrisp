@@ -1,5 +1,5 @@
 /*
- * $Id: krisp.c,v 1.35 2006-09-07 13:54:15 oops Exp $
+ * $Id: krisp.c,v 1.36 2006-09-07 14:21:00 oops Exp $
  */
 
 #include <stdio.h>
@@ -272,7 +272,6 @@ geoip_section:
 		 * GEOIP_CITY_EDITION_REV0 2
 		 * GEOIP_CITY_EDITION_REV1 6
 		 */
-		_GeoIP_setup_dbfilename();
 		if ( GeoIP_db_avail (GEOIP_CITY_EDITION_REV0) || GeoIP_db_avail (GEOIP_CITY_EDITION_REV1) ) {
 			GeoIPRecord *gir;
 			gir = GeoIP_record_by_name (db->gi->gic, isp->ip);
