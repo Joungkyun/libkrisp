@@ -1,5 +1,5 @@
 /*
- * $Id: krisp.c,v 1.31 2006-09-04 04:23:27 oops Exp $
+ * $Id: krisp.c,v 1.32 2006-09-07 10:17:28 oops Exp $
  */
 
 #include <stdio.h>
@@ -134,6 +134,9 @@ void kr_close (KR_API *db) {
 
 		if ( db->gi->gic != NULL )
 			GeoIP_delete (db->gi->gic);
+
+		if ( db->gi->gip != NULL )
+			GeoIP_delete (db->gi->gip);
 	}
 	free (db->gi);
 #endif
@@ -285,8 +288,24 @@ geoip_section:
 #endif
 
 	if ( r == 0 || ! strlen (isp->icode) ) {
-		strcpy (isp->icode, "--");
-		strcpy (isp->iname, "N/A");
+#ifdef HAVE_LIBGEOIP
+		if ( GeoIP_db_avail (GEOIP_ISP_EDITION) ) {
+			const char * g_isp;
+			g_isp = GeoIP_org_by_name(db->gi->gip, isp->ip);
+			if ( g_isp == NULL ) {
+				strcpy (isp->icode, "--");
+				strcpy (isp->iname, "N/A");
+			} else {
+				strcpy (isp->icode, "--");
+				strcpy (isp->iname, g_isp);
+			}
+		} else {
+#endif
+			strcpy (isp->icode, "--");
+			strcpy (isp->iname, "N/A");
+#ifdef HAVE_LIBGEOIP
+		}
+#endif
 	}
 
 	return 0;

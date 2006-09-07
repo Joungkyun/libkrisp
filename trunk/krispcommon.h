@@ -1,5 +1,5 @@
 /*
- * $Id: krispcommon.h,v 1.10 2006-09-04 04:23:27 oops Exp $
+ * $Id: krispcommon.h,v 1.11 2006-09-07 10:17:28 oops Exp $
  */
 
 #ifndef COMMON_H
@@ -90,6 +90,7 @@ typedef struct GeoIPRecordTag {
 typedef struct GeoIPvarTag {
 	GeoIP *		gid;
 	GeoIP *		gic;
+	GeoIP *		gip;
 } GeoIPvar;
 /*
  * GeoIP extension end
