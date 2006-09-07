@@ -1,5 +1,5 @@
 /*
- * $Id: krispcommon.h,v 1.11 2006-09-07 10:17:28 oops Exp $
+ * $Id: krispcommon.h,v 1.12 2006-09-07 14:14:34 oops Exp $
  */
 
 #ifndef COMMON_H
@@ -45,13 +45,6 @@ typedef struct GeoIPTag {
 	int record_iter; /* used in GeoIP_next_record */
 } GeoIP;
 
-#define GEOIP_API
-GEOIP_API GeoIP* GeoIP_new(int flags);
-GEOIP_API void GeoIP_delete(GeoIP* gi);
-GEOIP_API int GeoIP_id_by_name (GeoIP* gi, const char *host);
-extern const char GeoIP_country_code[247][3];
-extern const char * GeoIP_country_name[247];
-
 typedef enum { 
 	GEOIP_STANDARD = 0,
 	GEOIP_MEMORY_CACHE = 1,
@@ -85,6 +78,17 @@ typedef struct GeoIPRecordTag {
 	int dma_code;
 	int area_code;
 } GeoIPRecord;
+
+#define GEOIP_API
+GEOIP_API GeoIP* GeoIP_new(int flags);
+GEOIP_API void GeoIP_delete(GeoIP* gi);
+GEOIP_API int GeoIP_id_by_name (GeoIP* gi, const char *host);
+GEOIP_API int GeoIP_db_avail(int type);
+GEOIP_API char *GeoIP_org_by_name (GeoIP* gi, const char *host);
+GeoIPRecord * GeoIP_record_by_name (GeoIP* gi, const char *host);
+void _GeoIP_setup_dbfilename (void);
+extern const char GeoIP_country_code[247][3];
+extern const char * GeoIP_country_name[247];
 #endif
 
 typedef struct GeoIPvarTag {
