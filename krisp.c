@@ -1,5 +1,5 @@
 /*
- * $Id: krisp.c,v 1.34 2006-09-07 12:52:47 oops Exp $
+ * $Id: krisp.c,v 1.35 2006-09-07 13:54:15 oops Exp $
  */
 
 #include <stdio.h>
@@ -283,7 +283,7 @@ geoip_section:
 				else
 					strcpy (isp->gcity, gir->city);
 			} else
-				strcpy (isp->gcity, "UnKnown");
+				strcpy (isp->gcity, "N/A");
 		}
 	}
 #endif
