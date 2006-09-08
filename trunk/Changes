@@ -1,10 +1,11 @@
 Changelog
 
-$Id: Changes,v 1.48 2006-09-08 16:29:20 oops Exp $
+$Id: Changes,v 1.49 2006-09-08 17:37:32 oops Exp $
 
 * 2.0.1
 Sat, Sep 09 2006 JoungKyun.Kim <http://www.oops.org>
 	- fixed memroy leak of GeoIPCity and GeoIPISP
+	- change dabase open type
 
 * 2.0.0
 
