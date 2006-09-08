@@ -1,0 +1,126 @@
+Changelog
+
+$Id: Changes,v 1.49 2006-09-08 17:37:32 oops Exp $
+
+* 2.0.1
+Sat, Sep 09 2006 JoungKyun.Kim <http://www.oops.org>
+	- fixed memroy leak of GeoIPCity and GeoIPISP
+	- change dabase open type
+
+* 2.0.0
+
+Thu, Sep 07 2006 JoungKyun.Kim <http://www.oops.org>
+	- support GeoIPISP
+
+Mon, Sep 04 2006 JoungKyun.Kim <http://www.oops.org>
+	- skip release 1.0.6
+	- support GeoIPCity extension
+	- kr_open API support GEOIP handler
+
+
+* 1.0.6
+
+Thu, Aug 17 2006 JoungKyun.Kim <http://www.oops.org>
+	- update url of original data on krnic
+
+Wed, Jun 21 2006 JoungKyun.Kim <http://www.oops.org>
+	- fixed typo of krisp.c
+	- fixed print miss information with private ip address
+
+
+* 1.0.5
+
+Wed, Jun 21 2006 JoungKyun.Kim <http://www.oops.org>
+	- update man page
+	- update krisp_mksql.php
+	- changed name of isp structure member
+
+
+* 1.0.4
+
+Tue, Jun 20 2006 JoungKyun.Kim <http://www.oops.org>
+	- add KR_API
+	- add KRNET_API
+	- allocate memory with malloc on KR_API structure
+	- update database krnic 20060620
+	- fixed problem db->gi value init
+
+
+* 1.0.3
+
+Sun, Jun 19 2006 JoungKyun.Kim <http://www.oops.org>
+	- update soname revision to 2
+	- manipulated geoip null data
+	- update database krnic 20060612
+	- announced 1.0.x stable version
+
+Fri, Jun 16 2006 JoungKyun.Kim <http://www.oops.org>
+	- changed dynamic linked krisplookup and krispmkdb
+
+Thu, Jun 15 2006 JoungKyun.Kim <http://www.oops.org>
+	- fixed GeoIP memory leak
+
+
+* 1.0.2
+
+Tue, Jun 13 2006 JoungKyun.Kim <http://www.oops.org>
+	- increase ip variable of netinfos structures that protect overflows
+
+
+* 1.0.1
+
+Tue, Jun 13 2006 JoungKyun.Kim <http://www.oops.org>
+	- include GeoIP handler in db_argument structure
+
+Mon, Jun 12 2006 JoungKyun.Kim <http://www.oops.org>
+	- fixed segfault on special ip block
+	- coordinate krisplookup and geoipo
+
+
+* 1.0.0
+
+Mon, Jun 12 2006 JoungKyun.Kim <http://www.oops.org>
+	- major update to 1.0.0
+	- add man page
+	- add db open exception
+	- change search api name to kr_search
+
+
+* 0.0.3
+
+Mon, Jun 12 2006 JoungKyun.Kim <http://www.oops.org>
+	- moved geoip header file to krisp.h
+	- fixed reallcation failed problem
+	- added getopt krisplookup and krispmkdb
+	- changed geoip declare method
+	- changed proto type of search api
+	- chagend output format of krisplookup
+
+Sun, Jun 11 2006 JoungKyun.Kim <http://www.oops.org>
+	- add krisp_mksql.php contrib php script
+	- add db sql file
+	- add origianl db format file
+	- add database creating utility
+
+Sat, Jun 10 2006 JountKyun.Kim <http://www.oops.org>
+	- fixed can't get kroea isp information
+	- fixed 64bit link error
+	- added print_version api
+
+Fri, Jun  9 2006 JoungKyun.Kim <http://www.oops.org>
+	- support 64bit architecture
+	- fixed sqlite header location
+
+
+* 0.0.2
+
+Fri, Jun  9 2006 JoungKyun.Kim <http://www.oops.org>
+	- fixed libtool problems
+	- fixed memory leak
+
+
+* 0.0.1
+
+Fri, Jun  9 2006 JoungKyun.Kim <http://www.oops.org>
+	- first release 0.0.1
+
