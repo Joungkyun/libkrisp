@@ -1,5 +1,5 @@
 /*
- * $Id: krisp.c,v 1.37 2006-09-08 16:29:20 oops Exp $
+ * $Id: krisp.c,v 1.38 2006-09-13 13:07:36 oops Exp $
  */
 
 #include <stdio.h>
@@ -11,10 +11,18 @@
 #include <arpa/inet.h>
 #include <netdb.h>
 
+#ifdef HAVE_LIBGEOIP
+#define GEOCITYVAR
+#endif
+
 #include <krispcommon.h>
 #include <krdb.h>
 #include <krisp.h>
 
+#ifdef HAVE_LIBGEOIP
+/* set 1, search GeoIPCity database if enabled search GeoIPCity */
+short geocity = 0;
+#endif
 extern char dberr[1024];
 
 char *krisp_version (void) {
@@ -263,6 +271,9 @@ geoip_section:
 	if ( db->gi != NULL ) {
 		int country_id = 0;
 
+		if ( db->gi->gid == NULL )
+			goto geoispend;
+
 		country_id = GeoIP_id_by_name (db->gi->gid, isp->ip);
 		strcpy (isp->gcode,
 				GeoIP_country_code[country_id] ? GeoIP_country_code[country_id] : "--");
@@ -274,11 +285,15 @@ geoip_section:
 			strcpy (isp->gcode, "KR");
 			strcpy (isp->gname, "Korea, Republic of");
 		}
+geoispend:
 
 		/* check city information
 		 * GEOIP_CITY_EDITION_REV0 2
 		 * GEOIP_CITY_EDITION_REV1 6
 		 */
+		if ( db->gi->gic == NULL )
+			goto geocityend;
+
 		if ( GeoIP_db_avail (GEOIP_CITY_EDITION_REV0) || GeoIP_db_avail (GEOIP_CITY_EDITION_REV1) ) {
 			GeoIPRecord *gir;
 			gir = GeoIP_record_by_name (db->gi->gic, isp->ip);
@@ -294,6 +309,7 @@ geoip_section:
 			if ( gir != NULL )
 				GeoIPRecord_delete (gir);
 		}
+geocityend:
 	}
 #endif
 
