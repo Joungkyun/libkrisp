@@ -1,5 +1,5 @@
 /*
- * $Id: krisp.c,v 1.38 2006-09-13 13:07:36 oops Exp $
+ * $Id: krisp.c,v 1.39 2006-09-13 13:15:55 oops Exp $
  */
 
 #include <stdio.h>
@@ -21,7 +21,10 @@
 
 #ifdef HAVE_LIBGEOIP
 /* set 1, search GeoIPCity database if enabled search GeoIPCity */
-short geocity = 0;
+short geocity      = 0;
+short geocity_type = GEOIP_INDEX_CACHE | GEOIP_CHECK_CACHE;
+short geoisp_type  = GEOIP_INDEX_CACHE | GEOIP_CHECK_CACHE;
+short geo_type     = GEOIP_MEMORY_CACHE | GEOIP_CHECK_CACHE;
 #endif
 extern char dberr[1024];
 
