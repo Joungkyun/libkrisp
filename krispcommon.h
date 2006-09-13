@@ -1,5 +1,5 @@
 /*
- * $Id: krispcommon.h,v 1.14 2006-09-13 13:07:36 oops Exp $
+ * $Id: krispcommon.h,v 1.15 2006-09-13 13:09:15 oops Exp $
  */
 
 #ifndef COMMON_H
@@ -27,6 +27,7 @@
 #ifdef HAVE_GEOIP_H 
 #include <GeoIP.h>
 #include <GeoIPCity.h>
+void _GeoIP_setup_dbfilename (void);
 #define INCLUDE_GEOIP_HEADER_OK
 #endif
 #endif
@@ -87,7 +88,6 @@ GEOIP_API int GeoIP_db_avail(int type);
 GEOIP_API char *GeoIP_org_by_name (GeoIP* gi, const char *host);
 GeoIPRecord * GeoIP_record_by_name (GeoIP* gi, const char *host);
 void GeoIPRecord_delete (GeoIPRecord *gir);
-void _GeoIP_setup_dbfilename (void);
 extern const char GeoIP_country_code[247][3];
 extern const char * GeoIP_country_name[247];
 #endif
