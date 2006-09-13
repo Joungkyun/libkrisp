@@ -1,5 +1,5 @@
 /*
- * $Id: krdb.c,v 1.11 2006-09-13 13:07:36 oops Exp $
+ * $Id: krdb.c,v 1.12 2006-09-13 13:15:55 oops Exp $
  */
 
 #include <krispcommon.h>
@@ -30,8 +30,7 @@ GeoIPvar * krGeoIP_open (KR_API *db) {
 	if ( (p = (GeoIPvar *) malloc (sizeof (GeoIPvar)) ) == NULL )
 		return NULL;
 
-	//p->gid = GeoIP_new (GEOIP_MEMORY_CACHE | GEOIP_CHECK_CACHE);
-	p->gid = GeoIP_new (GEOIP_STANDARD);
+	p->gid = GeoIP_new (geo_type);
 
 	/*
 	 * check city information
@@ -44,15 +43,12 @@ GeoIPvar * krGeoIP_open (KR_API *db) {
 		p->gip = NULL;
 
 		if ( geocity && GeoIP_db_avail (GEOIP_CITY_EDITION_REV0) )
-			p->gic = GeoIP_open_type (GEOIP_CITY_EDITION_REV0, GEOIP_STANDARD);
-										//GEOIP_MEMORY_CACHE | GEOIP_CHECK_CACHE);
+			p->gic = GeoIP_open_type (GEOIP_CITY_EDITION_REV0, geocity_type);
 		else if ( geocity && GeoIP_db_avail (GEOIP_CITY_EDITION_REV1) )
-			p->gic = GeoIP_open_type (GEOIP_CITY_EDITION_REV1, GEOIP_STANDARD);
-										//GEOIP_MEMORY_CACHE | GEOIP_CHECK_CACHE);
+			p->gic = GeoIP_open_type (GEOIP_CITY_EDITION_REV1, geocity_type);
 
 		if ( GeoIP_db_avail (GEOIP_ISP_EDITION) )
-			p->gip = GeoIP_open_type (GEOIP_ISP_EDITION, GEOIP_STANDARD);
-										//GEOIP_MEMORY_CACHE | GEOIP_CHECK_CACHE);
+			p->gip = GeoIP_open_type (GEOIP_ISP_EDITION, geoisp_type);
 	} else {
 		p->gic = NULL;
 		p->gip = NULL;

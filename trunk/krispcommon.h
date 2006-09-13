@@ -1,5 +1,5 @@
 /*
- * $Id: krispcommon.h,v 1.15 2006-09-13 13:09:15 oops Exp $
+ * $Id: krispcommon.h,v 1.16 2006-09-13 13:15:55 oops Exp $
  */
 
 #ifndef COMMON_H
@@ -150,6 +150,9 @@ struct cinfo {
 /* set 1, search GeoIPCity database if enabled search GeoIPCity
  * default value is 0 */
 extern short geocity;
+extern short geocity_type;
+extern short geoisp_type;
+extern short geo_type;
 #endif
 #endif
 #endif
