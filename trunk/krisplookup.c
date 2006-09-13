@@ -1,5 +1,5 @@
 /*
- * $Id: krisplookup.c,v 1.22 2006-09-13 13:07:36 oops Exp $
+ * $Id: krisplookup.c,v 1.23 2006-09-13 13:29:02 oops Exp $
  */
 
 #include <krisp.h>
@@ -23,8 +23,6 @@ static struct option long_options [] = {
 	{ 0, 0, 0, 0 }
 };
 #endif
-
-extern char dberr[1024];
 
 void usage (char *prog) {
 	fprintf (stderr, "%s v%s: Resolved korea range ISP inforamtion\n", prog, krisp_version ());

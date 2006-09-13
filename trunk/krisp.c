@@ -1,5 +1,5 @@
 /*
- * $Id: krisp.c,v 1.39 2006-09-13 13:15:55 oops Exp $
+ * $Id: krisp.c,v 1.40 2006-09-13 13:29:02 oops Exp $
  */
 
 #include <stdio.h>
@@ -26,7 +26,6 @@ short geocity_type = GEOIP_INDEX_CACHE | GEOIP_CHECK_CACHE;
 short geoisp_type  = GEOIP_INDEX_CACHE | GEOIP_CHECK_CACHE;
 short geo_type     = GEOIP_MEMORY_CACHE | GEOIP_CHECK_CACHE;
 #endif
-extern char dberr[1024];
 
 char *krisp_version (void) {
 	return KRISP_VERSION;

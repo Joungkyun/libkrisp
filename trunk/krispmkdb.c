@@ -1,5 +1,5 @@
 /*
- * $Id: krispmkdb.c,v 1.7 2006-06-20 03:39:48 oops Exp $
+ * $Id: krispmkdb.c,v 1.8 2006-09-13 13:29:02 oops Exp $
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -28,8 +28,6 @@ static struct option long_options [] = {
 	{ 0, 0, 0, 0 }
 };
 #endif
-
-extern char dberr[1024];
 
 void usage (void) {
 	fprintf (stderr, "krmakedb v%s: Make libkrisp database utility\n", KRISP_VERSION);

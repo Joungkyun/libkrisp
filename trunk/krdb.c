@@ -1,6 +1,8 @@
 /*
- * $Id: krdb.c,v 1.12 2006-09-13 13:15:55 oops Exp $
+ * $Id: krdb.c,v 1.13 2006-09-13 13:29:02 oops Exp $
  */
+
+#define DBERRVAR
 
 #include <krispcommon.h>
 
@@ -25,8 +27,7 @@ GeoIPvar * krGeoIP_open (KR_API *db) {
 
 #ifndef HAVE_LIBGEOIP
 	return NULL;
-#endif
-
+#else
 	if ( (p = (GeoIPvar *) malloc (sizeof (GeoIPvar)) ) == NULL )
 		return NULL;
 
@@ -57,6 +58,7 @@ GeoIPvar * krGeoIP_open (KR_API *db) {
 	}
 
 	return p;
+#endif
 }
 
 /*
