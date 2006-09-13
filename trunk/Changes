@@ -1,11 +1,17 @@
 Changelog
 
-$Id: Changes,v 1.49 2006-09-08 17:37:32 oops Exp $
+$Id: Changes,v 1.50 2006-09-13 13:07:36 oops Exp $
+
+* 2.0.2
+Wed, Sep 13 2006 JoungKyun.Kim <http://www.oops.org>
+	- disable geoip city search if unless set global variable geocity set 1
+
 
 * 2.0.1
 Sat, Sep 09 2006 JoungKyun.Kim <http://www.oops.org>
 	- fixed memroy leak of GeoIPCity and GeoIPISP
 	- change dabase open type
+
 
 * 2.0.0
 
