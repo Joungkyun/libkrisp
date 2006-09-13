@@ -1,5 +1,5 @@
 /*
- * $Id: krispcommon.h,v 1.16 2006-09-13 13:15:55 oops Exp $
+ * $Id: krispcommon.h,v 1.17 2006-09-13 13:29:02 oops Exp $
  */
 
 #ifndef COMMON_H
@@ -155,6 +155,11 @@ extern short geoisp_type;
 extern short geo_type;
 #endif
 #endif
+
+#ifndef DBERRVAR
+extern char dberr[1024];
+#endif
+
 #endif
 
 /*

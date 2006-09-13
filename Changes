@@ -1,6 +1,6 @@
 Changelog
 
-$Id: Changes,v 1.51 2006-09-13 13:15:55 oops Exp $
+$Id: Changes,v 1.52 2006-09-13 13:29:02 oops Exp $
 
 * 2.0.2
 Wed, Sep 13 2006 JoungKyun.Kim <http://www.oops.org>
@@ -9,6 +9,7 @@ Wed, Sep 13 2006 JoungKyun.Kim <http://www.oops.org>
 	  short geocity_type = GEOIP_INDEX_CACHE | GEOIP_CHECK_CACHE;
 	  short geoisp_type = GEOIP_INDEX_CACHE | GEOIP_CHECK_CACHE;
 	  short geo_type = GEOIP_MEMORY_CACHE | GEOIP_CHECK_CACHE;
+	- fixed compile error when not include geoip option
 
 
 * 2.0.1
