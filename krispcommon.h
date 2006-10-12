@@ -1,5 +1,5 @@
 /*
- * $Id: krispcommon.h,v 1.17 2006-09-13 13:29:02 oops Exp $
+ * $Id: krispcommon.h,v 1.18 2006-10-12 17:23:35 oops Exp $
  */
 
 #ifndef COMMON_H
@@ -135,6 +135,7 @@ typedef struct netinfos {
 	char			gcode[4];
 	char			gname[128];
 	char			gcity[64];
+	char			gregion[4];
 #endif
 } KRNET_API;
 
