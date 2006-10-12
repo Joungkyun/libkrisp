@@ -1,6 +1,11 @@
 Changelog
 
-$Id: Changes,v 1.53 2006-09-13 13:42:12 oops Exp $
+$Id: Changes,v 1.54 2006-10-12 16:42:12 oops Exp $
+
+* 2.0.3
+Fri, Oct 13 2006 JoungKyun.Kim <http://www.oops.org>
+    - init GeoIPDBFileName after memory free
+
 
 * 2.0.2
 Wed, Sep 13 2006 JoungKyun.Kim <http://www.oops.org>
