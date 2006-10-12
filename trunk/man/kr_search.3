@@ -14,8 +14,8 @@ kr_search() 함수는 주어진 ip 또는 호스트이름에 대한 정보를 �
 2.0 이전 버전에서 GeoIP 정보를 이용하려면 따로 db->gi 를 관리했어야 하나,
 2.0 이후 부터는 kr_open 함수 내부에서 자동으로 처리를 하게 변경이 되었다.
 .PP
-또한, isp structure member 에 gcity 가 추가가 되어, GeoIPCity database 정보
-검색이 가능할 경우, 도시 정보를 같이 제공을 한다.
+또한, isp structure member 에 gcity, gretion 이 추가가 되어, GeoIPCity
+database 정보 검색이 가능할 경우, 도시, 지역 정보를 같이 제공을 한다.
 
 .PP
 .I kr_search (&isp, db);
@@ -54,7 +54,7 @@ int main (void) {
 
 #ifdef HAVE_LIBGEOIP
     printf ("NATION : %s (%s)\\n", isp.gname, isp.gcode);
-    printf ("CITY   : %s\\n", isp.gcity);
+    printf ("CITY   : %s %s\\n", isp.gregion isp.gcity);
 #endif
 
     return 0;
