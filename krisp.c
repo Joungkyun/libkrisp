@@ -1,5 +1,5 @@
 /*
- * $Id: krisp.c,v 1.40 2006-09-13 13:29:02 oops Exp $
+ * $Id: krisp.c,v 1.41 2006-10-12 16:42:12 oops Exp $
  */
 
 #include <stdio.h>
@@ -154,6 +154,7 @@ void kr_close (KR_API *db) {
 			for ( i = 1; i <= 11 ; i++ )
 				free (GeoIPDBFileName[i]);
 			free (GeoIPDBFileName);
+			GeoIPDBFileName = NULL;
 		}
 	}
 #endif
