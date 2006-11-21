@@ -1,11 +1,14 @@
 Changelog
 
-$Id: Changes,v 1.55 2006-10-12 17:23:35 oops Exp $
+$Id: Changes,v 1.56 2006-11-21 09:19:22 oops Exp $
 
 * 2.0.3
 Fri, Oct 13 2006 JoungKyun.Kim <http://www.oops.org>
     - init GeoIPDBFileName after memory free
 	- added gregion
+
+Tue, Nov 21 2006 JoungKyun.Kim <http://www.oops.org>
+	- support print csv format on krisp_mksql
 
 
 * 2.0.2
