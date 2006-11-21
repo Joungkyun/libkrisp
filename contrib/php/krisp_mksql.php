@@ -1,7 +1,7 @@
 #!/usr/bin/php
 <?
 #
-# $Id: krisp_mksql.php,v 1.5 2006-08-17 02:18:07 oops Exp $
+# $Id: krisp_mksql.php,v 1.6 2006-11-21 09:19:05 oops Exp $
 #
 # get Korea ISP information to text format and make krisp database sql
 #
@@ -88,7 +88,9 @@ class domesticIP {
 }
 
 class mkSQL {
-	function mkSQL ($lists) {
+	var $types;
+
+	function mkSQL ($lists, $_t = 'sql') {
 		$size = count ($lists);
 
 		## get array and get block group
@@ -117,6 +119,8 @@ class mkSQL {
 
 			$s = $this->inet_aton ($s);
 			$e = $this->inet_aton ($e);
+
+			$this->types = $_t;
 
 			$krblock[$eblock][$s] = array ($kblock, $eblock, $s, $e);
 		}
@@ -222,10 +226,19 @@ class mkSQL {
 			$s = sizeof ($v) - 1;
 
 			for ( $i=0; $i<$s; $i++ ) :
-				$sql = "INSERT INTO netmask (net, subnet) VALUES ('$ipa', '$v[$i]');";
+				if ( $this->types == 'sql' ) :
+					$sql = "INSERT INTO netmask (net, subnet) VALUES ('$ipa', '$v[$i]');";
+				else :
+					$sql = "$ipa\t$v[$i]";
+				endif;
 				echo $sql."\n";
 			endfor;
-			$sql = "INSERT INTO netmask (net, subnet) VALUES ('$ipa', '$v[$s]');";
+
+			if ( $this->types == 'sql' ) :
+				$sql = "INSERT INTO netmask (net, subnet) VALUES ('$ipa', '$v[$s]');";
+			else:
+				$sql = "$ipa\t$v[$s]";
+			endif;
 			echo $sql."\n";
 		endforeach;
 
@@ -236,10 +249,14 @@ class mkSQL {
 			ksort ($_IPNETWORK[$ipa]);
 
 			foreach ( $_IPNETWORK[$ipa] AS $k=>$arr ) :
-				#$sql = "INSERT INTO isp (longip, network, broadcast, netmask, organization, servicename) " .
-				#		"VALUES ('$k', '$arr[0]', '$arr[1]', '$arr[2]', '$arr[3]', '$arr[4]');";
-				$sql = "INSERT INTO isp " .
-						"VALUES ('$k', '$arr[0]', '$arr[1]', '$arr[2]', '$arr[3]', '$arr[4]');";
+				if ( $this->types == 'sql' ) :
+					#$sql = "INSERT INTO isp (longip, network, broadcast, netmask, organization, servicename) " .
+					#		"VALUES ('$k', '$arr[0]', '$arr[1]', '$arr[2]', '$arr[3]', '$arr[4]');";
+					$sql = "INSERT INTO isp " .
+							"VALUES ('$k', '$arr[0]', '$arr[1]', '$arr[2]', '$arr[3]', '$arr[4]');";
+				else :
+					$sql = "$k\t{$arr[0]}\t{$arr[1]}\t{$arr[2]}\t{$arr[3]}\t{$arr[4]}";
+				endif;
 				echo $sql."\n";
 			endforeach;
 		endforeach;
@@ -307,10 +324,13 @@ function usage ($prog) {
 	error_log ("USAGE: ${prog} [type]", 0);
 	error_log ("       ${prog} txt", 0);
 	error_log ("       ${prog} sql", 0);
+	error_log ("       ${prog} csv", 0);
 	error_log ("       ${prog} sql /path/txtformat", 0);
+	error_log ("       ${prog} csv /path/txtformat", 0);
 	error_log ("Option: type", 0);
 	error_log ("        txt => original text format", 0);
 	error_log ("        sql => parse sql qeury format", 0);
+	error_log ("        sql => parse csv format", 0);
 
 	exit (1);
 }
@@ -321,7 +341,7 @@ if ( $argc != 2 && $argc != 3 ) :
 endif;
 
 if ( $argc == 3 ) :
-	if ( $argv[1] != 'sql' ) :
+	if ( $argv[1] != 'sql' && $arvg[1] != 'csv' ) :
 		usage ($argv[0]);
 	endif;
 
@@ -340,7 +360,7 @@ endif;
 
 $_type = $argv[1];
 
-if ( $_type != 'txt' && $_type != 'sql' ) :
+if ( $_type != 'txt' && $_type != 'sql' && $_type != 'csv' ) :
 	usage ($argv[0]);
 endif;
 
@@ -358,5 +378,5 @@ if ( ! count ($ip->r) ) :
 	exit (1);
 endif;
 
-new mkSQL ($ip->r);
+new mkSQL ($ip->r, $_type);
 ?>
