@@ -1,5 +1,5 @@
 /*
- * $Id: krispcommon.h,v 1.18 2006-10-12 17:23:35 oops Exp $
+ * $Id: krispcommon.h,v 1.19 2006-11-24 16:57:29 oops Exp $
  */
 
 #ifndef COMMON_H
@@ -134,9 +134,9 @@ typedef struct netinfos {
 #ifdef HAVE_LIBGEOIP
 	char			gcode[4];
 	char			gname[128];
+#endif
 	char			gcity[64];
 	char			gregion[4];
-#endif
 } KRNET_API;
 
 struct cinfo {
@@ -145,6 +145,11 @@ struct cinfo {
 	unsigned long	network;
 	unsigned long	broad;
 };
+
+typedef struct hostip {
+	char			city[64];
+	char			region[32];
+} HOSTIP;
 
 #ifndef GEOCITYVAR
 #ifdef HAVE_LIBGEOIP

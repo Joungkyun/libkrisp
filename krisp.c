@@ -1,5 +1,5 @@
 /*
- * $Id: krisp.c,v 1.43 2006-10-12 17:29:20 oops Exp $
+ * $Id: krisp.c,v 1.44 2006-11-24 16:57:29 oops Exp $
  */
 
 #include <stdio.h>
@@ -136,6 +136,58 @@ int getISPinfo (KR_API *db, char *key, KRNET_API *n) {
 	return 0;
 }
 
+int getHostIP (KR_API *db, char *ip, HOSTIP *h) {
+	char sql[64] = { 0, };
+	char net[16] = { 0, };
+	int r;
+	struct cinfo cp;
+	char *city;
+	char *reg;
+
+	memset (h->city, 0, sizeof (h->city));
+	memset (h->region, 0, sizeof (h->region));
+
+	cp.ip = ip2long (ip);
+	cp.mask = ip2long ("255.255.255.0");
+	cp.network = cp.ip & cp.mask;
+	sprintf (net, "%lu", cp.network);
+
+	sprintf (sql, "SELECT * FROM hostip WHERE longip = '%s'", net);
+
+	if ( kr_dbQuery (db, sql) )
+		return 1;
+
+	db->rows = 0;
+	db->cols = 0;
+	while ( ! (r = kr_dbFetch (db)) ) {
+		for ( r=0; r<db->cols; r++ ) {
+			switch (r) {
+				case 1 :
+					strcpy (h->city, db->rowdata[r]);
+					break;
+				default:
+					continue;
+			}
+		}
+	}
+	kr_dbFree (db);
+
+	if ( h->city ) {
+		city = (char *) strdup (h->city);
+		if ( (reg = strchr (city, ',')) != NULL ) {
+			strcpy (h->region, reg + 1);
+			city[reg - city] = 0;
+			strcpy (h->city, city);
+		}
+		free (city);
+	}
+
+	if ( r == -1 )
+		return 1;
+
+	return 0;
+}
+
 void kr_close (KR_API *db) {
 #ifdef HAVE_LIBGEOIP
 	if ( db->gi != NULL ) {
@@ -183,9 +235,9 @@ void initStruct (KRNET_API *n) {
 #ifdef HAVE_LIBGEOIP
 	strcpy (n->gcode, "");
 	strcpy (n->gname, "");
+#endif
 	strcpy (n->gcity, "");
 	strcpy (n->gregion, "");
-#endif
 }
 
 int kr_search (KRNET_API *isp, KR_API *db) {
@@ -198,6 +250,8 @@ int kr_search (KRNET_API *isp, KR_API *db) {
 
 	struct hostent *hp;
 	struct in_addr s;
+
+	HOSTIP h;
 
 	initStruct (isp);
 
@@ -273,6 +327,9 @@ int kr_search (KRNET_API *isp, KR_API *db) {
 	kr_free_array (n.mask);
 
 geoip_section:
+	/* get HostIP */
+	getHostIP (db, isp->ip, &h);
+
 #ifdef HAVE_LIBGEOIP
 	if ( db->gi != NULL ) {
 		int country_id = 0;
@@ -340,6 +397,15 @@ geocityend:
 		}
 #endif
 	}
+
+	/* get HostIP */
+	getHostIP (db, isp->ip, &h);
+
+	if ( h.city )
+		strcpy (isp->gcity, h.city);
+
+	if ( h.region )
+		strcpy (isp->gregion, h.region);
 
 	return 0;
 }

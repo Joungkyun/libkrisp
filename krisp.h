@@ -1,5 +1,5 @@
 /*
- * $Id: krisp.h,v 1.12 2006-09-04 04:23:27 oops Exp $
+ * $Id: krisp.h,v 1.13 2006-11-24 16:57:29 oops Exp $
  */
 
 #ifndef KRIP_H
@@ -60,6 +60,11 @@ int kr_netmask (KR_API *, char *, struct netmasks *);
  * get ISP information of each network from db
  */
 int getISPinfo (KR_API *, char *, KRNET_API *);
+
+/*
+ * get HOSTIP information of each network from db
+ */
+int getHostIP (KR_API *, char *, HOSTIP *);
 
 /*
  * free memory that used db query function
