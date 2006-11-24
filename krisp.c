@@ -1,5 +1,5 @@
 /*
- * $Id: krisp.c,v 1.45 2006-11-24 17:39:01 oops Exp $
+ * $Id: krisp.c,v 1.46 2006-11-24 17:53:28 oops Exp $
  */
 
 #include <stdio.h>
@@ -18,6 +18,8 @@
 #include <krispcommon.h>
 #include <krdb.h>
 #include <krisp.h>
+
+shrot hostip       = 0;
 
 #ifdef HAVE_LIBGEOIP
 /* set 1, search GeoIPCity database if enabled search GeoIPCity */
@@ -172,7 +174,7 @@ int getHostIP (KR_API *db, char *ip, HOSTIP *h) {
 	}
 	kr_dbFree (db);
 
-	if ( h->city ) {
+	if ( strlen (h->city) ) {
 		city = (char *) strdup (h->city);
 		if ( (reg = strchr (city, ',')) != NULL ) {
 			strcpy (h->region, reg + 1);
@@ -398,11 +400,19 @@ geocityend:
 	/* get HostIP */
 	getHostIP (db, isp->ip, &h);
 
-	if ( h.city )
-		strcpy (isp->gcity, h.city);
+	if ( hostip ) {
+		if ( strlen (h.city) )
+			strcpy (isp->gcity, h.city);
 
-	if ( h.region )
-		strcpy (isp->gregion, h.region);
+		if ( strlen (h.region) )
+			strcpy (isp->gregion, h.region);
+	} else {
+		if ( ! strcmp (isp->gcity, "N/A") && strlen (h.city) )
+			strcpy (isp->gcity, h.city);
+
+		if ( ! strcmp (isp->gregion, "N/A") && strlen (h.region) )
+			strcpy (isp->gregion, h.region);
+	}
 
 	return 0;
 }
