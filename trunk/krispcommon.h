@@ -1,5 +1,5 @@
 /*
- * $Id: krispcommon.h,v 1.19 2006-11-24 16:57:29 oops Exp $
+ * $Id: krispcommon.h,v 1.20 2006-11-24 17:53:28 oops Exp $
  */
 
 #ifndef COMMON_H
@@ -150,6 +150,8 @@ typedef struct hostip {
 	char			city[64];
 	char			region[32];
 } HOSTIP;
+
+extern short hostip;
 
 #ifndef GEOCITYVAR
 #ifdef HAVE_LIBGEOIP

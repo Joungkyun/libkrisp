@@ -1,5 +1,5 @@
 /*
- * $Id: krisplookup.c,v 1.25 2006-11-24 17:20:28 oops Exp $
+ * $Id: krisplookup.c,v 1.26 2006-11-24 17:53:28 oops Exp $
  */
 
 #include <krisp.h>
@@ -30,10 +30,7 @@ void usage (char *prog) {
 	fprintf (stderr, "Options:\n");
 	fprintf (stderr, "         -f path, --datafile=path     set user define database file\n");
 	fprintf (stderr, "         -h , --help                  print this message\n");
-#ifdef HAVE_LIBGEOIP
 	fprintf (stderr, "         -c , --city                  search geoip city database\n\n");
-#else
-	fprintf (stderr, "         -c , --city                  dummy option [not use]\n\n");
 #endif
 
 	exit (1);
@@ -48,6 +45,8 @@ int main (int argc, char ** argv) {
 	char *datafile = NULL;
 	int city = 0;
 
+	hostip = 1;
+
 #ifdef HAVE_GETOPT_LONG
 	while ( (opt = getopt_long (argc, argv, "cf:h", long_options, (int *) 0)) != EOF ) {
 #else
@@ -56,6 +55,9 @@ int main (int argc, char ** argv) {
 		switch (opt) {
 			case 'c' :
 				city = 1;
+#ifdef HAVE_LIBGEOIP
+				geocity = 1;
+#endif
 				break;
 			case 'f' :
 				datafile = optarg;
