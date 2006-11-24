@@ -1,5 +1,5 @@
 /*
- * $Id: krisplookup.c,v 1.24 2006-09-13 13:37:50 oops Exp $
+ * $Id: krisplookup.c,v 1.25 2006-11-24 17:20:28 oops Exp $
  */
 
 #include <krisp.h>
@@ -46,6 +46,7 @@ int main (int argc, char ** argv) {
 	char * ip;
 	int opt;
 	char *datafile = NULL;
+	int city = 0;
 
 #ifdef HAVE_GETOPT_LONG
 	while ( (opt = getopt_long (argc, argv, "cf:h", long_options, (int *) 0)) != EOF ) {
@@ -54,9 +55,7 @@ int main (int argc, char ** argv) {
 #endif
 		switch (opt) {
 			case 'c' :
-#ifdef HAVE_LIBGEOIP
-				geocity = 1;
-#endif
+				city = 1;
 				break;
 			case 'f' :
 				datafile = optarg;
@@ -109,9 +108,9 @@ int main (int argc, char ** argv) {
 
 #ifdef HAVE_LIBGEOIP
 	printf ("NATION : %s (%s)\n", isp.gname, isp.gcode);
-	if ( geocity )
-		printf ("CITY   : %s\n", isp.gcity);
 #endif
+	if ( city )
+		printf ("CITY   : %s\n", isp.gcity);
 
 	/* database close */
 	kr_close (db);
