@@ -1,5 +1,5 @@
 /*
- * $Id: krisp.c,v 1.44 2006-11-24 16:57:29 oops Exp $
+ * $Id: krisp.c,v 1.45 2006-11-24 17:39:01 oops Exp $
  */
 
 #include <stdio.h>
@@ -327,9 +327,6 @@ int kr_search (KRNET_API *isp, KR_API *db) {
 	kr_free_array (n.mask);
 
 geoip_section:
-	/* get HostIP */
-	getHostIP (db, isp->ip, &h);
-
 #ifdef HAVE_LIBGEOIP
 	if ( db->gi != NULL ) {
 		int country_id = 0;
