@@ -1,7 +1,7 @@
 #!/usr/bin/php
 <?
 #
-# $Id: krisp_mksql.php,v 1.6 2006-11-21 09:19:05 oops Exp $
+# $Id: krisp_mksql.php,v 1.7 2006-11-25 16:38:39 oops Exp $
 #
 # get Korea ISP information to text format and make krisp database sql
 #
@@ -286,6 +286,14 @@ class mkSQL {
 			"   servicename varchar," .
 			"   PRIMARY KEY (longip)" .
 			");\n\n";
+
+		echo "CREATE TABLE hostip " .
+			"(" .
+			"    longip integer unsigned NOT NULL PRIMARY KEY," .
+			"    city varchar(64) NOT NULL DEFAULT ''" .
+			");\n\n";
+
+		echo "CREATE index hostip_city ON hostip(city);\n\n";
 	}
 
 	function search_net ($ln, $start, $end) {
