@@ -1,21 +1,24 @@
 Changelog
 
-$Id: Changes,v 1.57 2006-11-25 18:58:50 oops Exp $
+$Id: Changes,v 1.58 2006-11-25 19:29:59 oops Exp $
 
-* 2.0.3
+
+* 2.1.0
+
 Sun, Nov 26 2006 JoungKyun.Kim <http://www.oops.org>
 	- support hostip.info database
 	  see also contrib/hostip/README
+
+Tue, Nov 21 2006 JoungKyun.Kim <http://www.oops.org>
+	- support print csv format on krisp_mksql
 
 Fri, Oct 13 2006 JoungKyun.Kim <http://www.oops.org>
     - init GeoIPDBFileName after memory free
 	- added gregion
 
-Tue, Nov 21 2006 JoungKyun.Kim <http://www.oops.org>
-	- support print csv format on krisp_mksql
-
 
 * 2.0.2
+
 Wed, Sep 13 2006 JoungKyun.Kim <http://www.oops.org>
 	- disable geoip city search if unless set global variable geocity set 1
 	- add geoip database open type
@@ -27,6 +30,7 @@ Wed, Sep 13 2006 JoungKyun.Kim <http://www.oops.org>
 
 
 * 2.0.1
+
 Sat, Sep 09 2006 JoungKyun.Kim <http://www.oops.org>
 	- fixed memroy leak of GeoIPCity and GeoIPISP
 	- change dabase open type
