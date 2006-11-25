@@ -1,5 +1,5 @@
 /*
- * $Id: sqlite3.c,v 1.4 2006-11-25 18:58:50 oops Exp $
+ * $Id: sqlite3.c,v 1.5 2006-11-25 20:59:42 oops Exp $
  */
 
 #include <sys/types.h>
@@ -42,6 +42,9 @@ int kr_dbConnect (KR_API *db, char *file) {
 			return 0;
 
 		sprintf (_file, "%s-hostip", file);
+		f.st_size = 0;
+		if ( stat (_file, &f) == -1 )
+			sprintf (_file, DBHPATH);
 	} else
 		strcpy (_file, DBHPATH);
 
