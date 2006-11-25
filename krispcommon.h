@@ -1,5 +1,5 @@
 /*
- * $Id: krispcommon.h,v 1.21 2006-11-25 18:58:50 oops Exp $
+ * $Id: krispcommon.h,v 1.22 2006-11-25 19:55:53 oops Exp $
  */
 
 #ifndef COMMON_H
@@ -151,7 +151,7 @@ struct cinfo {
 	unsigned long	broad;
 };
 
-typedef struct hostip {
+typedef struct hostips {
 	char			city[64];
 	char			region[32];
 } HOSTIP;
