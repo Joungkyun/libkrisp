@@ -18,3 +18,10 @@ CREATE TABLE isp
 	PRIMARY KEY (longip)
 )
 
+CREATE TABLE hostip
+(
+	longip integer unsigned NOT NULL PRIMARY KEY,
+	city varchar(64) NOT NULL DEFAULT ''
+);
+CREATE index hostip_city ON hostip(city);
+
