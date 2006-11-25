@@ -1,5 +1,5 @@
 /*
- * $Id: krispmkdb.c,v 1.8 2006-09-13 13:29:02 oops Exp $
+ * $Id: krispmkdb.c,v 1.9 2006-11-25 18:58:50 oops Exp $
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -141,7 +141,7 @@ int main (int argc, char **argv) {
 			}
 			printf ("=> %s\n", output);
 
-			if ( kr_dbQuery (db, sql) ) {
+			if ( kr_dbQuery (db, sql, DBTYPE_KRISP) ) {
 				fprintf (stderr, "\nERROR: query failed (%s)\n", dberr);
 				kr_close (db);
 				free (buf);
@@ -149,7 +149,7 @@ int main (int argc, char **argv) {
 				return 1;
 			}
 
-			while ( ! (r = kr_dbFetch (db) ) ) {
+			while ( ! (r = kr_dbFetch (db, DBTYPE_KRISP) ) ) {
 				// not actions
 			}
 

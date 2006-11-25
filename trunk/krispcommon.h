@@ -1,5 +1,5 @@
 /*
- * $Id: krispcommon.h,v 1.20 2006-11-24 17:53:28 oops Exp $
+ * $Id: krispcommon.h,v 1.21 2006-11-25 18:58:50 oops Exp $
  */
 
 #ifndef COMMON_H
@@ -19,6 +19,9 @@
 #else
 #include <sqlite.h>
 #endif
+
+#define DBTYPE_KRISP  0
+#define DBTYPE_HOSTIP 1
 
 /*
  * GeoIP extension start
@@ -109,9 +112,11 @@ struct netmasks {
 typedef struct db_argument {
 #if defined(HAVE_LIBSQLITE3)
 	sqlite3			*c;		/* db resource */
+	sqlite3			*h;		/* hostip db resource */
 	sqlite3_stmt	*vm;	/* sqlite vm */
 #else
 	sqlite			*c;		/* db resource */
+	sqlite			*h;		/* hostip db resource */
 	sqlite_vm		*vm;	/* sqlite vm */
 #endif
 	int				r;		/* execute result code */

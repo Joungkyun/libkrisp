@@ -1,6 +1,10 @@
 /*
- * $Id: sqlite3.c,v 1.3 2006-06-20 03:25:52 oops Exp $
+ * $Id: sqlite3.c,v 1.4 2006-11-25 18:58:50 oops Exp $
  */
+
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
 
 void kr_dbError (int code, const char *err) {
 	memset (dberr, 0, 1024);
@@ -23,29 +27,67 @@ int kr_dbFree (KR_API *db) {
 }
 
 int kr_dbConnect (KR_API *db, char *file) {
+	struct stat f;
+	char _file[255];
+	int l;
+
 	if ( (db->r = sqlite3_open ((file != NULL) ? file : DBPATH, &db->c)) ) {
 		kr_dbError (sqlite3_errcode(db->c), sqlite3_errmsg(db->c));
 		return -1;
 	}
 
+	/* hostip database connect */
+	if ( file != NULL ) {
+		if ( (l = strlen (file) + 7) >= 255 )
+			return 0;
+
+		sprintf (_file, "%s-hostip", file);
+	} else
+		strcpy (_file, DBHPATH);
+
+	f.st_size = 0;
+	if ( stat (_file, &f) == 0 )
+		sqlite3_open (_file, &db->h);
+	else
+		db->h = NULL;
+
 	return 0;
 }
 
-int kr_dbQuery (KR_API *db, char * sql) {
-	db->r = sqlite3_prepare (db->c, sql, strlen (sql), &db->vm, NULL);
+int kr_dbQuery (KR_API *db, char * sql, int t) {
+	sqlite3 *c;
+
+	switch (t) {
+		case DBTYPE_HOSTIP :
+			c = db->h;
+			break;
+		default:
+			c = db->c;
+	}
+
+	db->r = sqlite3_prepare (c, sql, strlen (sql), &db->vm, NULL);
 
 	if ( db->r != SQLITE_OK ) {
-		kr_dbError (sqlite3_errcode(db->c), sqlite3_errmsg(db->c));
+		kr_dbError (sqlite3_errcode(c), sqlite3_errmsg(c));
 		return 1;
 	}
 
 	return 0;
 }
 
-int kr_dbFetch (KR_API *db) {
+int kr_dbFetch (KR_API *db, int t) {
+	sqlite3 *c;
 	int i;
 	char colname[128] = { 0, };
 	char rowdata[128] = { 0, };
+
+	switch (t) {
+		case DBTYPE_HOSTIP :
+			c = db->h;
+			break;
+		default:
+			c = db->c;
+	}
 
 	db->r = sqlite3_step (db->vm);
 
@@ -78,7 +120,7 @@ int kr_dbFetch (KR_API *db) {
 			db->vm = NULL;
 
 			if ( db->r != SQLITE_OK ) {
-				kr_dbError (sqlite3_errcode(db->c), sqlite3_errmsg(db->c));
+				kr_dbError (sqlite3_errcode(c), sqlite3_errmsg(c));
 				return -1;
 			}
 
@@ -91,6 +133,9 @@ int kr_dbFetch (KR_API *db) {
 void kr_dbClose (KR_API *db) {
 	if ( db->c != NULL )
 		sqlite3_close (db->c);
+
+	if ( db->h != NULL )
+		sqlite3_close (db->h);
 }
 
 /*

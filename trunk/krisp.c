@@ -1,5 +1,5 @@
 /*
- * $Id: krisp.c,v 1.46 2006-11-24 17:53:28 oops Exp $
+ * $Id: krisp.c,v 1.47 2006-11-25 18:58:50 oops Exp $
  */
 
 #include <stdio.h>
@@ -59,13 +59,13 @@ int kr_netmask (KR_API *db, char *aclass, struct netmasks *n) {
 
 	sprintf (sql, "SELECT subnet FROM netmask WHERE net = '%s'", aclass);
 
-	if ( kr_dbQuery (db, sql) )
+	if ( kr_dbQuery (db, sql, DBTYPE_KRISP) )
 		return 1;
 
 	n->nums = 0;
 	db->rows = 0;
 	db->cols = 0;
-	while ( ! (r = kr_dbFetch (db) ) ) {
+	while ( ! (r = kr_dbFetch (db, DBTYPE_KRISP) ) ) {
 		for ( i=0; i<db->cols; i++ ) {
 			if ( n->nums > 31 && (n->nums % 32 ) == 0 ) {
 				char ** new;
@@ -101,12 +101,12 @@ int getISPinfo (KR_API *db, char *key, KRNET_API *n) {
 
 	sprintf (sql, "SELECT * FROM isp WHERE longip = '%s'", key);
 
-	if  ( kr_dbQuery (db, sql) )
+	if  ( kr_dbQuery (db, sql, DBTYPE_KRISP) )
 		return 1;
 
 	db->rows = 0;
 	db->cols = 0;
-	while ( ! (r = kr_dbFetch (db) ) ) {
+	while ( ! (r = kr_dbFetch (db, DBTYPE_KRISP) ) ) {
 		for ( r=0; r<db->cols; r++ ) {
 			switch (r) {
 				case 0 :
@@ -156,12 +156,12 @@ int getHostIP (KR_API *db, char *ip, HOSTIP *h) {
 
 	sprintf (sql, "SELECT * FROM hostip WHERE longip = '%s'", net);
 
-	if ( kr_dbQuery (db, sql) )
+	if ( kr_dbQuery (db, sql, DBTYPE_HOSTIP) )
 		return 1;
 
 	db->rows = 0;
 	db->cols = 0;
-	while ( ! (r = kr_dbFetch (db)) ) {
+	while ( ! (r = kr_dbFetch (db, DBTYPE_HOSTIP)) ) {
 		for ( r=0; r<db->cols; r++ ) {
 			switch (r) {
 				case 1 :
@@ -401,17 +401,22 @@ geocityend:
 	getHostIP (db, isp->ip, &h);
 
 	if ( hostip ) {
+gohostip:
 		if ( strlen (h.city) )
 			strcpy (isp->gcity, h.city);
 
 		if ( strlen (h.region) )
 			strcpy (isp->gregion, h.region);
 	} else {
+#ifdef HAVE_LIBGEOIP
 		if ( ! strcmp (isp->gcity, "N/A") && strlen (h.city) )
 			strcpy (isp->gcity, h.city);
 
 		if ( ! strcmp (isp->gregion, "N/A") && strlen (h.region) )
 			strcpy (isp->gregion, h.region);
+#else
+		goto gohostip;
+#endif
 	}
 
 	return 0;
