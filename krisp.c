@@ -1,5 +1,5 @@
 /*
- * $Id: krisp.c,v 1.49 2006-11-25 21:00:53 oops Exp $
+ * $Id: krisp.c,v 1.50 2006-11-25 21:03:13 oops Exp $
  */
 
 #include <stdio.h>
@@ -241,8 +241,8 @@ void initStruct (KRNET_API *n) {
 	strcpy (n->gcode, "");
 	strcpy (n->gname, "");
 #endif
-	strcpy (n->gcity, "");
-	strcpy (n->gregion, "");
+	strcpy (n->gcity, "N/A");
+	strcpy (n->gregion, "N/A");
 }
 
 int kr_search (KRNET_API *isp, KR_API *db) {
@@ -273,9 +273,9 @@ int kr_search (KRNET_API *isp, KR_API *db) {
 #ifdef HAVE_LIBGEOIP
 		strcpy (isp->gcode, "--");
 		strcpy (isp->gname, "N/A");
+#endif
 		strcpy (isp->gcity, "N/A");
 		strcpy (isp->gregion, "N/A");
-#endif
 		return 0;
 	}
 
@@ -287,9 +287,9 @@ int kr_search (KRNET_API *isp, KR_API *db) {
 #ifdef HAVE_LIBGEOIP
 		strcpy (isp->gcode, "--");
 		strcpy (isp->gname, "N/A");
+#endif
 		strcpy (isp->gcity, "N/A");
 		strcpy (isp->gregion, "N/A");
-#endif
 		return 0;
 	}
 	aclass[aclass_tmp - aclass] = 0;
@@ -363,13 +363,16 @@ geoispend:
 			GeoIPRecord *gir;
 			gir = GeoIP_record_by_name (db->gi->gic, isp->ip);
 
-			if ( gir != NULL && gir->city) {
-				strcpy (isp->gregion, gir->region);
+			if ( gir != NULL && strlen (gir->city) ) {
 				strcpy (isp->gcity, gir->city);
 			} else {
-				strcpy (isp->gregion, "N/A");
 				strcpy (isp->gcity, "N/A");
 			}
+
+			if ( gir != NULL && strlen (gir->city) )
+				strcpy (isp->gregion, gir->region);
+			else
+				strcpy (isp->gregion, "N/A");
 
 			if ( gir != NULL )
 				GeoIPRecord_delete (gir);
