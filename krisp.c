@@ -1,5 +1,5 @@
 /*
- * $Id: krisp.c,v 1.48 2006-11-25 19:42:19 oops Exp $
+ * $Id: krisp.c,v 1.49 2006-11-25 21:00:53 oops Exp $
  */
 
 #include <stdio.h>
@@ -148,6 +148,9 @@ int getHostIP (KR_API *db, char *ip, HOSTIP *h) {
 
 	memset (h->city, 0, sizeof (h->city));
 	memset (h->region, 0, sizeof (h->region));
+
+	if ( db->h == NULL )
+		return 1;
 
 	cp.ip = ip2long (ip);
 	cp.mask = ip2long ("255.255.255.0");
