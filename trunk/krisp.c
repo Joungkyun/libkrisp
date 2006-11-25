@@ -1,5 +1,5 @@
 /*
- * $Id: krisp.c,v 1.47 2006-11-25 18:58:50 oops Exp $
+ * $Id: krisp.c,v 1.48 2006-11-25 19:42:19 oops Exp $
  */
 
 #include <stdio.h>
@@ -19,7 +19,7 @@
 #include <krdb.h>
 #include <krisp.h>
 
-shrot hostip       = 0;
+short hostip       = 0;
 
 #ifdef HAVE_LIBGEOIP
 /* set 1, search GeoIPCity database if enabled search GeoIPCity */

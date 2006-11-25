@@ -1,5 +1,5 @@
 /*
- * $Id: krisplookup.c,v 1.27 2006-11-25 18:58:50 oops Exp $
+ * $Id: krisplookup.c,v 1.28 2006-11-25 19:42:19 oops Exp $
  */
 
 #include <krisp.h>
@@ -31,7 +31,6 @@ void usage (char *prog) {
 	fprintf (stderr, "         -f path, --datafile=path     set user define database file\n");
 	fprintf (stderr, "         -h , --help                  print this message\n");
 	fprintf (stderr, "         -c , --city                  search geoip city database\n\n");
-#endif
 
 	exit (1);
 }
