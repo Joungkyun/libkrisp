@@ -1,26 +1,41 @@
 krisp 에서 hostip 를 지원하기 위한 문서
 
+참고:
+hostip database 를 사용하기 위해서는 libkrisp 를 sqlite3 모드로 사용하기를
+권장한다. hostip csv file 을 COPY 로 입력할 때 에러가 발생한다. sql query
+로 만들어서 넣기에는 data 가 너무 많다.
+
+hostip databse 는 krisp.dat 파일이 위치하는 디렉토리에 krisp-hostip.dat 라
+는 이름으로 database file 을 생성하도록 한다.
+
+kr_open 에서 기본위치가 아닌 다른 위치의 krisp.dat 를 지정할 경우에는, hostip
+database 의 이름은 "지정한이름.dat-hostip" 로 만들어야 한다.
+
+
 1. 다운로드 hostip city CSV
    rsync -rltvz --progress hostip.info::hostip/csv/hip_ip4_city_lat_lng.csv ./
 
 2. 필드 정리
    awk -F',' '{print $1"|"$2}' ./hip_ip4_city_lat_lng.csv > hostip.csv
 
-3. %20 을 " " 로 변환 : perl -pi -e 's/%20/ /g' ./hostip.csv
+3. 문자열 수정
+   perl -pi -e 's/%20/ /g' ./hostip.csv
+   perl -pi -e 's/%2C[ ]*/,/g' ./hostip.csv
+   perl -pi -e 's/Pusan/Busan/g' hostip.csv
+   perl -pi -e 's/ULSAN/Ulsan/g' hostip.csv
 
 4. 중복 확인 및 제거 :
    awk -F'|' '{print $1}' hostip.csv | sort | uniq -c > ppp
    /[2-9]\t 로 확인하여 hostip.csv 에서 longip 를 유일값으로 수정
 
-5. 문자열 수정
-   perl -pi -e 's/Pusan/Busan/g' hostip.csv
-   perl -pi -e 's/ULSAN/Ulsan/g' hostip.csv
-
-t. krisp.dat 에 hostip table 생성
+5. krisp-hostip.dat 에 hostip table 생성
    sqlite(3) /usr/share/krisp/krisp.dat
    sqlite> CREATE TABLE hostip ( longip integer unsigned NOT NULL PRIMARY KEY, city varchar(64) NOT NULL DEFAULT '' );
    sqlite> CREATE index hostip_city ON hostip(city);
 
-7. data import
-   sqlite> .import hostip.csv hostip (if sqlite3)
+6. data import
+   sqlite3:
+      sqlite> .import hostip.csv hostip (if sqlite3)
 
+   sqlite2:
+      sqlite> COPY hostip FROM 'hostip.csv' USING DELIMITERS '|';

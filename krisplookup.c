@@ -1,5 +1,5 @@
 /*
- * $Id: krisplookup.c,v 1.26 2006-11-24 17:53:28 oops Exp $
+ * $Id: krisplookup.c,v 1.27 2006-11-25 18:58:50 oops Exp $
  */
 
 #include <krisp.h>
@@ -111,8 +111,12 @@ int main (int argc, char ** argv) {
 #ifdef HAVE_LIBGEOIP
 	printf ("NATION : %s (%s)\n", isp.gname, isp.gcode);
 #endif
-	if ( city )
-		printf ("CITY   : %s\n", isp.gcity);
+	if ( city ) {
+		printf ("CITY   : %s", isp.gcity);
+		if ( strlen (isp.gregion) && strcmp (isp.gregion, "N/A") )
+			printf (", %s", isp.gregion);
+		printf ("\n");
+	}
 
 	/* database close */
 	kr_close (db);

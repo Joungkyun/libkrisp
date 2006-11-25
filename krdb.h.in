@@ -1,11 +1,13 @@
 /*
- * $Id: krdb.h.in,v 1.4 2006-06-20 03:25:52 oops Exp $
+ * $Id: krdb.h.in,v 1.5 2006-11-25 18:58:50 oops Exp $
  */
 
 #ifndef KRDB_H
 #define KRDB_H
 
-#define DBPATH "@dbpath@/krisp.dat"
+#define DBROOT "@dbpath@"
+#define DBPATH DBROOT "/krisp.dat"
+#define DBHPATH DBROOT "/krisp-hostip.dat"
 
 #if defined(HAVE_LIBSQLITE3)
 void kr_dbError (int code, const char *err);
@@ -14,8 +16,8 @@ void kr_dbError (KR_API *);
 #endif
 int kr_dbFree (KR_API *);
 int kr_dbConnect (KR_API *, char *);
-int kr_dbQuery (KR_API *, char *);
-int kr_dbFetch (KR_API *);
+int kr_dbQuery (KR_API *, char *, int);
+int kr_dbFetch (KR_API *, int);
 void kr_dbClose (KR_API *);
 
 #endif
