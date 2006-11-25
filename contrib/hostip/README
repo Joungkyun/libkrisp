@@ -9,7 +9,7 @@ krisp 에서 hostip 를 지원하기 위한 문서
 3. %20 을 " " 로 변환 : perl -pi -e 's/%20/ /g' ./hostip.csv
 
 4. 중복 확인 및 제거 :
-   awk -F'|' '{print $1}' a.csv | sort | uniq -c > ppp
+   awk -F'|' '{print $1}' hostip.csv | sort | uniq -c > ppp
    /[2-9]\t 로 확인하여 hostip.csv 에서 longip 를 유일값으로 수정
 
 5. 문자열 수정
