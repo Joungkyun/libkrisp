@@ -1,7 +1,7 @@
 #!/usr/bin/php
 <?
 #
-# $Id: krisp_mksql.php,v 1.7 2006-11-25 16:38:39 oops Exp $
+# $Id: krisp_mksql.php,v 1.8 2006-11-25 19:11:16 oops Exp $
 #
 # get Korea ISP information to text format and make krisp database sql
 #
@@ -349,7 +349,7 @@ if ( $argc != 2 && $argc != 3 ) :
 endif;
 
 if ( $argc == 3 ) :
-	if ( $argv[1] != 'sql' && $arvg[1] != 'csv' ) :
+	if ( $argv[1] != 'sql' && $argv[1] != 'csv' ) :
 		usage ($argv[0]);
 	endif;
 
