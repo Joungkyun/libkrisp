@@ -1,7 +1,7 @@
 #!/usr/bin/php
 <?
 #
-# $Id: krisp_mksql.php,v 1.8 2006-11-25 19:11:16 oops Exp $
+# $Id: krisp_mksql.php,v 1.9 2006-11-25 19:14:27 oops Exp $
 #
 # get Korea ISP information to text format and make krisp database sql
 #
@@ -229,7 +229,7 @@ class mkSQL {
 				if ( $this->types == 'sql' ) :
 					$sql = "INSERT INTO netmask (net, subnet) VALUES ('$ipa', '$v[$i]');";
 				else :
-					$sql = "$ipa\t$v[$i]";
+					$sql = "$ipa|$v[$i]";
 				endif;
 				echo $sql."\n";
 			endfor;
@@ -237,7 +237,7 @@ class mkSQL {
 			if ( $this->types == 'sql' ) :
 				$sql = "INSERT INTO netmask (net, subnet) VALUES ('$ipa', '$v[$s]');";
 			else:
-				$sql = "$ipa\t$v[$s]";
+				$sql = "$ipa|$v[$s]";
 			endif;
 			echo $sql."\n";
 		endforeach;
@@ -255,7 +255,7 @@ class mkSQL {
 					$sql = "INSERT INTO isp " .
 							"VALUES ('$k', '$arr[0]', '$arr[1]', '$arr[2]', '$arr[3]', '$arr[4]');";
 				else :
-					$sql = "$k\t{$arr[0]}\t{$arr[1]}\t{$arr[2]}\t{$arr[3]}\t{$arr[4]}";
+					$sql = "$k|{$arr[0]}|{$arr[1]}|{$arr[2]}|{$arr[3]}|{$arr[4]}";
 				endif;
 				echo $sql."\n";
 			endforeach;
