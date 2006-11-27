@@ -1,8 +1,10 @@
-$Id: README,v 1.6 2006-06-30 06:25:08 oops Exp $
+$Id: README,v 1.7 2006-11-27 06:32:34 oops Exp $
 
 libkrisp - Korea ISP library
 
 작성: 김정균 2006.06.09 http://www.oops.org
+
+자세한 내용은 http://devel.oops.org/ 의 libkrisp section 을 참고하기 바란다.
 
 libkrisp 는 한국의 ip address 에 대한 ISP 정보를 얻기 위한 라이브러리이다.
 이 library 를 사용하기 위해서는 sqlite library 가 필요하며, sqlite2 또는 sqlite3
