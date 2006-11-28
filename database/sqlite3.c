@@ -1,5 +1,5 @@
 /*
- * $Id: sqlite3.c,v 1.5 2006-11-25 20:59:42 oops Exp $
+ * $Id: sqlite3.c,v 1.6 2006-11-28 19:39:08 oops Exp $
  */
 
 #include <sys/types.h>
@@ -36,12 +36,12 @@ int kr_dbConnect (KR_API *db, char *file) {
 		return -1;
 	}
 
-	/* hostip database connect */
+	/* userdb database connect */
 	if ( file != NULL ) {
 		if ( (l = strlen (file) + 7) >= 255 )
 			return 0;
 
-		sprintf (_file, "%s-hostip", file);
+		sprintf (_file, "%s-userdb", file);
 		f.st_size = 0;
 		if ( stat (_file, &f) == -1 )
 			sprintf (_file, DBHPATH);
@@ -61,7 +61,7 @@ int kr_dbQuery (KR_API *db, char * sql, int t) {
 	sqlite3 *c;
 
 	switch (t) {
-		case DBTYPE_HOSTIP :
+		case DBTYPE_USERDB :
 			c = db->h;
 			break;
 		default:
@@ -85,7 +85,7 @@ int kr_dbFetch (KR_API *db, int t) {
 	char rowdata[128] = { 0, };
 
 	switch (t) {
-		case DBTYPE_HOSTIP :
+		case DBTYPE_USERDB :
 			c = db->h;
 			break;
 		default:

@@ -1,5 +1,5 @@
 /*
- * $Id: sqlite.c,v 1.4 2006-11-25 18:58:50 oops Exp $
+ * $Id: sqlite.c,v 1.5 2006-11-28 19:39:08 oops Exp $
  */
 
 #include <sys/types.h>
@@ -29,12 +29,12 @@ int kr_dbConnect (KR_API *db, char *file) {
 		return -1;
 	}
 
-	/* hostip database connect */
+	/* userdb database connect */
 	if ( file != NULL ) {
 		if ( (l = strlen (file) + 7) >= 255 )
 			return 0;
 
-		sprintf (_file, "%s-hostip", file);
+		sprintf (_file, "%s-userdb", file);
 	} else
 		strcpy (_file, DBHPATH);
 
@@ -51,7 +51,7 @@ int kr_dbQuery (KR_API *db, char * sql, int t) {
 	sqlite *c;
 
 	switch (t) {
-		case DBTYPE_HOSTIP :
+		case DBTYPE_USERDB :
 			c = db->h;
 			break;
 		default:

@@ -1,5 +1,5 @@
 /*
- * $Id: krisplookup.c,v 1.28 2006-11-25 19:42:19 oops Exp $
+ * $Id: krisplookup.c,v 1.29 2006-11-28 19:39:08 oops Exp $
  */
 
 #include <krisp.h>
@@ -43,8 +43,6 @@ int main (int argc, char ** argv) {
 	int opt;
 	char *datafile = NULL;
 	int city = 0;
-
-	hostip = 1;
 
 #ifdef HAVE_GETOPT_LONG
 	while ( (opt = getopt_long (argc, argv, "cf:h", long_options, (int *) 0)) != EOF ) {
@@ -106,10 +104,7 @@ int main (int argc, char ** argv) {
 	printf ("SUBNET : %s\n", isp.netmask);
 	printf ("NETWORK: %s\n", isp.network);
 	printf ("BCAST  : %s\n", isp.broadcast);
-
-#ifdef HAVE_LIBGEOIP
 	printf ("NATION : %s (%s)\n", isp.gname, isp.gcode);
-#endif
 	if ( city ) {
 		printf ("CITY   : %s", isp.gcity);
 		if ( strlen (isp.gregion) && strcmp (isp.gregion, "N/A") )
