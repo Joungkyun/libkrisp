@@ -1,4 +1,4 @@
-.TH SEARCH 1 "04 Sep 2006"
+.TH SEARCH 1 "29 Nov 2006"
 .UC 4
 
 .SH 이름
@@ -14,7 +14,7 @@ kr_search() 함수는 주어진 ip 또는 호스트이름에 대한 정보를 �
 2.0 이전 버전에서 GeoIP 정보를 이용하려면 따로 db->gi 를 관리했어야 하나,
 2.0 이후 부터는 kr_open 함수 내부에서 자동으로 처리를 하게 변경이 되었다.
 .PP
-또한, isp structure member 에 city, retion 이 추가가 되어, GeoIPCity
+또한, isp structure member 에 city, retion 이 추가가 되어, GeoIPCity 나 userdb
 database 정보 검색이 가능할 경우, 도시, 지역 정보를 같이 제공을 한다.
 
 .PP
@@ -51,11 +51,8 @@ int main (void) {
 
     printf ("%-15s %-15s %-20s %-15s %-15s %s\\n",
             ip, isp.ip, isp.icode, isp.network, isp.broadcast, isp.iname);
-
-#ifdef HAVE_LIBGEOIP
     printf ("NATION : %s (%s)\\n", isp.cname, isp.ccode);
     printf ("CITY   : %s %s\\n", isp.region isp.city);
-#endif
 
     return 0;
 }
