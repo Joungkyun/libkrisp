@@ -1,8 +1,8 @@
-$Id: README,v 1.8 2006-11-28 19:52:22 oops Exp $
+$Id: README,v 1.9 2006-11-28 20:09:06 oops Exp $
 
 libkrisp - Korea ISP library
 
-작성: 김정균 2006.06.09 http://www.oops.org
+작성: 김정균 2006.11.29 http://www.oops.org
 
 자세한 내용은 http://devel.oops.org/ 의 libkrisp section 을 참고하기 바란다.
 
@@ -40,7 +40,8 @@ int main (void) {
 }
 
 또한, configure 시에 --with-geoip 옵션을 이용하여 geoip 를 연동할 수 있다.
-geoip 를 연동하면 국가 코드와 국가 이름이 netinfos structure 에 추가 된다.
+geoip database 는 국가 database, ISP database, City database 를 지원한다.
+
 netinfos structure 는 다음과 같이 구성이 되어 있다.
 
 struct netinfos {
@@ -51,10 +52,8 @@ struct netinfos {
     char            broadcast[16];
     char            icode[128];
     char            iname[128];
-#ifdef HAVE_LIBGEOIP
     char            ccode[4];
     char            cname[128];
-#endif
 };
 
 geoip 를 추가하는 예제는 krisplookup.c 를 참고하기 바란다. 아주 간단한 소스
