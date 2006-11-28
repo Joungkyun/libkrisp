@@ -1,5 +1,5 @@
 /*
- * $Id: krisp.c,v 1.54 2006-11-28 19:52:22 oops Exp $
+ * $Id: krisp.c,v 1.55 2006-11-28 19:54:52 oops Exp $
  */
 
 #include <stdio.h>
@@ -433,11 +433,10 @@ geocityend:
 		if ( strlen (h.iname) )
 			strcpy (isp->iname, h.iname);
 
-		if ( strlen (h.city) )
+		if ( strlen (h.city) ) {
 			strcpy (isp->city, h.city);
-
-		if ( strlen (h.region) )
 			strcpy (isp->region, h.region);
+		}
 	} else {
 		if ( ! strcmp (isp->ccode, "--") && strlen (h.ccode) )
 			strcpy (isp->ccode, h.ccode);
@@ -451,11 +450,10 @@ geocityend:
 		if ( ! strcmp (isp->iname, "N/A") && strlen (h.iname) )
 			strcpy (isp->iname, h.iname);
 
-		if ( ! strcmp (isp->city, "N/A") && strlen (h.city) )
+		if ( ! strcmp (isp->city, "N/A") && strlen (h.city) ) {
 			strcpy (isp->city, h.city);
-
-		if ( ! strcmp (isp->region, "N/A") && strlen (h.region) )
 			strcpy (isp->region, h.region);
+		}
 	}
 
 	return 0;
