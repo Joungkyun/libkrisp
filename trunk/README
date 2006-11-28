@@ -1,4 +1,4 @@
-$Id: README,v 1.7 2006-11-27 06:32:34 oops Exp $
+$Id: README,v 1.8 2006-11-28 19:52:22 oops Exp $
 
 libkrisp - Korea ISP library
 
@@ -52,8 +52,8 @@ struct netinfos {
     char            icode[128];
     char            iname[128];
 #ifdef HAVE_LIBGEOIP
-    char            gcode[4];
-    char            gname[128];
+    char            ccode[4];
+    char            cname[128];
 #endif
 };
 

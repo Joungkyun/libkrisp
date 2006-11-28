@@ -1,5 +1,5 @@
 /*
- * $Id: krisp.c,v 1.53 2006-11-28 19:39:08 oops Exp $
+ * $Id: krisp.c,v 1.54 2006-11-28 19:52:22 oops Exp $
  */
 
 #include <stdio.h>
@@ -145,9 +145,9 @@ int getHostIP (KR_API *db, char *ip, USERDB *h) {
 	char *reg;
 
 	memset (h->ccode, 0, sizeof (h->ccode));
-	memset (h->country, 0, sizeof (h->country));
-	memset (h->ispcode, 0, sizeof (h->ispcode));
-	memset (h->isp, 0, sizeof (h->isp));
+	memset (h->cname, 0, sizeof (h->cname));
+	memset (h->icode, 0, sizeof (h->icode));
+	memset (h->iname, 0, sizeof (h->iname));
 	memset (h->city, 0, sizeof (h->city));
 	memset (h->region, 0, sizeof (h->region));
 	h->flag = 0;
@@ -174,13 +174,13 @@ int getHostIP (KR_API *db, char *ip, USERDB *h) {
 					strcpy (h->ccode, db->rowdata[r] ? db->rowdata[r] : "");
 					break;
 				case 2 :
-					strcpy (h->country, db->rowdata[r] ? db->rowdata[r] : "");
+					strcpy (h->cname, db->rowdata[r] ? db->rowdata[r] : "");
 					break;
 				case 3 :
-					strcpy (h->ispcode, db->rowdata[r] ? db->rowdata[r] : "");
+					strcpy (h->icode, db->rowdata[r] ? db->rowdata[r] : "");
 					break;
 				case 4 :
-					strcpy (h->isp, db->rowdata[r] ? db->rowdata[r] : "");
+					strcpy (h->iname, db->rowdata[r] ? db->rowdata[r] : "");
 					break;
 				case 5 :
 					strcpy (h->city, db->rowdata[r] ? db->rowdata[r] : "");
@@ -255,10 +255,10 @@ void initStruct (KRNET_API *n) {
 	strcpy (n->netmask, "");
 	strcpy (n->icode, "");
 	strcpy (n->iname, "");
-	strcpy (n->gcode, "--");
-	strcpy (n->gname, "N/A");
-	strcpy (n->gcity, "N/A");
-	strcpy (n->gregion, "N/A");
+	strcpy (n->ccode, "--");
+	strcpy (n->cname, "N/A");
+	strcpy (n->city, "N/A");
+	strcpy (n->region, "N/A");
 }
 
 int kr_search (KRNET_API *isp, KR_API *db) {
@@ -286,10 +286,10 @@ int kr_search (KRNET_API *isp, KR_API *db) {
 	if ( inet_addr (isp->ip) == -1 ) {
 		strcpy (isp->icode, "--");
 		strcpy (isp->iname, "N/A");
-		strcpy (isp->gcode, "--");
-		strcpy (isp->gname, "N/A");
-		strcpy (isp->gcity, "N/A");
-		strcpy (isp->gregion, "N/A");
+		strcpy (isp->ccode, "--");
+		strcpy (isp->cname, "N/A");
+		strcpy (isp->city, "N/A");
+		strcpy (isp->region, "N/A");
 		return 0;
 	}
 
@@ -298,10 +298,10 @@ int kr_search (KRNET_API *isp, KR_API *db) {
 	if ( aclass_tmp == NULL ) {
 		strcpy (isp->icode, "--");
 		strcpy (isp->iname, "N/A");
-		strcpy (isp->gcode, "--");
-		strcpy (isp->gname, "N/A");
-		strcpy (isp->gcity, "N/A");
-		strcpy (isp->gregion, "N/A");
+		strcpy (isp->ccode, "--");
+		strcpy (isp->cname, "N/A");
+		strcpy (isp->city, "N/A");
+		strcpy (isp->region, "N/A");
 		return 0;
 	}
 	aclass[aclass_tmp - aclass] = 0;
@@ -352,15 +352,15 @@ geoip_section:
 			goto geoispend;
 
 		country_id = GeoIP_id_by_name (db->gi->gid, isp->ip);
-		strcpy (isp->gcode,
+		strcpy (isp->ccode,
 				GeoIP_country_code[country_id] ? GeoIP_country_code[country_id] : "--");
-		strcpy (isp->gname,
+		strcpy (isp->cname,
 				GeoIP_country_name[country_id] ? GeoIP_country_name[country_id] : "N/A");
 
 		/* manipulated geoip null data */
-		if ( ! strcmp (isp->gcode, "--") && strlen (isp->icode) ) {
-			strcpy (isp->gcode, "KR");
-			strcpy (isp->gname, "Korea, Republic of");
+		if ( ! strcmp (isp->ccode, "--") && strlen (isp->icode) ) {
+			strcpy (isp->ccode, "KR");
+			strcpy (isp->cname, "Korea, Republic of");
 		}
 geoispend:
 
@@ -375,16 +375,15 @@ geoispend:
 			GeoIPRecord *gir;
 			gir = GeoIP_record_by_name (db->gi->gic, isp->ip);
 
-			if ( gir != NULL && gir->city ) {
-				strcpy (isp->gcity, gir->city);
-			} else {
-				strcpy (isp->gcity, "N/A");
-			}
-
 			if ( gir != NULL && gir->city )
-				strcpy (isp->gregion, gir->region);
+				strcpy (isp->city, gir->city);
 			else
-				strcpy (isp->gregion, "N/A");
+				strcpy (isp->city, "N/A");
+
+			if ( gir != NULL && gir->region )
+				strcpy (isp->region, gir->region);
+			else
+				strcpy (isp->region, "N/A");
 
 			if ( gir != NULL )
 				GeoIPRecord_delete (gir);
@@ -392,8 +391,8 @@ geoispend:
 geocityend:
 	}
 #else
-	strcpy (isp->gcode, strlen (isp->icode) ? "KR" : "");
-	strcpy (isp->gname, strlen (isp->icode) ? "Korea, Republic of" : "");
+	strcpy (isp->ccode, strlen (isp->icode) ? "KR" : "");
+	strcpy (isp->cname, strlen (isp->icode) ? "Korea, Republic of" : "");
 #endif
 
 	if ( r == 0 || ! strlen (isp->icode) ) {
@@ -423,40 +422,40 @@ geocityend:
 
 	if ( h.flag ) {
 		if ( strlen (h.ccode) )
-			strcpy (isp->gcode, h.ccode);
+			strcpy (isp->ccode, h.ccode);
 
-		if ( strlen (h.country) )
-			strcpy (isp->gname, h.country);
+		if ( strlen (h.cname) )
+			strcpy (isp->cname, h.cname);
 
-		if ( strlen (h.ispcode) )
-			strcpy (isp->icode, h.ispcode);
+		if ( strlen (h.icode) )
+			strcpy (isp->icode, h.icode);
 
-		if ( strlen (h.isp) )
-			strcpy (isp->iname, h.isp);
+		if ( strlen (h.iname) )
+			strcpy (isp->iname, h.iname);
 
 		if ( strlen (h.city) )
-			strcpy (isp->gcity, h.city);
+			strcpy (isp->city, h.city);
 
 		if ( strlen (h.region) )
-			strcpy (isp->gregion, h.region);
+			strcpy (isp->region, h.region);
 	} else {
-		if ( ! strcmp (isp->gcode, "--") && strlen (h.ccode) )
-			strcpy (isp->gcode, h.ccode);
+		if ( ! strcmp (isp->ccode, "--") && strlen (h.ccode) )
+			strcpy (isp->ccode, h.ccode);
 
-		if ( ! strcmp (isp->gname, "N/A") && strlen (h.country) )
-			strcpy (isp->gname, h.country);
+		if ( ! strcmp (isp->cname, "N/A") && strlen (h.cname) )
+			strcpy (isp->cname, h.cname);
 
-		if ( ! strcmp (isp->icode, "--`) && strlen (h.ispcode) )
-			strcpy (isp->icode, h.ispcode);
+		if ( ! strcmp (isp->icode, "--") && strlen (h.icode) )
+			strcpy (isp->icode, h.icode);
 
-		if ( ! strcmp (isp->iname, "N/A") && strlen (h.isp) )
-			strcpy (isp->iname, h.isp);
+		if ( ! strcmp (isp->iname, "N/A") && strlen (h.iname) )
+			strcpy (isp->iname, h.iname);
 
-		if ( ! strcmp (isp->gcity, "N/A") && strlen (h.city) )
-			strcpy (isp->gcity, h.city);
+		if ( ! strcmp (isp->city, "N/A") && strlen (h.city) )
+			strcpy (isp->city, h.city);
 
-		if ( ! strcmp (isp->gregion, "N/A") && strlen (h.region) )
-			strcpy (isp->gregion, h.region);
+		if ( ! strcmp (isp->region, "N/A") && strlen (h.region) )
+			strcpy (isp->region, h.region);
 	}
 
 	return 0;
