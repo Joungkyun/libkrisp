@@ -1,5 +1,5 @@
 /*
- * $Id: krisp.c,v 1.51 2006-11-25 21:05:40 oops Exp $
+ * $Id: krisp.c,v 1.52 2006-11-28 10:57:09 oops Exp $
  */
 
 #include <stdio.h>
@@ -363,13 +363,13 @@ geoispend:
 			GeoIPRecord *gir;
 			gir = GeoIP_record_by_name (db->gi->gic, isp->ip);
 
-			if ( gir != NULL && strlen (gir->city) ) {
+			if ( gir != NULL && gir->city ) {
 				strcpy (isp->gcity, gir->city);
 			} else {
 				strcpy (isp->gcity, "N/A");
 			}
 
-			if ( gir != NULL && strlen (gir->city) )
+			if ( gir != NULL && gir->city )
 				strcpy (isp->gregion, gir->region);
 			else
 				strcpy (isp->gregion, "N/A");
