@@ -1,5 +1,5 @@
 /*
- * $Id: krispcommon.h,v 1.22 2006-11-25 19:55:53 oops Exp $
+ * $Id: krispcommon.h,v 1.23 2006-11-28 19:39:08 oops Exp $
  */
 
 #ifndef COMMON_H
@@ -21,7 +21,7 @@
 #endif
 
 #define DBTYPE_KRISP  0
-#define DBTYPE_HOSTIP 1
+#define DBTYPE_USERDB 1
 
 /*
  * GeoIP extension start
@@ -112,11 +112,11 @@ struct netmasks {
 typedef struct db_argument {
 #if defined(HAVE_LIBSQLITE3)
 	sqlite3			*c;		/* db resource */
-	sqlite3			*h;		/* hostip db resource */
+	sqlite3			*h;		/* userdb db resource */
 	sqlite3_stmt	*vm;	/* sqlite vm */
 #else
 	sqlite			*c;		/* db resource */
-	sqlite			*h;		/* hostip db resource */
+	sqlite			*h;		/* userdb db resource */
 	sqlite_vm		*vm;	/* sqlite vm */
 #endif
 	int				r;		/* execute result code */
@@ -136,10 +136,8 @@ typedef struct netinfos {
 	char			broadcast[16];
 	char			icode[128];
 	char			iname[128];
-#ifdef HAVE_LIBGEOIP
 	char			gcode[4];
 	char			gname[128];
-#endif
 	char			gcity[64];
 	char			gregion[4];
 } KRNET_API;
@@ -151,12 +149,15 @@ struct cinfo {
 	unsigned long	broad;
 };
 
-typedef struct hostips {
+typedef struct userdbs {
+	char			ccode[4];
+	char			country[128];
+	char			ispcode[128];
+	char			isp[128];
 	char			city[64];
-	char			region[32];
-} HOSTIP;
-
-extern short hostip;
+	char			region[4];
+	int				flag;
+} USERDB;
 
 #ifndef GEOCITYVAR
 #ifdef HAVE_LIBGEOIP

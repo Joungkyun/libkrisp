@@ -1,5 +1,5 @@
 /*
- * $Id: krisp.c,v 1.52 2006-11-28 10:57:09 oops Exp $
+ * $Id: krisp.c,v 1.53 2006-11-28 19:39:08 oops Exp $
  */
 
 #include <stdio.h>
@@ -18,8 +18,6 @@
 #include <krispcommon.h>
 #include <krdb.h>
 #include <krisp.h>
-
-short hostip       = 0;
 
 #ifdef HAVE_LIBGEOIP
 /* set 1, search GeoIPCity database if enabled search GeoIPCity */
@@ -138,7 +136,7 @@ int getISPinfo (KR_API *db, char *key, KRNET_API *n) {
 	return 0;
 }
 
-int getHostIP (KR_API *db, char *ip, HOSTIP *h) {
+int getHostIP (KR_API *db, char *ip, USERDB *h) {
 	char sql[64] = { 0, };
 	char net[16] = { 0, };
 	int r;
@@ -146,8 +144,13 @@ int getHostIP (KR_API *db, char *ip, HOSTIP *h) {
 	char *city;
 	char *reg;
 
+	memset (h->ccode, 0, sizeof (h->ccode));
+	memset (h->country, 0, sizeof (h->country));
+	memset (h->ispcode, 0, sizeof (h->ispcode));
+	memset (h->isp, 0, sizeof (h->isp));
 	memset (h->city, 0, sizeof (h->city));
 	memset (h->region, 0, sizeof (h->region));
+	h->flag = 0;
 
 	if ( db->h == NULL )
 		return 1;
@@ -157,18 +160,33 @@ int getHostIP (KR_API *db, char *ip, HOSTIP *h) {
 	cp.network = cp.ip & cp.mask;
 	sprintf (net, "%lu", cp.network);
 
-	sprintf (sql, "SELECT * FROM hostip WHERE longip = '%s'", net);
+	sprintf (sql, "SELECT * FROM userdb WHERE longip = '%s'", net);
 
-	if ( kr_dbQuery (db, sql, DBTYPE_HOSTIP) )
+	if ( kr_dbQuery (db, sql, DBTYPE_USERDB) )
 		return 1;
 
 	db->rows = 0;
 	db->cols = 0;
-	while ( ! (r = kr_dbFetch (db, DBTYPE_HOSTIP)) ) {
+	while ( ! (r = kr_dbFetch (db, DBTYPE_USERDB)) ) {
 		for ( r=0; r<db->cols; r++ ) {
 			switch (r) {
 				case 1 :
-					strcpy (h->city, db->rowdata[r]);
+					strcpy (h->ccode, db->rowdata[r] ? db->rowdata[r] : "");
+					break;
+				case 2 :
+					strcpy (h->country, db->rowdata[r] ? db->rowdata[r] : "");
+					break;
+				case 3 :
+					strcpy (h->ispcode, db->rowdata[r] ? db->rowdata[r] : "");
+					break;
+				case 4 :
+					strcpy (h->isp, db->rowdata[r] ? db->rowdata[r] : "");
+					break;
+				case 5 :
+					strcpy (h->city, db->rowdata[r] ? db->rowdata[r] : "");
+					break;
+				case 6 :
+					h->flag = (! strncmp (db->rowdata[r], "0", 1) ) ? 0 : 1;
 					break;
 				default:
 					continue;
@@ -237,10 +255,8 @@ void initStruct (KRNET_API *n) {
 	strcpy (n->netmask, "");
 	strcpy (n->icode, "");
 	strcpy (n->iname, "");
-#ifdef HAVE_LIBGEOIP
-	strcpy (n->gcode, "");
-	strcpy (n->gname, "");
-#endif
+	strcpy (n->gcode, "--");
+	strcpy (n->gname, "N/A");
 	strcpy (n->gcity, "N/A");
 	strcpy (n->gregion, "N/A");
 }
@@ -256,7 +272,7 @@ int kr_search (KRNET_API *isp, KR_API *db) {
 	struct hostent *hp;
 	struct in_addr s;
 
-	HOSTIP h;
+	USERDB h;
 
 	initStruct (isp);
 
@@ -270,10 +286,8 @@ int kr_search (KRNET_API *isp, KR_API *db) {
 	if ( inet_addr (isp->ip) == -1 ) {
 		strcpy (isp->icode, "--");
 		strcpy (isp->iname, "N/A");
-#ifdef HAVE_LIBGEOIP
 		strcpy (isp->gcode, "--");
 		strcpy (isp->gname, "N/A");
-#endif
 		strcpy (isp->gcity, "N/A");
 		strcpy (isp->gregion, "N/A");
 		return 0;
@@ -284,10 +298,8 @@ int kr_search (KRNET_API *isp, KR_API *db) {
 	if ( aclass_tmp == NULL ) {
 		strcpy (isp->icode, "--");
 		strcpy (isp->iname, "N/A");
-#ifdef HAVE_LIBGEOIP
 		strcpy (isp->gcode, "--");
 		strcpy (isp->gname, "N/A");
-#endif
 		strcpy (isp->gcity, "N/A");
 		strcpy (isp->gregion, "N/A");
 		return 0;
@@ -379,6 +391,9 @@ geoispend:
 		}
 geocityend:
 	}
+#else
+	strcpy (isp->gcode, strlen (isp->icode) ? "KR" : "");
+	strcpy (isp->gname, strlen (isp->icode) ? "Korea, Republic of" : "");
 #endif
 
 	if ( r == 0 || ! strlen (isp->icode) ) {
@@ -406,23 +421,42 @@ geocityend:
 	/* get HostIP */
 	getHostIP (db, isp->ip, &h);
 
-	if ( hostip ) {
-gohostip:
+	if ( h.flag ) {
+		if ( strlen (h.ccode) )
+			strcpy (isp->gcode, h.ccode);
+
+		if ( strlen (h.country) )
+			strcpy (isp->gname, h.country);
+
+		if ( strlen (h.ispcode) )
+			strcpy (isp->icode, h.ispcode);
+
+		if ( strlen (h.isp) )
+			strcpy (isp->iname, h.isp);
+
 		if ( strlen (h.city) )
 			strcpy (isp->gcity, h.city);
 
 		if ( strlen (h.region) )
 			strcpy (isp->gregion, h.region);
 	} else {
-#ifdef HAVE_LIBGEOIP
+		if ( ! strcmp (isp->gcode, "--") && strlen (h.ccode) )
+			strcpy (isp->gcode, h.ccode);
+
+		if ( ! strcmp (isp->gname, "N/A") && strlen (h.country) )
+			strcpy (isp->gname, h.country);
+
+		if ( ! strcmp (isp->icode, "--`) && strlen (h.ispcode) )
+			strcpy (isp->icode, h.ispcode);
+
+		if ( ! strcmp (isp->iname, "N/A") && strlen (h.isp) )
+			strcpy (isp->iname, h.isp);
+
 		if ( ! strcmp (isp->gcity, "N/A") && strlen (h.city) )
 			strcpy (isp->gcity, h.city);
 
 		if ( ! strcmp (isp->gregion, "N/A") && strlen (h.region) )
 			strcpy (isp->gregion, h.region);
-#else
-		goto gohostip;
-#endif
 	}
 
 	return 0;

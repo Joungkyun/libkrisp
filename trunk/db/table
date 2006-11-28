@@ -1,4 +1,8 @@
 
+krisp.dat
+---------
+
+
 CREATE TABLE netmask
 (
 	no integer NOT NULL DEFAULT '0',
@@ -16,12 +20,21 @@ CREATE TABLE isp
 	organization varchar,
 	servicename varchar,
 	PRIMARY KEY (longip)
-)
+);
 
-CREATE TABLE hostip
+
+
+krisp-userdb.dat
+----------------
+
+CREATE TABLE userdb
 (
 	longip integer unsigned NOT NULL PRIMARY KEY,
-	city varchar(64) NOT NULL DEFAULT ''
+	country_code char(2) NOT NULL DEFAULT '',
+	country varchar(64) NOT NULL DEFAULT '',
+	isp_code char(64) NOT NULL DEFAULT '',
+	isp char(64) NOT NULL DEFAULT '',
+	city varchar(64) NOT NULL DEFAULT '',
+	flag int NOT NULL DEFAULT '0'
 );
-CREATE index hostip_city ON hostip(city);
 
