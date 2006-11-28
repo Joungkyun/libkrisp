@@ -70,9 +70,9 @@ int main (void) {
             ip, isp.ip, isp.serv, isp.network, isp.broadcast, isp.org);
 
 #ifdef HAVE_LIBGEOIP
-	printf ("%s %s\\n", isp.gcode, isp.gname);
+	printf ("%s %s\\n", isp.ccode, isp.cname);
 	if ( geocity )
-		printf ("%s\\n", isp.gcity);
+		printf ("%s\\n", isp.city);
 #endif
     return 0;
 }

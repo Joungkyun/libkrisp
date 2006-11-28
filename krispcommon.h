@@ -1,5 +1,5 @@
 /*
- * $Id: krispcommon.h,v 1.23 2006-11-28 19:39:08 oops Exp $
+ * $Id: krispcommon.h,v 1.24 2006-11-28 19:52:22 oops Exp $
  */
 
 #ifndef COMMON_H
@@ -136,10 +136,10 @@ typedef struct netinfos {
 	char			broadcast[16];
 	char			icode[128];
 	char			iname[128];
-	char			gcode[4];
-	char			gname[128];
-	char			gcity[64];
-	char			gregion[4];
+	char			ccode[4];
+	char			cname[128];
+	char			city[64];
+	char			region[4];
 } KRNET_API;
 
 struct cinfo {
@@ -151,9 +151,9 @@ struct cinfo {
 
 typedef struct userdbs {
 	char			ccode[4];
-	char			country[128];
-	char			ispcode[128];
-	char			isp[128];
+	char			cname[128];
+	char			icode[128];
+	char			iname[128];
 	char			city[64];
 	char			region[4];
 	int				flag;

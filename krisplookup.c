@@ -1,5 +1,5 @@
 /*
- * $Id: krisplookup.c,v 1.29 2006-11-28 19:39:08 oops Exp $
+ * $Id: krisplookup.c,v 1.30 2006-11-28 19:52:22 oops Exp $
  */
 
 #include <krisp.h>
@@ -104,11 +104,11 @@ int main (int argc, char ** argv) {
 	printf ("SUBNET : %s\n", isp.netmask);
 	printf ("NETWORK: %s\n", isp.network);
 	printf ("BCAST  : %s\n", isp.broadcast);
-	printf ("NATION : %s (%s)\n", isp.gname, isp.gcode);
+	printf ("NATION : %s (%s)\n", isp.cname, isp.ccode);
 	if ( city ) {
-		printf ("CITY   : %s", isp.gcity);
-		if ( strlen (isp.gregion) && strcmp (isp.gregion, "N/A") )
-			printf (", %s", isp.gregion);
+		printf ("CITY   : %s", isp.city);
+		if ( strlen (isp.region) && strcmp (isp.region, "N/A") )
+			printf (", %s", isp.region);
 		printf ("\n");
 	}
 
