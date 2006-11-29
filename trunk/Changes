@@ -1,6 +1,6 @@
 Changelog
 
-$Id: Changes,v 1.59 2006-11-28 19:39:08 oops Exp $
+$Id: Changes,v 1.60 2006-11-29 07:14:34 oops Exp $
 
 
 * 2.1.0
@@ -10,6 +10,7 @@ Wed, Nov 29 2006 JoungKyun.Kim <http://www.oops.org>
 	  see also contrib/userdb/README
 	- support hostip database
 	  see also contrib/hostip/README
+	- upgrade soname version
 
 Tue, Nov 21 2006 JoungKyun.Kim <http://www.oops.org>
 	- support print csv format on krisp_mksql
