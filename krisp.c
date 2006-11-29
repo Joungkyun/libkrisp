@@ -1,5 +1,5 @@
 /*
- * $Id: krisp.c,v 1.57 2006-11-29 08:01:07 oops Exp $
+ * $Id: krisp.c,v 1.58 2006-11-29 10:11:03 oops Exp $
  */
 
 #include <stdio.h>
@@ -379,12 +379,12 @@ geoispend:
 			gir = GeoIP_record_by_name (db->gi->gic, isp->ip);
 
 			if ( gir != NULL && gir->city )
-				strcpy (isp->city, gir->city);
+				strcpy (isp->city, strlen (gir->city) ? gir->city : "N/A");
 			else
 				strcpy (isp->city, "N/A");
 
 			if ( gir != NULL && gir->region )
-				strcpy (isp->region, gir->region);
+				strcpy (isp->region, strlen (gir->region) ? gir->region : "N/A");
 			else
 				strcpy (isp->region, "N/A");
 
@@ -407,8 +407,8 @@ geocityend:
 				strcpy (isp->icode, "--");
 				strcpy (isp->iname, "N/A");
 			} else {
-				strcpy (isp->icode, g_isp);
-				strcpy (isp->iname, g_isp);
+				strcpy (isp->icode, strlen (g_isp) ? g_isp : "N/A");
+				strcpy (isp->iname, strlen (g_isp) ? g_isp : "N/A");
 				free ((char *) g_isp);
 			}
 		} else {
@@ -442,7 +442,7 @@ geocityend:
 
 		if ( strlen (h.city) ) {
 			strcpy (isp->city, h.city);
-			strcpy (isp->region, h.region);
+			strcpy (isp->region, strlen (h.region) ? h.region : "N/A");
 		}
 	} else {
 		if ( ! strcmp (isp->ccode, "--") && strlen (h.ccode) )
@@ -463,7 +463,7 @@ geocityend:
 
 		if ( ! strcmp (isp->city, "N/A") && strlen (h.city) ) {
 			strcpy (isp->city, h.city);
-			strcpy (isp->region, h.region);
+			strcpy (isp->region, strlen (h.region) ? h.region : "N/A");
 		}
 	}
 
