@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 1.18 2006-06-18 15:49:14 oops Exp $
+# $Id: Makefile.in,v 1.19 2006-11-29 07:00:01 oops Exp $
 srcdir          = @srcdir@
 top_srcdir      = @top_srcdir@
 builddir        = @builddir@
@@ -61,7 +61,8 @@ MAN1            = krisplookup krispmkdb
 MAN3            = krisp_version kr_open kr_close kr_search
 
 
-all: $(OBJECT) krisplookup.lo krispmkdb.lo $(PROG)-config $(PROG)-spec libs
+all: $(OBJECT) krisplookup.lo krispmkdb.lo $(PROG)-config $(PROG)-spec
+	$(MAKE) libs
 	$(LINK) -o $(PROG)lookup $(PROG)lookup.c libkrisp.la
 	$(LINK) -o $(PROG)mkdb $(PROG)mkdb.c libkrisp.la
 
