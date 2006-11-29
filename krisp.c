@@ -1,5 +1,5 @@
 /*
- * $Id: krisp.c,v 1.55 2006-11-28 19:54:52 oops Exp $
+ * $Id: krisp.c,v 1.56 2006-11-29 07:10:09 oops Exp $
  */
 
 #include <stdio.h>
@@ -404,7 +404,7 @@ geocityend:
 				strcpy (isp->icode, "--");
 				strcpy (isp->iname, "N/A");
 			} else {
-				strcpy (isp->icode, "--");
+				strcpy (isp->icode, g_isp);
 				strcpy (isp->iname, g_isp);
 				free ((char *) g_isp);
 			}
@@ -430,8 +430,12 @@ geocityend:
 		if ( strlen (h.icode) )
 			strcpy (isp->icode, h.icode);
 
-		if ( strlen (h.iname) )
+		if ( strlen (h.iname) ) {
+			if ( ! strcmp (isp->icode, "--") )
+				strcpy (isp->icode, h.iname);
+
 			strcpy (isp->iname, h.iname);
+		}
 
 		if ( strlen (h.city) ) {
 			strcpy (isp->city, h.city);
@@ -447,8 +451,12 @@ geocityend:
 		if ( ! strcmp (isp->icode, "--") && strlen (h.icode) )
 			strcpy (isp->icode, h.icode);
 
-		if ( ! strcmp (isp->iname, "N/A") && strlen (h.iname) )
+		if ( ! strcmp (isp->iname, "N/A") && strlen (h.iname) ) {
+			if ( ! strcmp (isp->icode, "--") )
+				strcpy (isp->icode, h.iname);
+
 			strcpy (isp->iname, h.iname);
+		}
 
 		if ( ! strcmp (isp->city, "N/A") && strlen (h.city) ) {
 			strcpy (isp->city, h.city);
