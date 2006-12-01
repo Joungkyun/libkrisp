@@ -1,5 +1,5 @@
 /*
- * $Id: krisp.c,v 1.59 2006-12-01 08:02:18 oops Exp $
+ * $Id: krisp.c,v 1.60 2006-12-01 09:53:00 oops Exp $
  */
 
 #include <stdio.h>
@@ -127,8 +127,8 @@ int getISPinfo (KR_API *db, char *key, KRNET_API *n) {
 					break;
 			}
 		}
+		kr_dbFree (db);
 	}
-	kr_dbFree (db);
 
 	if ( r == -1 )
 		return 1;
@@ -195,8 +195,8 @@ int getHostIP (KR_API *db, char *ip, USERDB *h) {
 					continue;
 			}
 		}
+		kr_dbFree (db);
 	}
-	kr_dbFree (db);
 
 	if ( ! strlen (h->icode) && strlen (h->iname) )
 		strcpy (h->icode, h->iname);
