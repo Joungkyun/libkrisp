@@ -1,12 +1,14 @@
 Changelog
 
-$Id: Changes,v 1.61 2006-12-01 09:08:04 oops Exp $
+$Id: Changes,v 1.62 2006-12-01 09:11:41 oops Exp $
 
 
 * 2.1.0
 
 Fri, Dec  1 2006 JoungKyun.Kim <http://www.oops.org>
+	- release 2.1.0
 	- add region filed on userdb
+	- update database 20061130
 
 Wed, Nov 29 2006 JoungKyun.Kim <http://www.oops.org>
 	- support user database
