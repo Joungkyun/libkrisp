@@ -80,7 +80,7 @@ function _callback ($m) {
 }
 
 function convert_char ($lip, $m) {
-	global $wrong;
+	global $wrong, $cfix;
 	$_reg = '';
 
 	$_s = '/(%[0-9a-z]{2})/i';
