@@ -20,6 +20,7 @@ CREATE TABLE userdb
   isp_code char(64) NOT NULL DEFAULT '',        ISP 코드
   isp char(64) NOT NULL DEFAULT '',             ISP명
   city varchar(64) NOT NULL DEFAULT '',         도시명
+  region varchar(4) NOT NULL DEFAULT '',        지역명
   flag int NOT NULL DEFAULT '0'                 강제 출력 플래그
 );
 

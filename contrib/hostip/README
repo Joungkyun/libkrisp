@@ -22,10 +22,8 @@ krisp 에서 hostip database (http://hostip.info) 를 지원하기 위한 문서
    shell> php hostip.php hip_ip4_City_lat_lng.csv > hostip.csv
 
 3. 중복 확인 및 제거 :
-   awk -F'|' '{print $1}' hostip.csv | sort | uniq -c > ppp
-   /[2-9]\t 로 확인하여 hostip.csv 에서 첫번째 field longip 를 유일값으로 수정
-
-   이 단계는 수작업을 해 줘야 한다.
+   hostip.php 를 실행하면 마지막에 결과로 중복된 longip 를 보여준다. host.csv 에
+   서 중복된 longip 를 유일값으로 수정해 준다. 이 단계는 수작업을 해 줘야 한다.
 
 5. user database 에 입력
    libkrisp/contrib/userdb/README 를 참고하여 database 를 생성한다.
