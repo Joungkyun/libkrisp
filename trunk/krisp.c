@@ -1,5 +1,5 @@
 /*
- * $Id: krisp.c,v 1.58 2006-11-29 10:11:03 oops Exp $
+ * $Id: krisp.c,v 1.59 2006-12-01 08:02:18 oops Exp $
  */
 
 #include <stdio.h>
@@ -186,6 +186,9 @@ int getHostIP (KR_API *db, char *ip, USERDB *h) {
 					strcpy (h->city, db->rowdata[r] ? db->rowdata[r] : "");
 					break;
 				case 6 :
+					strcpy (h->region, db->rowdata[r] ? db->rowdata[r] : "");
+					break;
+				case 7 :
 					h->flag = (! strncmp (db->rowdata[r], "0", 1) ) ? 0 : 1;
 					break;
 				default:
