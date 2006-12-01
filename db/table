@@ -35,6 +35,7 @@ CREATE TABLE userdb
 	isp_code char(64) NOT NULL DEFAULT '',
 	isp char(64) NOT NULL DEFAULT '',
 	city varchar(64) NOT NULL DEFAULT '',
+	region varchar(4) NOT NULL DEFAULT '',
 	flag int NOT NULL DEFAULT '0'
 );
 
