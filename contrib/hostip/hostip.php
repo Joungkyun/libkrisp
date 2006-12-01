@@ -178,7 +178,7 @@ endforeach;
 
 foreach ( $uniq as $k => $v ) :
 	if ( $v > 1 ) :
-		echo "$k is not uniq ($v)\n";
+		error_log ("\n\n$k is not uniq ($v)");
 	endif;
 endforeach;
 
