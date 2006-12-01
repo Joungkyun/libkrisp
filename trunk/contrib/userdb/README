@@ -29,7 +29,7 @@ longip 는 C class 단위로 넣어 주어야 하며, C class 의 network 즉 마지막 자리는 0
 
 
 <?
-echo ip2long ("10.0.0.1")."\n";
+$longip = sprintf ('%u', ip2long ($ipaddr));
 ?>
 
 과 같이 값을 구할 수 있다.
