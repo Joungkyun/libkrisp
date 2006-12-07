@@ -1,5 +1,5 @@
 /*
- * $Id: krisp.c,v 1.60 2006-12-01 09:53:00 oops Exp $
+ * $Id: krisp.c,v 1.61 2006-12-07 06:41:21 oops Exp $
  */
 
 #include <stdio.h>
@@ -394,8 +394,9 @@ geoispend:
 			if ( gir != NULL )
 				GeoIPRecord_delete (gir);
 		}
-geocityend:
 	}
+geocityend:
+
 #else
 	strcpy (isp->ccode, strlen (isp->icode) ? "KR" : "");
 	strcpy (isp->cname, strlen (isp->icode) ? "Korea, Republic of" : "");
