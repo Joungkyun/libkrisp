@@ -39,3 +39,19 @@ userdb 의 flag 값은 기존의 data 와 어떻게 조합을 할 지를 결정을 할 수 있다. 0으�
 환하도록 된다.  1 로 지정을 할 경우에는, userdb 에 값이 존재할 경우 무조건 userdb
 의 값이 반환이 된다.
 
+
+* hostip database 에 나만의 data merge 하기
+
+추가나 변경할 c class 대역을
+
+longIP|국가코드|국가이름|ISP코드|ISP이름|도시명(영문)|지역코드|강제출력여부
+
+의 형식으로 파일을 만든다. ISP 정보는 생략 가능하며 지역코드를 모를 경우에는 0 으
+로 지정을 한다. 강제 출력 여부는 1 로 지정을 한다.
+
+다음,
+
+shell> ./merge.php hostip.csv my.csv > new.csv
+
+명령을 실행하면 hostip.csv 에 my.csv 가 attach 또는 수정된 정보가 new.csv 에 저장
+이 된다. 이 new.csv 파일로 DB 를 생성하면 된다.
