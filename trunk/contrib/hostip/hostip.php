@@ -83,6 +83,8 @@ $cfix = array (
 	'Y÷gyang' => array ('Yeongyang', 6),
 	'Yongin' => array ('Yongin', 13),
 	'Yuch\'on' => array ('Yeocheon', 16)
+	'Chungju' => array ('Cheongju', 5);
+	'Cheongju' => array ('Cheongju', 5);
 );
 
 function _callback ($m) {
