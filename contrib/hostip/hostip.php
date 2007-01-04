@@ -11,7 +11,7 @@ endif;
 
 # fix it flag
 $fix = array (
-	'3530972672' => 1;
+	'3530972672' => 1,
 );
 
 # wrong ip & cities
@@ -82,9 +82,9 @@ $cfix = array (
 	'Ulsan' => array ('Ulsan', 21),
 	'Y÷gyang' => array ('Yeongyang', 6),
 	'Yongin' => array ('Yongin', 13),
-	'Yuch\'on' => array ('Yeocheon', 16)
-	'Chungju' => array ('Cheongju', 5);
-	'Cheongju' => array ('Cheongju', 5);
+	'Yuch\'on' => array ('Yeocheon', 16),
+	'Chungju' => array ('Cheongju', 5),
+	'Cheongju' => array ('Cheongju', 5),
 );
 
 function _callback ($m) {
