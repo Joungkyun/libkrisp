@@ -1,12 +1,37 @@
-#!/usr/bin/php
+#!/usr/bin/php-cli
 <?
-dl ('geoip.so');
+#
+# Requirement
+#
+# over PHP5
+# GeoIP
+# GeoIP Pear (http://pear.php.net/package/Net_GeoIP/) or
+# GeoIP php extension (http://cvs.oops.org/index.cgi/mod_geoip/?cvsroot=OOPS-PHP)
+#
 
-if ( file_exists ('/usr/local/src/mycvs/php/pear_krisp/krisp/georegion.php') ) :
-	require_once '/usr/local/src/mycvs/php/pear_krisp/krisp/georegion.php';
-endif;
+define (_ADDR, 0);
+define (_NAME, 1);
+define (_CLASS, 2);
+define (_START, 3);
+define (_END, 4);
+
+define (F_CLASS, 0);
+define (F_START, 1);
+define (F_END, 2);
+define (F_CITY, 3);
+define (F_REGION, 4);
+define (F_NAME, 5);
+
+define (O_START, 0);
+define (O_END, 1);
+define (O_NAME, 2);
+define (O_CITY, 3);
+define (O_REGION, 4);
+define (O_CLASS, 5);
 
 function addr_parser ($str) {
+	unset ($_s);
+	unset ($_t);
 	$_s[] = '/^"/';
 	$_t[] = '';
 	$_s[] = '/^(서울|부산|대구|광주|인천|대전|울산).*/';
@@ -48,7 +73,10 @@ function rvk_class ($class, $n=0) {
 					break;
 			endswitch;
 		else :
-			$v = preg_replace ('/^[0]{1,2}/', '', trim ($v));
+			$v = preg_replace ('/^[0]+/', '', trim ($v));
+			if ( ! trim ($v) ) :
+				$v = 0;
+			endif;
 		endif;
 		$_p .= $v . '.';
 	endforeach;
@@ -69,7 +97,10 @@ function fix_strint ($d, $n = 0) {
 				break;
 		endswitch;
 	else :
-		$d = preg_replace ('/^0+/', '', $d);
+		$d = preg_replace ('/^0+/', '', trim ($d));
+		if ( ! trim ($d) ) :
+			$d = 0;
+		endif;
 	endif;
 
 	return $d;
@@ -78,112 +109,151 @@ function fix_strint ($d, $n = 0) {
 function fix_city ($c) {
 	global $FIPS_K;
 	$c = preg_replace ('/(시|군)$/', '', $c);
-	$c = $FIPS_K['cityMap'][$c];
+	$_c = $FIPS_K['cityMap'][$c];
 
-	return $c;
+	return $_c ? $_c : $c;
 }
 
-function fix_region ($r) {
+function fix_region ($_r) {
 	global $FIPS_K;
-	$key = array_search ($r, $FIPS_K['short']);
-	return $key;
-}
-
-function location_callback ($m) {
-	$m[3] = rvk_class ($m[3], 1);
-	$m[4] = fix_strint ($m[4], 1);
-	$m[5] = fix_strint ($m[5], 1);
-
-	return "{$m[3]}\t{$m[4]}\t{$m[5]}\t{$m[1]}\t{$m[2]}";
+	$key = array_search ($_r, $FIPS_K['short']);
+	return $key ? $key : $_r;
 }
 
 function _file_init ($f) {
+	global $stderr;
+
 	$_l = file ($f);
+	$_s = count ($_l);
+
+	if ( $_s < 1 ) :
+		error_log ("ERROR: no data", 0);
+		exit (1);
+	endif;
 
 	$_l = preg_replace ('/[\r\n]/', '', $_l);
-	$_l = preg_replace_callback ('/([^\t]+)\t([^\t]+)\t([^\t]+)\t([^\t]+)\t([^\t]+)/', 'location_callback', $_l);
-	sort ($_l);
 
-	return $_l;
+	error_log ("* Read line", 0);
+	for ( $i=0; $i<$_s; $i++ ) :
+		$_component = explode ('|', trim ($_l[$i]));
+
+		$_r[$i]  = rvk_class ($_component[_CLASS]) . '|';
+		$_r[$i] .= fix_strint ($_component[_START]) . '|';
+		$_r[$i] .= fix_strint ($_component[_END]) . '|';
+
+		$_component[_ADDR]  = addr_parser (trim ($_component[_ADDR]));
+		$_region = split ('[ ]+', $_component[_ADDR]);
+		$_r[$i]  .= $_region[1] . '|';
+		$_r[$i]  .= $_region[0] . '|';
+		$_r[$i]  .= trim ($_component[_NAME]);
+
+		fprintf ($stderr, "  ==> %d\r", $i);
+	endfor;
+	fprintf ($stderr, "%20s\r* Sort data start\n", ' ');
+
+	natsort ($_r);
+	fprintf ($stderr, "%20\r", ' ');
+
+	return $_r;
 }
 
-$geoip_t = GEOIP_INDEX_CACHE | GEOIP_CHECK_CACHE;
-$gi = GeoIP_open ($_geoip_t);
+$_geoip = 0;
+if ( ! extension_loaded ('geoip') ) :
+	dl ('geoip.so');
+	$_geoip = 1; // extension
 
-if ( trim ($argv[1]) && file_exists ($argv[1]) ) :
-	$_file = $argv[1];
-else :
-	$_file = './PC방IP리스트.txt';
+	if ( function_exists ('GeoIP_open') ) :
+		$geoip_t = GEOIP_INDEX_CACHE | GEOIP_CHECK_CACHE;
+		$gi      = GeoIP_open ($_geoip_t);
+	else :
+		$_geoip = 0; // pear
+		@include_once 'Net/GeoIP.php';
+
+		if ( ! class_exists ('Net_GeoIP') ) :
+			error_log ('ERROR: This system don\'t support GeoIP extension or Pear', 0);
+			error_log ('       Get php extension on http://cvs.oops.org/index.cgi/mod_geoip/?cvsroot=OOPS-PHP or', 0);
+			error_log ('       Get php pear on http://pear.php.net/package/Net_GeoIP/', 0);
+			exit (1);
+		endif;
+
+		$gi = Net_GeoIP::getInstance ('/usr/share/GeoIP/GeoIP.dat', Net_GeoIP::MEMORY_CACHE);
+	endif;
 endif;
 
-$_line = _file_init ($_file);
+if ( file_exists ('/usr/local/src/mycvs/php/pear_krisp/krisp/georegion.php') ) :
+	require_once '/usr/local/src/mycvs/php/pear_krisp/krisp/georegion.php';
+endif;
 
-define (F_REGION, 0);
-define (F_CITY, 1);
+if ( trim ($argv[1]) && file_exists ($argv[1]) ) :
+    $_file = $argv[1];
+else :
+    $_file = './PC방IP리스트.txt';
 
-define (F_CLASS, 0);
-define (F_START, 1);
-define (F_END, 2);
-define (F_ADDR, 3);
-define (F_NAME, 4);
+	if ( ! file_exists ($_file) ) :
+		error_log ("ERROR: $_file not found", 0);
+		exit (1);
+	endif;
+endif;
 
-define (O_START, 0);
-define (O_END, 1);
-define (O_NAME, 2);
-define (O_CITY, 3);
-define (O_REGION, 4);
-define (O_CLASS, 5);
+$stderr = fopen ('php://stderr', 'w');
+$line = _file_init ($_file);
 
+error_log ("* Start line parse", 0);
+$i = 0;
+foreach ( $line as $v ) :
+	fprintf ($stderr, "  ==> %d\r", ++$i);
 
-foreach ( $_line as $_l ) :
-	$_la = split ("[\t]+", trim ($_l));
+	#printf ("%s\n", $v);
+	#continue;
+
+	$l = explode ('|', trim ($v));
 
 	for ( $j=0; $j<5; $j++ ) :
-		$_la[$j] = trim ($_la[$j]);
+		$l[$j] = trim ($l[$j]);
 	endfor;
-	$_la[F_START] = fix_strint ($_la[F_START]);
-	$_la[F_END]   = fix_strint ($_la[F_END]);
 
-	$_la[F_CLASS] = rvk_class ($_la[F_CLASS]);
-	$_start = $_la[F_CLASS] . $_la[F_START];
-	$_end   = $_la[F_CLASS] . $_la[F_END];
+	$_start = $l[F_CLASS] . '.' . $l[F_START];
+	$_end   = $l[F_CLASS] . '.' . $l[F_END];
 
-	$gir = GeoIP_id_by_name ($gi, $_la[F_CLASS] . '.0');
+	if ( $_geoip ) :
+		$_gir = GeoIP_id_by_name ($gi, $l[F_CLASS] . '.0');
+		$gir = $_gir['code'];
+	else :
+		$gir = $gi->lookupCountryCode ($l[F_CLASS] . '.0');
+	endif;
 
-	if ( $gir['code'] != 'KR' ) :
+	if ( $gir != 'KR' ) :
 		continue;
 	endif;
 
-	$_la[F_ADDR] = addr_parser ($_la[F_ADDR]);
-	$_lp = explode (" ", $_la[F_ADDR]);
-
 	if ( ! is_array ($old) ) :
-		$old = array ($_la[F_START], $_la[F_END], $_la[F_NAME], $_lp[F_CITY], $_lp[F_REGION], $_la[F_CLASS]);
+		$old = array ($l[F_START], $l[F_END], $l[F_NAME], $l[F_CITY], $l[F_REGION], $l[F_CLASS]);
 	else :
-		if ( $old[O_CLASS] == $_la[F_CLASS] ) :
-			#if ( $_la[F_START] < $old[O_END] ) :
-				if ( $_la[F_START] < $old[O_START] ) :
-					$old[O_START] = $_la[F_START];
+		if ( $old[O_CLASS] == $l[F_CLASS] ) :
+			#if ( $l[F_START] < $old[O_END] ) :
+				if ( $l[F_START] < $old[O_START] ) :
+					$old[O_START] = $l[F_START];
 				endif;
-				if ( $_la[F_END] > $old[O_END] ) :
-					$old[O_END] = $_la[F_END];
+				if ( $l[F_END] > $old[O_END] ) :
+					$old[O_END] = $l[F_END];
 				endif;
 			#else :
 			#	$o_start = $old[O_CLASS] . '.' . $old[O_START];
 			#	$o_end   = $old[O_CLASS] . '.' . $old[O_END];
 			#	printf ("%s|%s|%s|%s|%s\n", $o_start, $o_end, $old[O_NAME], $old[O_CITY], $old[O_REGION]);
-			#	$old = array ($_la[F_START], $_la[F_END], $_la[F_NAME], $_lp[F_CITY], $_lp[F_REGION], $_la[F_CLASS]);
-			#endif;
+			#	$old = array ($l[F_START], $l[F_END], $l[F_NAME], $l[F_CITY], $l[F_REGION], $l[F_CLASS]);
+            #endif;
 		else :
-			$o_start = $old[O_CLASS] . '.' . $old[O_START];
-			$o_end   = $old[O_CLASS] . '.' . $old[O_END];
+			#$o_start = $old[O_CLASS] . '.' . $old[O_START];
+			#$o_end   = $old[O_CLASS] . '.' . $old[O_END];
 			#printf ("%s|%s|%s|%s|%s\n", $o_start, $o_end, $old[O_NAME], $old[O_CITY], $old[O_REGION]);
 			printf ("%s|KR|Korea, Republic of|||%s|%s|1\n",
 					_ip2long ($old[O_CLASS].".0"), fix_city ($old[O_CITY]), fix_region ($old[O_REGION]));
-			$old = array ($_la[F_START], $_la[F_END], $_la[F_NAME], $_lp[F_CITY], $_lp[F_REGION], $_la[F_CLASS]);
+			$old = array ($l[F_START], $l[F_END], $l[F_NAME], $l[F_CITY], $l[F_REGION], $l[F_CLASS]);
 		endif;
 	endif;
 endforeach;
+fclose ($stderr);
 
-GeoIP_close ($gi);
+exit (0);
 ?>
