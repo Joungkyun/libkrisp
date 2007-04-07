@@ -43,7 +43,7 @@ foreach ($r_addip as $k => $v ) :
 	$r_hostip[$k] = $v;
 endforeach;
 
-sort ($r_hostip);
+natsort ($r_hostip);
 
 foreach ( $r_hostip as $v ) :
 	echo $v."\n";
