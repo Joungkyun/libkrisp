@@ -201,7 +201,7 @@ endif;
 if ( trim ($argv[1]) && file_exists ($argv[1]) ) :
     $_file = $argv[1];
 else :
-    $_file = './PC방IP리스트.txt';
+	$_file = './PCBangIPlist.txt';
 
 	if ( ! file_exists ($_file) ) :
 		error_log ("ERROR: $_file not found", 0);
