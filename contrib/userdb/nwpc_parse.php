@@ -157,6 +157,20 @@ function _file_init ($f) {
 	return $_r;
 }
 
+function test_checker ($target) {
+	if ( ! is_array ($target) ) :
+		return TRUE;
+	endif;
+
+	foreach ( $target as $v ) :
+		if ( preg_match ('/Å×½ºÆ®/', $v) ) :
+			return FALSE;
+		endif;
+	endforeach;
+
+	return TRUE;
+}
+
 $_geoip = 0;
 if ( ! extension_loaded ('geoip') ) :
 	dl ('geoip.so');
@@ -207,6 +221,10 @@ foreach ( $line as $v ) :
 	#continue;
 
 	$l = explode ('|', trim ($v));
+
+	if ( test_checker (array ($l[F_NAME], $l[F_REGION])) === FALSE ) :
+		continue;
+	endif;
 
 	for ( $j=0; $j<5; $j++ ) :
 		$l[$j] = trim ($l[$j]);
