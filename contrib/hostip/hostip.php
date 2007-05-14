@@ -247,7 +247,7 @@ foreach ( $_f as $v ) :
 	$_co = $_gir['code'];
 	$_con = $_gir['name'];
 
-	$flags = is_array ($fix[$_lip]) ? 1 : 0;
+	$flags = $fix[$_lip] ? 1 : 0;
 
 	#printf ("%s|%s|%s|%s|%s|0\n", $_lip, $_ip, $_co, $_con, $_city[0], $_city[1]);
 	printf ("%s|%s|%s|||%s|%s|%s\n", $_lip, $_co, $_con, $_city[0], $_city[1], $flags);
