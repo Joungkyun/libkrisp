@@ -100,8 +100,9 @@ function fix_city ($c) {
 	global $FIPS_K;
 	$c = preg_replace ('/(½Ã|±º)$/', '', $c);
 	$_c = $FIPS_K['cityMap'][$c];
+	$_c = fixgu ($_c ? $_c : $c);
 
-	return $_c ? $_c : $c;
+	return $_c;
 }
 
 function fix_region ($_r) {
@@ -160,6 +161,20 @@ function test_checker ($target) {
 
 	return TRUE;
 }
+
+function fixgu ($city) {
+	global $fix_eng_gu;
+
+	if ( ! is_array ($fix_eng_gu) || ! count ($fix_eng_gu) ) :
+		return $city;
+	endif;
+
+	return $fix_eng_gu[$city] ? $fix_eng_gu[$city] : $city;
+}
+
+if ( file_exists ('./fix-eng-gu.php') ) :
+	include './fix-eng-gu.php';
+endif;
 
 $_geoip = 0;
 if ( ! extension_loaded ('geoip') ) :
