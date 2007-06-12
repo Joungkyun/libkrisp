@@ -219,14 +219,19 @@ function chk_block ($ip) {
 	return 1;
 }
 
-
-$_f = file ('hip_ip4_city_lat_lng.csv');
+$_file = $argv[1] ? trim ($argv[1]) : 'hip_ip4_city_lat_lng.csv';
+$stderr = fopen ('php://stderr', 'w');
 
 $gi = GeoIP_open (GEOIP_MEMORY_CACHE|GEOIP_CHECK_CACHE);
+$fp = fopen ($_file, 'rb');
+
+fprintf ($stderr, "* Parsed %s\n", $_file);
 
 $i = 0;
-foreach ( $_f as $v ) :
-	$line = explode (',', $v);
+while ( ! feof ($fp) ) :
+	$line = explode (',', fgets ($fp, 1024));
+
+	fprintf ($stderr, "  => %d\r", ++$i);
 
 	if ( count ($line) != 4 ) :
 		continue;
@@ -252,13 +257,18 @@ foreach ( $_f as $v ) :
 
 	#printf ("%s|%s|%s|%s|%s|0\n", $_lip, $_ip, $_co, $_con, $_city[0], $_city[1]);
 	printf ("%s|%s|%s|||%s|%s|%s\n", $_lip, $_co, $_con, $_city[0], $_city[1], $flags);
-endforeach;
+endwhile;
 
+fprintf ($stderr, "* Check uniq entry\n");
+$i = 0;
 foreach ( $uniq as $k => $v ) :
+	fprintf ($stderr, "  => %d", ++$i);
 	if ( $v > 1 ) :
-		error_log ("\n\n$k is not uniq ($v)");
+		error_log ("\n$k is not uniq ($v)");
 	endif;
+	fprintf ($stderr, "\r");
 endforeach;
 
+fclose ($stderr);
 GeoIP_close ($gi);
 ?>
