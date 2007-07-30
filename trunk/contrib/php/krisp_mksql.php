@@ -1,7 +1,7 @@
 #!/usr/bin/php
 <?
 #
-# $Id: krisp_mksql.php,v 1.11 2007-07-22 21:12:04 oops Exp $
+# $Id: krisp_mksql.php,v 1.12 2007-07-30 11:55:23 oops Exp $
 #
 # get Korea ISP information to text format and make krisp database sql
 #
@@ -63,7 +63,7 @@ class domesticIP {
 		$p = explode ("\n", $v);
 		$r = array ();
 		$i = 0;
-		$ready = 0;
+		$ready = ( preg_match ('/배정일자/', $v) ) ? 0 : 1;
 
 		foreach ($p as $_v) :
 			$_v = trim ($_v);
