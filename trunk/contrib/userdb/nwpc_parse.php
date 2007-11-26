@@ -197,6 +197,8 @@ if ( ! extension_loaded ('geoip') ) :
 
 		$gi = Net_GeoIP::getInstance ('/usr/share/GeoIP/GeoIP.dat', Net_GeoIP::MEMORY_CACHE);
 	endif;
+else :
+	$_geoip = 1;
 endif;
 
 if ( file_exists ('/usr/local/src/mycvs/php/pear_krisp/krisp/georegion.php') ) :
