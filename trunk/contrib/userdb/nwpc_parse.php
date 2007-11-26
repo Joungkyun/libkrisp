@@ -199,6 +199,8 @@ if ( ! extension_loaded ('geoip') ) :
 	endif;
 else :
 	$_geoip = 1;
+	$geoip_t = GEOIP_INDEX_CACHE | GEOIP_CHECK_CACHE;
+	$gi      = GeoIP_open ($_geoip_t);
 endif;
 
 if ( file_exists ('/usr/local/src/mycvs/php/pear_krisp/krisp/georegion.php') ) :
