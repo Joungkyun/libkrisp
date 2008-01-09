@@ -1,7 +1,7 @@
 #!/usr/bin/php
 <?
 #
-# $Id: krisp_mksql.php,v 1.12 2007-07-30 11:55:23 oops Exp $
+# $Id: krisp_mksql.php,v 1.13 2008-01-09 19:34:46 oops Exp $
 #
 # get Korea ISP information to text format and make krisp database sql
 #
@@ -27,7 +27,7 @@ class domesticIP {
 			exit (1);
 		endif;
 
-		if ( ! preg_match ('/6KANet|한국전산원/', $v) ) :
+		if ( ! preg_match ('/한국정보사회진흥원|KOREN/', $v) ) :
 			error_log ("ERROR: invalid data format", 0);
 			exit (1);
 		endif;
