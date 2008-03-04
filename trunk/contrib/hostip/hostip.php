@@ -225,6 +225,11 @@ $stderr = fopen ('php://stderr', 'w');
 $gi = GeoIP_open (GEOIP_MEMORY_CACHE|GEOIP_CHECK_CACHE);
 $fp = fopen ($_file, 'rb');
 
+if ( ! is_resource ($fp) ) :
+	fprintf ($stderr, "%s open failed\n", $_file);
+	exit (1);
+endif;
+
 fprintf ($stderr, "* Parsed %s\n", $_file);
 
 $i = 0;
