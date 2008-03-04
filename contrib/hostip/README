@@ -19,7 +19,7 @@ krisp 에서 hostip database (http://hostip.info) 를 지원하기 위한 문서
    서는 mod_geoip (ftp://ftp.oops.org/pub/oops/php/extensions/mod_geoip/)가 필요
    하다.
 
-   shell> php hostip.php hip_ip4_City_lat_lng.csv > hostip.csv
+   shell> php hostip.php hip_ip4_city_lat_lng.csv > hostip.csv
 
 3. 중복 확인 및 제거 :
    hostip.php 를 실행하면 마지막에 결과로 중복된 longip 를 보여준다. host.csv 에
