@@ -23,6 +23,7 @@ $wrong = array (
 	'3420617984' => array ('Changwon', '20'),		# 203.226.125.0
 	'3420693504' => array ('Goyang', '6'),			# 203.227.164.0
 	'3420694272' => array ('Goyang', '6'),			# 203.227.167.0
+	'3421615872' => array ('Sasang-gu', 10),		# 203.241.183.0 부산 사상구 동서대학교
 	'3422095360' => array ('Suwon', '13'),			# 203.249.8.0
 	'3422097664' => array ('Suwon', '13'),			# 203.249.20.0
 	'3422098432' => array ('Suwon', '13'),			# 203.249.20.0
@@ -31,6 +32,12 @@ $wrong = array (
 	'3543771648' => array ('Chongsong', '14'),		# 211.57.170.0
 	'3543785216' => array ('Namsandong', '13'),		# 211.57.223.0
 	'3695600640' => array ('Jinhae', '20')			# 220.70.100.0 fixed it
+);
+
+$addip = array (
+	'2109365760' => array ('Seongnam', 13),			# 125.186.94.0
+	'3421424384' => array ('Seongnam', 13),			# 203.238.203.0
+	'3739753216' => array ('Suwon', 13),			# 222.232.27.0
 );
 
 $cfix = array (
@@ -155,6 +162,22 @@ function _callback ($m) {
 	return urldecode ($m[1]);
 }
 
+function check_addip ($o, $c) {
+	global $addip;
+
+	if ( ! is_array ($addip) || ! $o || ! $c ) :
+		return FALSE;
+	endif;
+
+	foreach ( $addip as $key => $value ) :
+		if ( $key > $o && $key < $c ) :
+			return array ($key, $value[0], $value[1]);
+		endif;
+	endforeach;
+
+	return FALSE;
+}
+
 function convert_char ($lip, $m) {
 	global $wrong, $cfix;
 	$_reg = '';
@@ -200,23 +223,24 @@ function chk_block ($ip) {
 
 		$s = split ("[\r\n]+", $site);
 		foreach ( $s as $v ) :
-			if ( ! preg_match ('/IANA - [RPM]/', $v) ) :
+			if ( preg_match ('/[\s](ALLOCATED|LEGACY)$/', trim ($v)) ) :
 				continue;
 			endif;
 
 			$va = split ('[[:space:]]+', $v);
-			$_aclass = preg_replace ('/\/[0-9]+/', '', $va[0]);
+			$_aclass = preg_replace ('!/[0-9]+!', '', $va[0]);
 			$_block[] = $_aclass;
 		endforeach;
 		$_block[] = '255';
 	endif;
 
 	$ipa = preg_replace ('/\..*/', '', $ip);
+	$ipa = explode ('.', $ip);
 
-	if ( array_search ($ipa, $_block) === FALSE )
-		return 0;
+	if ( array_search ($ipa[0], $_block) === FALSE )
+		return true;
 
-	return 1;
+	return false;
 }
 
 $_file = $argv[1] ? trim ($argv[1]) : 'hip_ip4_city_lat_lng.csv';
@@ -235,7 +259,6 @@ fprintf ($stderr, "* Parsed %s\n", $_file);
 $i = 0;
 while ( ! feof ($fp) ) :
 	$line = explode (',', fgets ($fp, 1024));
-
 	fprintf ($stderr, "  => %d\r", ++$i);
 
 	if ( count ($line) != 4 ) :
@@ -247,7 +270,7 @@ while ( ! feof ($fp) ) :
 
 	$uniq["$_lip"]++;
 
-	if ( chk_block ($_ip) ) :
+	if ( chk_block ($_ip) === false ) :
 		continue;
 	endif;
 
@@ -260,8 +283,15 @@ while ( ! feof ($fp) ) :
 
 	$flags = $fix[$_lip] ? 1 : 0;
 
+	$add_ip = check_addip ($o_lip, $_lip);
+	if ( $add_ip !== FALSE ) :
+		printf ("%s|KR|Korea, Republic of|||%s|%s|1", $add_ip[0], $add_ip[1], $add_ip[2]);
+	endif;
+
 	#printf ("%s|%s|%s|%s|%s|0\n", $_lip, $_ip, $_co, $_con, $_city[0], $_city[1]);
 	printf ("%s|%s|%s|||%s|%s|%s\n", $_lip, $_co, $_con, $_city[0], $_city[1], $flags);
+
+	$o_lip = $_lip;
 endwhile;
 
 fprintf ($stderr, "* Check uniq entry\n");
