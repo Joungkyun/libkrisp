@@ -1,8 +1,11 @@
 Changelog
 
-$Id: Changes,v 1.67 2008-01-09 19:34:46 oops Exp $
+$Id: Changes,v 1.68 2008-03-07 10:02:01 oops Exp $
 
 * 2.1.1
+
+Fri, Mar  7 2008 JoungKyun.Kim <http://oops.org>
+	- fixed print wrong isp informatin cause of wrong caculation
 
 Thu, Jan 10 2008 JoungKyun.Kim <http://oops.org>
 	- fixed krisp_mksql : check failed original data form

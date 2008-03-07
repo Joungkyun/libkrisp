@@ -1,5 +1,5 @@
 /*
- * $Id: krisp.c,v 1.61 2006-12-07 06:41:21 oops Exp $
+ * $Id: krisp.c,v 1.62 2008-03-07 10:02:01 oops Exp $
  */
 
 #include <stdio.h>
@@ -342,8 +342,13 @@ int kr_search (KRNET_API *isp, KR_API *db) {
 		compare = cp.ip & ip2long (isp->netmask);
 
 		if ( cp.network == compare ) {
-			r = 1;
-			break;
+			/*
+			 * if ip is big broadcast, this is miss match
+			 */
+			if ( ip2long (isp->ip) <= ip2long (isp->broadcast) ) {
+				r = 1;
+				break;
+			}
 		}
 	}
 
