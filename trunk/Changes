@@ -1,6 +1,6 @@
 Changelog
 
-$Id: Changes,v 1.69 2008-03-07 14:44:48 oops Exp $
+$Id: Changes,v 1.70 2008-03-07 15:08:10 oops Exp $
 
 * 2.1.1
 
@@ -9,6 +9,9 @@ Fri, Mar  7 2008 JoungKyun.Kim <http://oops.org>
 	- support verbose mode
 	  krisplookup: with -v option
 	  use extern short verbose on library
+	- add i and n option on krisplookup
+      -i: print only isp code
+      -n: print only country code
 
 Thu, Jan 10 2008 JoungKyun.Kim <http://oops.org>
 	- fixed krisp_mksql : check failed original data form

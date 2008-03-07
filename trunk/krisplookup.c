@@ -1,5 +1,5 @@
 /*
- * $Id: krisplookup.c,v 1.31 2008-03-07 14:44:48 oops Exp $
+ * $Id: krisplookup.c,v 1.32 2008-03-07 15:08:10 oops Exp $
  */
 
 #include <krisp.h>
@@ -20,6 +20,8 @@ static struct option long_options [] = {
 	/* Options without arguments: */
 	{ "help", no_argument, NULL, 'h' },
 	{ "verbose", no_argument, NULL, 'v' },
+	{ "onlyisp", no_argument, NULL, 'i' },
+	{ "onlynation", no_argument, NULL, 'n' },
 
 	/* Options accepting an argument: */
 	{ "datafile", required_argument, NULL, 'f' },
@@ -33,7 +35,9 @@ void usage (char *prog) {
 	fprintf (stderr, "Options:\n");
 	fprintf (stderr, "         -f path, --datafile=path     set user define database file\n");
 	fprintf (stderr, "         -h , --help                  print this message\n");
-	fprintf (stderr, "         -c , --city                  search geoip city database\n\n");
+	fprintf (stderr, "         -c , --city                  search geoip city database\n");
+	fprintf (stderr, "         -i , --isp                   only print isp code\n");
+	fprintf (stderr, "         -n , --nation                only print nation code\n\n");
 
 	exit (1);
 }
@@ -45,12 +49,14 @@ int main (int argc, char ** argv) {
 	char * ip;
 	int opt;
 	char *datafile = NULL;
-	int city = 0;
+	short city = 0;
+	short onlyisp = 0;
+	short onlynation = 0;
 
 #ifdef HAVE_GETOPT_LONG
-	while ( (opt = getopt_long (argc, argv, "cf:hv", long_options, (int *) 0)) != EOF ) {
+	while ( (opt = getopt_long (argc, argv, "cf:hinv", long_options, (int *) 0)) != EOF ) {
 #else
-	while ( (opt = getopt (argc, argv, "cf:hv")) != EOF ) {
+	while ( (opt = getopt (argc, argv, "cf:hinv")) != EOF ) {
 #endif
 		switch (opt) {
 			case 'c' :
@@ -61,6 +67,20 @@ int main (int argc, char ** argv) {
 				break;
 			case 'f' :
 				datafile = optarg;
+				break;
+			case 'i' :
+				if ( onlynation > 0 ) {
+					fprintf (stderr, "ERROR: Can't use -n option and -i option togather\n");
+					return 1;
+				}
+				onlyisp++;
+				break;
+			case 'n' :
+				if ( onlyisp > 0 ) {
+					fprintf (stderr, "ERROR: Can't use -n option and -i option togather\n");
+					return 1;
+				}
+				onlynation++;
 				break;
 			case 'v' :
 				verbose++;
@@ -109,16 +129,22 @@ int main (int argc, char ** argv) {
 	if ( verbose )
 		printf ("\n");
 
-	printf ("%s (%s): %s (%s)\n", ip, isp.ip, isp.iname, isp.icode);
-	printf ("SUBNET : %s\n", isp.netmask);
-	printf ("NETWORK: %s\n", isp.network);
-	printf ("BCAST  : %s\n", isp.broadcast);
-	printf ("NATION : %s (%s)\n", isp.cname, isp.ccode);
-	if ( city ) {
-		printf ("CITY   : %s", isp.city);
-		if ( strlen (isp.region) && strcmp (isp.region, "N/A") )
-			printf (", %s", isp.region);
-		printf ("\n");
+	if ( onlyisp ) {
+		printf ("%s\n", isp.icode);
+	} else if ( onlynation ) {
+		printf ("%s\n", isp.ccode);
+	} else {
+		printf ("%s (%s): %s (%s)\n", ip, isp.ip, isp.iname, isp.icode);
+		printf ("SUBNET : %s\n", isp.netmask);
+		printf ("NETWORK: %s\n", isp.network);
+		printf ("BCAST  : %s\n", isp.broadcast);
+		printf ("NATION : %s (%s)\n", isp.cname, isp.ccode);
+		if ( city ) {
+			printf ("CITY   : %s", isp.city);
+			if ( strlen (isp.region) && strcmp (isp.region, "N/A") )
+				printf (", %s", isp.region);
+			printf ("\n");
+		}
 	}
 
 	/* database close */
