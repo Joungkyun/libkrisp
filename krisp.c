@@ -1,5 +1,5 @@
 /*
- * $Id: krisp.c,v 1.62 2008-03-07 10:02:01 oops Exp $
+ * $Id: krisp.c,v 1.63 2008-03-07 14:44:48 oops Exp $
  */
 
 #include <stdio.h>
@@ -26,6 +26,8 @@ short geocity_type = GEOIP_INDEX_CACHE | GEOIP_CHECK_CACHE;
 short geoisp_type  = GEOIP_INDEX_CACHE | GEOIP_CHECK_CACHE;
 short geo_type     = GEOIP_MEMORY_CACHE | GEOIP_CHECK_CACHE;
 #endif
+
+short verbose      = 0;
 
 char *krisp_version (void) {
 	return KRISP_VERSION;
@@ -56,6 +58,8 @@ int kr_netmask (KR_API *db, char *aclass, struct netmasks *n) {
 	*masks = NULL;
 
 	sprintf (sql, "SELECT subnet FROM netmask WHERE net = '%s'", aclass);
+	if ( verbose )
+		printf ("DEBUG: %s\n", sql);
 
 	if ( kr_dbQuery (db, sql, DBTYPE_KRISP) )
 		return 1;
@@ -98,6 +102,8 @@ int getISPinfo (KR_API *db, char *key, KRNET_API *n) {
 	int r;
 
 	sprintf (sql, "SELECT * FROM isp WHERE longip = '%s'", key);
+	if ( verbose )
+		printf ("DEBUG: %s\n", sql);
 
 	if  ( kr_dbQuery (db, sql, DBTYPE_KRISP) )
 		return 1;
@@ -340,6 +346,10 @@ int kr_search (KRNET_API *isp, KR_API *db) {
 			continue;
 
 		compare = cp.ip & ip2long (isp->netmask);
+
+		if ( verbose )
+			printf ("DEBUG: => %s, %15s, %15s, %15s, %lu\n",
+					isp->key, isp->ip, isp->network, isp->broadcast, compare);
 
 		if ( cp.network == compare ) {
 			/*

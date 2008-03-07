@@ -1,5 +1,5 @@
 /*
- * $Id: krisplookup.c,v 1.30 2006-11-28 19:52:22 oops Exp $
+ * $Id: krisplookup.c,v 1.31 2008-03-07 14:44:48 oops Exp $
  */
 
 #include <krisp.h>
@@ -13,10 +13,13 @@
 
 #define PNAME "krisplookup"
 
+extern short verbose;
+
 #ifdef HAVE_GETOPT_LONG
 static struct option long_options [] = {
 	/* Options without arguments: */
 	{ "help", no_argument, NULL, 'h' },
+	{ "verbose", no_argument, NULL, 'v' },
 
 	/* Options accepting an argument: */
 	{ "datafile", required_argument, NULL, 'f' },
@@ -45,9 +48,9 @@ int main (int argc, char ** argv) {
 	int city = 0;
 
 #ifdef HAVE_GETOPT_LONG
-	while ( (opt = getopt_long (argc, argv, "cf:h", long_options, (int *) 0)) != EOF ) {
+	while ( (opt = getopt_long (argc, argv, "cf:hv", long_options, (int *) 0)) != EOF ) {
 #else
-	while ( (opt = getopt (argc, argv, "cf:h")) != EOF ) {
+	while ( (opt = getopt (argc, argv, "cf:hv")) != EOF ) {
 #endif
 		switch (opt) {
 			case 'c' :
@@ -58,6 +61,9 @@ int main (int argc, char ** argv) {
 				break;
 			case 'f' :
 				datafile = optarg;
+				break;
+			case 'v' :
+				verbose++;
 				break;
 			default:
 				usage (PNAME);
@@ -99,6 +105,9 @@ int main (int argc, char ** argv) {
 		strcpy (isp.ip, ip);
 	}
 	kr_search (&isp, db);
+
+	if ( verbose )
+		printf ("\n");
 
 	printf ("%s (%s): %s (%s)\n", ip, isp.ip, isp.iname, isp.icode);
 	printf ("SUBNET : %s\n", isp.netmask);
