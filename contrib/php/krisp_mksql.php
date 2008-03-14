@@ -1,16 +1,24 @@
 #!/usr/bin/php
 <?
 #
-# $Id: krisp_mksql.php,v 1.13 2008-01-09 19:34:46 oops Exp $
+# $Id: krisp_mksql.php,v 1.14 2008-03-14 18:53:59 oops Exp $
 #
 # get Korea ISP information to text format and make krisp database sql
 #
 
 class domesticIP {
-	var $url = "http://online.nida.or.kr/link/ISPAllocation.jsp";
+	private $url = "http://online.nida.or.kr/link/ISPAllocation.jsp";
+	#private $url = 'ISPAllocation.html';
+	public $r;
 
-	function domesticIP ($f = '') {
+	function __construct ($f = '', $type = 'txt') {
 		$r = $this->getpage ($f);
+
+		if ( $type == 'txt' ) {
+			$this->r = $r;
+			return;
+		}
+
 		$this->r = $this->makeArray ($r);
 	}
 
@@ -20,85 +28,101 @@ class domesticIP {
 	# "korean-ispname  6KANet  203.254.0.0  203.254.63.255  19940401"
 	#
 	function getpage ($f = '') {
-		$v = @file_get_contents ($f ? $f : $this->url);
+		$dom = new nDom ($this->url);
 
-		if ( $v === FALSE ) :
-			error_log ("ERROR: URL open failed ($this->url)", 0);
-			exit (1);
-		endif;
-
-		if ( ! preg_match ('/한국정보사회진흥원|KOREN/', $v) ) :
+		if ( $dom->err ) {
 			error_log ("ERROR: invalid data format", 0);
 			exit (1);
-		endif;
+		}
 
-		if ( ! $f ) :
-			# remove carage return
-			$_src[] = "/\r/";
-			$_des[] = '';
-
-			# removed html code
-			$_src[] = '/<[^>]+>/';
-			$_des[] = '';
-
-			# remove header
-			#$_src[] = '/.*배정일자/s';
-			#$_des[] = '';
-
-			$_src[] = "/^\s*&nbsp;\s*/m";
-			$_des[] = '';
-			$_src[] = '/^[\s]+([0-9])/m';
-			$_des[] = "\\1";
-		else :
-			$_src[] = '/[\t]+/';
-			$_des[] = "\n";
-		endif;
-
-		$r = trim (preg_replace ($_src, $_des, $v));
-
-		return $r;
+		return $dom->row;
 	}
 
 	function makeArray ($v) {
-		$p = explode ("\n", $v);
-		$r = array ();
-		$i = 0;
-		$ready = ( preg_match ('/배정일자/', $v) ) ? 0 : 1;
+		return explode ("\n", trim ($v));
+	}
+}
 
-		foreach ($p as $_v) :
-			$_v = trim ($_v);
+class nDom {
+	public $row;
+	public $err = 0;
 
-			if ( $_v == '배정일자' ) :
-				$ready = 1;
+	function __construct ($f) {
+		$context = file_get_contents ($f);
+		if ( $context === FALSE ) {
+			error_log ("ERROR: URL open failed ($f)", 0);
+			exit (1);
+		}
+		$context = $this->decode_entities ($context);
+
+		$dom = new DOMDocument ();
+		#
+		# 메모리에 HTML dom tree 를 load.
+		# 주의: loadHTMLFile 은 utf8 로 처리가 된다. 단, 입력 데이터가 iso-8859-1
+		#       로 가정을 하기 때문에 출력시에 utf8 을 iso-8859-1 로 변환 시켜야
+		#       한다.
+		#
+		$dom->loadHTML ($context);
+
+		# get table entity
+		# ISP 정보는 4번째 테이블에 위치
+		$tbls = $this->entity ($dom, 'table');
+
+		$tno = 0;
+		foreach ( $tbls as $tbl ) {
+			# ISP 는 3번째 테이블이므로, 이전 테이블 까지는 skip
+			if ( $tno++ != 2 )
 				continue;
-			elseif ( ! $ready ) :
-				continue;
-			endif;
 
-			if ( preg_match ('/^[0-9]+$/', $_v) ) :
-				$r[$i] .= $_v;
+			$trs = $this->entity ($tbl, 'tr');
 
-				# array check
-				$chk = split ("[\t]+", $r[$i]);
-				if ( count ($chk) != 5 ) :
-					error_log ("ERROR: invalid data format", 0);
-					exit (1);
-				endif;
+			$trno = 0;
+			foreach ( $trs as $tr ) {
+				# 첫번째 tr 은 테이블 헤더, skip
+				if ( $trno++ == 0 )
+					continue;
 
-				$i++;
-			else :
-				$r[$i] .= "$_v\t";
-			endif;
-		endforeach;
+				$tds = $this->entity ($tr, 'td');
 
-		return $r;
+				unset ($row);
+				$no = 0;
+				foreach ( $tds as $td ) {
+					$row .= $this->str ($td) . "\t";
+					$no++;
+				}
+
+				if ( $no != 5 ) {
+					$this->err = 1;
+					return;
+				}
+
+				$this->row .= trim ($row) . "\n";
+			}
+		}
+
+		$this->row = trim ($this->row);
+	}
+
+	function entity ($stream, $tag) {
+		return $stream->getElementsByTagName ($tag);
+	}
+
+	function str ($stream) {
+		return trim (iconv ('utf8', 'iso-8859-1', $stream->textContent));
+	}
+
+	function decode_entities ($str) {
+		$r = array ('/&nbsp;/');
+		$d = array (' ');
+
+		return preg_replace ($r, $d, $str);
 	}
 }
 
 class mkSQL {
-	var $types;
+	private $types;
 
-	function mkSQL ($lists, $_t = 'sql') {
+	function __construct ($lists, $_t = 'sql') {
 		$size = count ($lists);
 
 		## get array and get block group
@@ -111,19 +135,18 @@ class mkSQL {
 			$e = trim ($e);
 			$s = trim ($s);
 
-			if ( preg_match ('/^#/', $kblock) || ! $kblock ) :
+			if ( preg_match ('/^#/', $kblock) || ! $kblock )
 				continue;
-			endif;
 
-			if ( ! $s || preg_match ('/[^0-9.]|^[0-9]+$/', $s) ) :
+			if ( ! $s || preg_match ('/[^0-9.]|^[0-9]+$/', $s) ) {
 				error_log ("ERROR: invalide data format\n", 0);
 				exit (1);
-			endif;
+			}
 
-			if ( ! $e || preg_match ('/[^0-9.]|^[0-9]+$/', $e) ) :
+			if ( ! $e || preg_match ('/[^0-9.]|^[0-9]+$/', $e) ) {
 				error_log ("ERROR: invalide data format\n", 0);
 				exit (1);
-			endif;
+			}
 
 			$s = $this->inet_aton ($s);
 			$e = $this->inet_aton ($e);
@@ -137,23 +160,22 @@ class mkSQL {
 
 		## merge
 		##
-		foreach ( $krblock AS $arr ) :
+		foreach ( $krblock AS $arr ) {
 			unset ($start); // reset
 			ksort ($arr);
 
 			$new = array_values ($arr);
 			$size = sizeof ($new);
 
-			for ( $i=0; $i<$size; $i++ ) :
+			for ( $i=0; $i<$size; $i++ ) {
 				$total++;
 				$kname = $new[$i][0];
 				$ename = $new[$i][1];
 				$start = $start ? $start : $new[$i][2];
 				$end   = $new[$i][3];
 
-				if ( ($new[$i][3] + 1) == $new[$i+1][2] ) :
+				if ( ($new[$i][3] + 1) == $new[$i+1][2] )
 					continue; // not next skip
-				endif;
 
 				$m++; // count of merge
 
@@ -166,15 +188,15 @@ class mkSQL {
 
 				unset ($nu);
 				unset ($start);
-			endfor;
-		endforeach;
+			}
+		}
 
 		$class_a = $this->inet_aton ('127.0.0.0');
 		$class_b = $this->inet_aton ('192.0.0.0');
 		$me = 0;
 
-		foreach ( $merge AS $arr ) :
-			foreach ( $arr AS $tmp ) :
+		foreach ( $merge AS $arr ) {
+			foreach ( $arr AS $tmp ) {
 				$kname = $tmp[0];
 				$ename = $tmp[1];
 				$start = $tmp[2];
@@ -182,17 +204,16 @@ class mkSQL {
 				$nu	= $tmp[4];
 				$nn	= $tmp[5];
 
-				if ($nu) :
+				if ($nu) {
 					$ln = strlen (preg_replace ('/^([1]+).*$/', '\1', decbin ($nn)));
 					$sbit = decbin ($start);
 
-					if ( $start < $class_a ) :
+					if ( $start < $class_a )
 						$ln = 1; // A class
-					elseif ( $start < $class_b ) :
+					else if ( $start < $class_b )
 						$ln = 8; // B class
-					endif;
 
-					while ( $start < $end ) :
+					while ( $start < $end ) {
 						list ($tend, $mask) = $this->search_net ($ln, $start, $end);
 
 						$ps = $this->inet_ntoa ($start);
@@ -205,8 +226,8 @@ class mkSQL {
 
 						$start = $tend + 1; // change
 						$me++;
-					endwhile;
-				else :
+					}
+				} else {
 					$ps = $this->inet_ntoa ($start);
 					$pe = $this->inet_ntoa ($end);
 					$mask = $start + $this->inet_aton ('255.255.255.255') - $end;
@@ -216,9 +237,9 @@ class mkSQL {
 					$_IPNETWORK[$idx[0]]['netmask'][] = $netmask;
 					$_IPNETWORK[$idx[0]][$this->inet_aton ($ps)] = array ($ps, $pe, $netmask, $kname, $ename);
 					$me++;
-				endif;
-			endforeach;
-		endforeach;
+				}
+			}
+		}
 
 		$ipas = array_keys ($_IPNETWORK);
 		sort ($ipas);
@@ -226,48 +247,49 @@ class mkSQL {
 		# crete table sql
 		$this->makeTable ();
 
-		foreach ( $ipas AS $ipa ) :
+		foreach ( $ipas AS $ipa ) {
 			$_NETMASK = array_unique ($_IPNETWORK[$ipa]['netmask']);
 			sort ($_NETMASK);
 
 			$v = array_values ($_NETMASK);
 			$s = sizeof ($v) - 1;
 
-			for ( $i=0; $i<$s; $i++ ) :
-				if ( $this->types == 'sql' ) :
+			for ( $i=0; $i<$s; $i++ ) {
+				if ( $this->types == 'sql' )
 					$sql = "INSERT INTO netmask (net, subnet) VALUES ('$ipa', '$v[$i]');";
-				else :
+				else
 					$sql = "$ipa|$v[$i]";
-				endif;
-				echo $sql."\n";
-			endfor;
 
-			if ( $this->types == 'sql' ) :
+				echo $sql."\n";
+			}
+
+			if ( $this->types == 'sql' )
 				$sql = "INSERT INTO netmask (net, subnet) VALUES ('$ipa', '$v[$s]');";
-			else:
+			else
 				$sql = "$ipa|$v[$s]";
-			endif;
+
 			echo $sql."\n";
-		endforeach;
+		}
 
 		echo "\n";
 
-		foreach ( $ipas AS $ipa ) :
+		$this->makeTable ('isp');
+		foreach ( $ipas AS $ipa ) {
 			unset ($_IPNETWORK[$ipa]['netmask']);
 			ksort ($_IPNETWORK[$ipa]);
 
-			foreach ( $_IPNETWORK[$ipa] AS $k=>$arr ) :
-				if ( $this->types == 'sql' ) :
+			foreach ( $_IPNETWORK[$ipa] AS $k=>$arr ) {
+				if ( $this->types == 'sql' ) {
 					#$sql = "INSERT INTO isp (longip, network, broadcast, netmask, organization, servicename) " .
 					#		"VALUES ('$k', '$arr[0]', '$arr[1]', '$arr[2]', '$arr[3]', '$arr[4]');";
 					$sql = "INSERT INTO isp " .
 							"VALUES ('$k', '$arr[0]', '$arr[1]', '$arr[2]', '$arr[3]', '$arr[4]');";
-				else :
+				} else
 					$sql = "$k|{$arr[0]}|{$arr[1]}|{$arr[2]}|{$arr[3]}|{$arr[4]}";
-				endif;
+
 				echo $sql."\n";
-			endforeach;
-		endforeach;
+			}
+		}
 
 		//print_r ($ipas);
 		//print_r ($_IPNETWORK);
@@ -275,46 +297,49 @@ class mkSQL {
 		#echo $total.' '.$me."\n";
 	}
 
-	function makeTable () {
-		echo "CREATE TABLE netmask " .
-			"(" .
-			"   no integer NOT NULL DEFAULT '0'," .
-			"   net integer NOT NULL DEFAULT '0'," .
-			"   subnet char(15) NOT NULL DEFAULT '0.0.0.0'," .
-			"   PRIMARY KEY (no)" .
-			");\n\n";
-
-		echo "CREATE TABLE isp " .
-			"(" .
-			"   longip char(10) NOT NULL DEFAULT '0'," .
-			"   network char(15) NOT NULL DEFAULT '0.0.0.0'," .
-			"   broadcast char(15) NOT NULL DEFAULT '0.0.0.0'," .
-			"   netmask char(15) NOT NULL DEFAULT '0.0.0.0'," .
-			"   organization varchar," .
-			"   servicename varchar," .
-			"   PRIMARY KEY (longip)" .
-			");\n\n";
+	function makeTable ($t = 'netmask') {
+		switch ( $t ) {
+			case 'netmask' :
+				echo "CREATE TABLE netmask " .
+					"(" .
+					"   no integer NOT NULL DEFAULT '0'," .
+					"   net integer NOT NULL DEFAULT '0'," .
+					"   subnet char(15) NOT NULL DEFAULT '0.0.0.0'," .
+					"   PRIMARY KEY (no)" .
+					");\n\n";
+				break;
+			default :
+				echo "CREATE TABLE isp " .
+					"(" .
+					"   longip char(10) NOT NULL DEFAULT '0'," .
+					"   network char(15) NOT NULL DEFAULT '0.0.0.0'," .
+					"   broadcast char(15) NOT NULL DEFAULT '0.0.0.0'," .
+					"   netmask char(15) NOT NULL DEFAULT '0.0.0.0'," .
+					"   organization varchar," .
+					"   servicename varchar," .
+					"   PRIMARY KEY (longip)" .
+					");\n\n";
+		}
 	}
 
 	function search_net ($ln, $start, $end) {
-		for ( $l=$ln; $l<=32; $l++ ) :
+		for ( $l=$ln; $l<=32; $l++ ) {
 			$hbit = 32 - $l;
 			$host = pow (2, $hbit);
 			$tbit = str_repeat (1, $l) . str_repeat (0, $hbit);
 			$tnet = bindec ($tbit);
 			$tend = $start + $host - 1;
 
-			if ( $tend > $end ) :
+			if ( $tend > $end )
 				continue;
-			endif;
 
 			$tand = bindec ($tbit & sprintf ('%032b', $tend));
 
-			if ( $start == $tand ) :
+			if ( $start == $tand ) {
 				$nstart = $tend + 1; // change
 				break;
-			endif;
-		endfor;
+			}
+		}
 
 		return array ($tend, $tnet);
 	}
@@ -344,47 +369,40 @@ function usage ($prog) {
 }
 
 
-if ( $argc != 2 && $argc != 3 ) :
+if ( $argc != 2 && $argc != 3 )
 	usage ($argv[0]);
-endif;
 
-if ( $argc == 3 ) :
-	if ( $argv[1] != 'sql' && $argv[1] != 'csv' ) :
+if ( $argc == 3 ) {
+	if ( $argv[1] != 'sql' && $argv[1] != 'csv' )
 		usage ($argv[0]);
-	endif;
 
-	if ( $argv[2] ) :
-		if ( ! file_exists ($argv[2]) ) :
+	if ( $argv[2] ) {
+		if ( ! file_exists ($argv[2]) ) {
 			error_log ("ERROR: {$argv[2]} is not found", 0);
 			exit (1);
-		else :
+		} else
 			$txtformat = $argv[2];
-		endif;
-	else :
+	} else
 		$txtformat = '';
-	endif;
-endif;
+}
 
 
 $_type = $argv[1];
 
-if ( $_type != 'txt' && $_type != 'sql' && $_type != 'csv' ) :
+if ( $_type != 'txt' && $_type != 'sql' && $_type != 'csv' )
 	usage ($argv[0]);
-endif;
 
-$ip = new domesticIP ($txtformat);
+$ip = new domesticIP ($txtformat, $_type);
 
-if ( $_type == 'txt' ) :
-	foreach ( $ip->r as $v ) :
-		echo $v . "\n";
-	endforeach;
+if ( $_type == 'txt' ) {
+	echo $ip->r . "\n";
 	exit (0);
-endif;
+}
 
-if ( ! count ($ip->r) ) :
+if ( ! count ($ip->r) ) {
 	error_log ("ERROR: ip list array is empty\n", 0);
 	exit (1);
-endif;
+}
 
 new mkSQL ($ip->r, $_type);
 ?>

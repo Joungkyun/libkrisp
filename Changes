@@ -1,13 +1,15 @@
 Changelog
 
-$Id: Changes,v 1.72 2008-03-14 18:52:16 oops Exp $
+$Id: Changes,v 1.73 2008-03-14 18:53:59 oops Exp $
 
 * 2.1.2
+Sat, Mar 15 2008 JoungKyun.Kim <http://oops.org>
+	- rewrite code of get raw isp data information with dom
 
 
 * 2.1.1
 
-Sat, Mar  8 2008 JoungKyun.kim <http://oops.org>
+Sat, Mar  8 2008 JoungKyun.Kim <http://oops.org>
 	- release 2.1.1
 
 Fri, Mar  7 2008 JoungKyun.Kim <http://oops.org>
