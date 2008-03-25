@@ -1,7 +1,7 @@
 #!/usr/bin/php
 <?
 #
-# $Id: krisp_mksql.php,v 1.14 2008-03-14 18:53:59 oops Exp $
+# $Id: krisp_mksql.php,v 1.15 2008-03-25 05:06:58 oops Exp $
 #
 # get Korea ISP information to text format and make krisp database sql
 #
@@ -28,6 +28,9 @@ class domesticIP {
 	# "korean-ispname  6KANet  203.254.0.0  203.254.63.255  19940401"
 	#
 	function getpage ($f = '') {
+		if ( $f && file_exists ($f) )
+			return file_get_contents ($f);
+
 		$dom = new nDom ($this->url);
 
 		if ( $dom->err ) {
