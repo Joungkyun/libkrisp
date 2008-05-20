@@ -285,7 +285,10 @@ while ( ! feof ($fp) ) :
 
 	$add_ip = check_addip ($o_lip, $_lip);
 	if ( $add_ip !== FALSE ) :
-		printf ("%s|KR|Korea, Republic of|||%s|%s|1", $add_ip[0], $add_ip[1], $add_ip[2]);
+		if ( ! $uniq[$add_ip[1]] ) :
+			$uniq[$add_ip[1]]++;
+			printf ("%s|KR|Korea, Republic of|||%s|%s|1\n", $add_ip[0], $add_ip[1], $add_ip[2]);
+		endif;
 	endif;
 
 	#printf ("%s|%s|%s|%s|%s|0\n", $_lip, $_ip, $_co, $_con, $_city[0], $_city[1]);
