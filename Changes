@@ -1,8 +1,11 @@
 Changelog
 
-$Id: Changes,v 1.73 2008-03-14 18:53:59 oops Exp $
+$Id: Changes,v 1.74 2008-06-15 04:29:37 oops Exp $
 
 * 2.1.2
+Sun, Jun 15 2008 JoungKyun.Kim <http://oops.org>
+	- change nation detected algorithm
+
 Sat, Mar 15 2008 JoungKyun.Kim <http://oops.org>
 	- rewrite code of get raw isp data information with dom
 
