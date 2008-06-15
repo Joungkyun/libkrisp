@@ -1,5 +1,5 @@
 /*
- * $Id: krisp.c,v 1.63 2008-03-07 14:44:48 oops Exp $
+ * $Id: krisp.c,v 1.64 2008-06-15 04:29:37 oops Exp $
  */
 
 #include <stdio.h>
@@ -345,6 +345,9 @@ int kr_search (KRNET_API *isp, KR_API *db) {
 		if ( getISPinfo (db, isp->key, isp) )
 			continue;
 
+		strcpy (isp->ccode, "KR");
+		strcpy (isp->cname, "Korea, Republic of");
+
 		compare = cp.ip & ip2long (isp->netmask);
 
 		if ( verbose )
@@ -372,17 +375,14 @@ geoip_section:
 		if ( db->gi->gid == NULL )
 			goto geoispend;
 
+		if ( ! strcmp (isp->ccode, "KR") )
+			goto geoispend;
+
 		country_id = GeoIP_id_by_name (db->gi->gid, isp->ip);
 		strcpy (isp->ccode,
 				GeoIP_country_code[country_id] ? GeoIP_country_code[country_id] : "--");
 		strcpy (isp->cname,
 				GeoIP_country_name[country_id] ? GeoIP_country_name[country_id] : "N/A");
-
-		/* manipulated geoip null data */
-		if ( ! strcmp (isp->ccode, "--") && strlen (isp->icode) ) {
-			strcpy (isp->ccode, "KR");
-			strcpy (isp->cname, "Korea, Republic of");
-		}
 geoispend:
 
 		/* check city information
@@ -411,10 +411,6 @@ geoispend:
 		}
 	}
 geocityend:
-
-#else
-	strcpy (isp->ccode, strlen (isp->icode) ? "KR" : "");
-	strcpy (isp->cname, strlen (isp->icode) ? "Korea, Republic of" : "");
 #endif
 
 	if ( r == 0 || ! strlen (isp->icode) ) {
@@ -426,7 +422,7 @@ geocityend:
 				strcpy (isp->icode, "--");
 				strcpy (isp->iname, "N/A");
 			} else {
-				strcpy (isp->icode, strlen (g_isp) ? g_isp : "N/A");
+				strcpy (isp->icode, strlen (g_isp) ? g_isp : "--");
 				strcpy (isp->iname, strlen (g_isp) ? g_isp : "N/A");
 				free ((char *) g_isp);
 			}
