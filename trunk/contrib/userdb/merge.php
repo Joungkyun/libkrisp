@@ -26,6 +26,8 @@ function arrange ($f) {
 	return $_r;
 }
 
+ini_set ('memory_limit', '256M');
+
 $stderr = fopen ('php://stderr', 'w');
 
 if ( $argc != 3 ) :
