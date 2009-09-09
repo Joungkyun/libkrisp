@@ -203,8 +203,8 @@ else :
 	$gi      = GeoIP_open ($_geoip_t);
 endif;
 
-if ( file_exists ('/usr/local/src/mycvs/php/pear_krisp/krisp/georegion.php') ) :
-	require_once '/usr/local/src/mycvs/php/pear_krisp/krisp/georegion.php';
+if ( file_exists ('/usr/local/src/cvs/php/pear_krisp/krisp/georegion.php') ) :
+	require_once '/usr/local/src/cvs/php/pear_krisp/krisp/georegion.php';
 endif;
 
 if ( trim ($argv[1]) && file_exists ($argv[1]) ) :
