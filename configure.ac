@@ -1,7 +1,7 @@
 # Process this file with autoconf to produce a configure script.
 # Configure template for krisp library
 #
-# $Id: configure.ac,v 1.22 2008-03-14 18:52:00 oops Exp $
+# $Id: configure.ac,v 1.23 2009-12-28 20:23:05 oops Exp $
 
 #
 AC_PREREQ(2.59)
@@ -37,6 +37,9 @@ AC_ARG_WITH(sqlite,
 
 AC_ARG_WITH(geoip,
 [  --with-geoip=PATH       support geoip extension [[default: /usr]]])
+
+AC_ARG_WITH(libiconv,
+[  --with-libiconv=PATH    libiconv prefix])
 
 AC_PATH_PROG(MAKE, make)
 if test ! -f "$ac_cv_path_MAKE"; then
@@ -135,13 +138,26 @@ if test "x$with_geoip" != "x"; then
 	AC_CHECK_LIB(GeoIP, GeoIP_new,, [AC_MSG_ERROR([Can't not found GeoIP library (-lGeoIP)])])
 fi
 
+if test "x$with_libiconv" != "x"; then
+	if test -f "$with_libiconv/lib/libiconv.so" -o -f "$with_libiconv/lib/libiconv.a"; then
+		export LDFLAGS="$LDFLAGS -L$with_libiconv/lib"
+	fi
+
+	if test -f "$with_libiconv/include/iconv.h"; then
+		export CPPFLAGS="$CPPFLAGS -I$with_libiconv/include"
+	fi
+
+	AC_CHECK_LIB(iconv, libiconv_open,,
+	[ AC_MSG_ERROR([Can not find libiconv library (-liconv)])])
+fi
+
 # Checks for header files.
 AC_HEADER_STDC
 
 #sqlite.h
 #sqlite3.h
 AC_CHECK_HEADERS([arpa/inet.h getopt.h netinet/in.h stdio.h stdlib.h \
-					string.h sys/socket.h sqlite3.h sqlite.h])
+					string.h sys/socket.h sqlite3.h sqlite.h iconv.h])
 if test "xwith_geoip" != "x"; then
 	AC_CHECK_HEADERS([GeoIP.h])
 fi
