@@ -1916,7 +1916,7 @@ compiler."
 		  ;;
 		esac
 	      fi
-	      add_dir="$add_dir -L$libdir"
+	      add_dir="-L$libdir $add_dir"
 	      add="-l$name"
 	    elif test "$hardcode_shlibpath_var" = yes; then
 	      case :$finalize_shlibpath: in
@@ -1935,7 +1935,7 @@ compiler."
 		  ;;
 		esac
 	      fi
-	      add_dir="$add_dir -L$libdir"
+	      add_dir="-L$libdir $add_dir "
 	      add="-l$name"
 	    fi
 

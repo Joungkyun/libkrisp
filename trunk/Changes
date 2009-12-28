@@ -1,8 +1,11 @@
 Changelog
 
-$Id: Changes,v 1.74 2008-06-15 04:29:37 oops Exp $
+$Id: Changes,v 1.75 2009-12-28 20:23:05 oops Exp $
 
 * 2.1.2
+Tue, Dec 29 2009 JoungKyun.Kim <http://oops.org>
+	- add iconv on krisplookup
+
 Sun, Jun 15 2008 JoungKyun.Kim <http://oops.org>
 	- change nation detected algorithm
 

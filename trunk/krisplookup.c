@@ -1,5 +1,5 @@
 /*
- * $Id: krisplookup.c,v 1.32 2008-03-07 15:08:10 oops Exp $
+ * $Id: krisplookup.c,v 1.33 2009-12-28 20:23:05 oops Exp $
  */
 
 #include <krisp.h>
@@ -12,6 +12,15 @@
 #endif
 
 #define PNAME "krisplookup"
+
+#ifdef HAVE_ICONV_H
+#include <iconv.h>
+#include <errno.h>
+#define DB_CHARSET "EUC-KR"
+#define FORCE_NOTHING 0
+#define FORCE_UTF8 1
+#define FORCE_EUCKR 2
+#endif
 
 extern short verbose;
 
@@ -28,6 +37,19 @@ static struct option long_options [] = {
 	{ 0, 0, 0, 0 }
 };
 #endif
+
+short confirm_local_charset (void) {
+	char * lang_env = getenv ("LANG");
+	char * lcharset = strrchr (lang_env + 1, '.');
+
+	if ( ! strcmp (".eucKR", lcharset) || ! strcmp (".euckr", lcharset)
+		|| ! strcmp (".euc-kr", lcharset) || ! strcmp (".EUC-KR", lcharset)
+		|| ! strcmp (".euc-KR", lcharset) ) {
+		return ( ! strcmp ("EUC-KR", DB_CHARSET) ) ? FORCE_NOTHING : FORCE_EUCKR;
+	} else {
+		return ( ! strcmp ("UTF8", DB_CHARSET) ) ? FORCE_NOTHING : FORCE_UTF8;
+	}
+}
 
 void usage (char *prog) {
 	fprintf (stderr, "%s v%s: Resolved korea range ISP inforamtion\n", prog, krisp_version ());
@@ -134,7 +156,63 @@ int main (int argc, char ** argv) {
 	} else if ( onlynation ) {
 		printf ("%s\n", isp.ccode);
 	} else {
+#ifdef HAVE_ICONV_H
+		short lcharset;
+		iconv_t cd;
+		char * ispname, * to;
+		size_t flen, tlen;
+		char * srcname = (char *) isp.iname;
+
+		lcharset = confirm_local_charset ();
+		flen = strlen (srcname);
+
+		switch (lcharset) {
+			case FORCE_UTF8 :
+				tlen = flen * 4 + 1;
+				cd = iconv_open ("UTF-8", "CP949");
+				break;
+			case FORCE_EUCKR :
+				tlen = flen + 1;
+				cd = iconv_open ("CP949", "UTF-8");
+				break;
+			default :
+				tlen = 1;
+				cd = (iconv_t)(-1);
+		}	
+
+		if ( cd == (iconv_t)(-1) ) {
+			ispname = strdup (isp.iname);
+			goto noconvert;
+		}
+
+		if ( (ispname = (char *) malloc (sizeof (char) * tlen)) == NULL ) {
+			ispname = strdup (isp.iname);
+			goto noconvert;
+		}
+		memset (ispname, 0, sizeof (char) * tlen);
+		to = ispname;
+
+		iconv (cd, &srcname, &flen, &to, &tlen);
+		switch ( errno ) {
+			case E2BIG :
+			case EILSEQ :
+			case EINVAL :
+				strcpy (ispname, isp.iname);
+				break;
+		}
+
+noconvert:
+		printf ("%s (%s): %s (%s)\n", ip, isp.ip, ispname, isp.icode);
+#else
 		printf ("%s (%s): %s (%s)\n", ip, isp.ip, isp.iname, isp.icode);
+#endif
+
+#ifdef HAVE_ICONV_H
+		if ( cd != (iconv_t)(-1) )
+			iconv_close (cd);
+		free (ispname);
+#endif
+
 		printf ("SUBNET : %s\n", isp.netmask);
 		printf ("NETWORK: %s\n", isp.network);
 		printf ("BCAST  : %s\n", isp.broadcast);
