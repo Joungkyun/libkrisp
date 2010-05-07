@@ -30,6 +30,7 @@ krisp 에서 hostip database (http://hostip.info) 를 지원하기 위한 문서
 
 6. data import
    sqlite3:
+      sqlite> .separator "|"
       sqlite> .import hostip.csv userdb
 
    sqlite2:
