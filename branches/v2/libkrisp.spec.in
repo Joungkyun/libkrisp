@@ -7,7 +7,7 @@ Name: libkrisp
 Version: @version@
 Release: 1
 Epoch: 1
-Copyright: LGPL
+License: LGPL
 Group: System Environment/Libraries
 %if %{with_geoip}
 Requires: GeoIP
