@@ -1,6 +1,6 @@
 Changelog
 
-$Id: Changes,v 1.80.2.1 2010-06-05 10:56:25 oops Exp $
+$Id: Changes,v 1.80.2.2 2010-06-05 11:43:58 oops Exp $
 
 * 2.1.4
 
@@ -8,8 +8,6 @@ Sat, Jun 05 2010 JoungKyun.Kim <http://oops.org>
 	- refixed wrong nation information from 2.1.3
 	  back ported lookup algorithm from 3.x.
 	  don't search netmask table any more.
-	- removed dberr global variable.
-	  use err member of KR_API struct
 
 
 * 2.1.3

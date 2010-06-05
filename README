@@ -1,4 +1,4 @@
-$Id: README,v 1.9.2.1 2010-06-05 10:56:25 oops Exp $
+$Id: README,v 1.9.2.2 2010-06-05 11:43:58 oops Exp $
 
 libkrisp - Korea ISP library
 
@@ -12,7 +12,8 @@ libkrisp 는 한국의 ip address 에 대한 ISP 정보를 얻기 위한 라이�
 하며, sqlite3 을 사용하는 것을 권장한다. (sqlite2 는 가끔 오동작을 한다.)
 
 이 library는 thread safe 하지 않음을 주의 하도록 한다. thread에서 사용을 하려면,
-각 thread에서 krisp handle을 각각 열어야 한다.
+각 thread에서 krisp handle을 각각 열어야 한다. 또한, dberr global 변수를
+사용하지 말고 KR_API의 err member를 사용하도록 한다.
 
 간단한 사용법은 아래와 같다. (자세한 사항은 'man 3 kr_search' 를 참고한다.)
 

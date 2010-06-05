@@ -1,6 +1,8 @@
 /*
- * $Id: krdb.c,v 1.13.2.1 2010-06-05 10:56:25 oops Exp $
+ * $Id: krdb.c,v 1.13.2.2 2010-06-05 11:43:58 oops Exp $
  */
+
+#define DBERRVAR
 
 #include <krispcommon.h>
 
@@ -11,6 +13,8 @@
 #endif
 
 #include <krdb.h>
+
+char dberr[1024];
 
 #if defined(HAVE_LIBSQLITE3)
 #include <database/sqlite3.c>
