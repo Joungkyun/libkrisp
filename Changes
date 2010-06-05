@@ -1,6 +1,6 @@
 Changelog
 
-$Id: Changes,v 1.80.2.3 2010-06-05 11:51:16 oops Exp $
+$Id: Changes,v 1.80.2.4 2010-06-05 11:51:39 oops Exp $
 
 * 2.1.4
 
@@ -9,6 +9,7 @@ Sat, Jun 05 2010 JoungKyun.Kim <http://oops.org>
 	  back ported lookup algorithm from 3.x.
 	  don't search netmask table any more.
 	- update 2010/06 data
+	- release 2.1.4
 
 
 * 2.1.3
