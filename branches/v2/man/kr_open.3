@@ -12,8 +12,7 @@ kr_open() 함수의 argument 는 database 연결에 사용되는 db_argument str
 database 파일의 경로를 지정을 한다.
 .PP
 db_argument structure 는 krispcommon.h 에 정의가 되어 있으며, kr_open 을 호출하기
-전에 다음과 같이 정의 되어 있어야 하며, db error 를 처리하기 위하여 전역 변수로
-extern char dberr[] 이 정의 되어져야 한다. (예제를 참고한다.)
+전에 다음과 같이 정의 되어 있어야 한다.
 .PP
 .I KR_API db;
 .br
@@ -35,7 +34,6 @@ apache 같은 환경에서 사용시에 memory 고갈이 되어 out of memory �
 .SH 예제
 .nf
 #include <krisp.h>
-extern char dberr[1024];
 
 int main (void) {
     KR_API db;
@@ -54,7 +52,7 @@ int main (void) {
 #endif
 
     if ( kr_open (db) ) {
-        fprintf (stderr, "ERROR Connect: %s\\n", dberr);
+        fprintf (stderr, "ERROR Connect: %s\\n", db->err);
 		free (db);
         return 1;
     }

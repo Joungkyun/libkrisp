@@ -28,7 +28,6 @@ database 정보 검색이 가능할 경우, 도시, 지역 정보를 같이 제�
 .SH 예제
 .nf
 #include <krisp.h>
-extern char dberr[1024];
 
 int main (void) {
     KR_API db;
@@ -38,7 +37,7 @@ int main (void) {
 	db = (KR_API *) malloc (sizeof (KR_API));
 
     if ( kr_open (db) ) {
-        fprintf (stderr, "ERROR Connect: %s\\n", dberr);
+        fprintf (stderr, "ERROR Connect: %s\\n", db->err);
 		free (db);
         return 1;
     }

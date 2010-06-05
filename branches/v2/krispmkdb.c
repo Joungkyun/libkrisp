@@ -1,5 +1,5 @@
 /*
- * $Id: krispmkdb.c,v 1.9 2006-11-25 18:58:50 oops Exp $
+ * $Id: krispmkdb.c,v 1.9.2.1 2010-06-05 10:56:25 oops Exp $
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -111,7 +111,7 @@ int main (int argc, char **argv) {
 	db = (KR_API *) malloc (sizeof (KR_API));
 
 	if ( kr_open (db, (savedb != NULL ) ? savedb : DEFSAVE) ) {
-		fprintf (stderr, "ERROR: DB connect failed (%s)\n", dberr);
+		fprintf (stderr, "ERROR: DB connect failed (%s)\n", db->err);
 		return 1;
 	}
 	
@@ -142,7 +142,7 @@ int main (int argc, char **argv) {
 			printf ("=> %s\n", output);
 
 			if ( kr_dbQuery (db, sql, DBTYPE_KRISP) ) {
-				fprintf (stderr, "\nERROR: query failed (%s)\n", dberr);
+				fprintf (stderr, "\nERROR: query failed (%s)\n", db->err);
 				kr_close (db);
 				free (buf);
 				free (db);
@@ -154,7 +154,7 @@ int main (int argc, char **argv) {
 			}
 
 			if ( r == -1 ) {
-				fprintf (stderr, "\nERROR: fetch failed (%s)\n", dberr);
+				fprintf (stderr, "\nERROR: fetch failed (%s)\n", db->err);
 				kr_close (db);
 				free (buf);
 				free (db);

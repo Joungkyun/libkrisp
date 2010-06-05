@@ -1,5 +1,5 @@
 /*
- * $Id: krisp.h,v 1.14 2006-11-28 19:39:08 oops Exp $
+ * $Id: krisp.h,v 1.14.2.1 2010-06-05 10:56:25 oops Exp $
  */
 
 #ifndef KRIP_H
@@ -52,11 +52,6 @@ GeoIPvar * krGeoIP_open (KR_API *db);
  */
 
 /*
- * get netmask of each A class ip from db
- */
-int kr_netmask (KR_API *, char *, struct netmasks *);
-
-/*
  * get ISP information of each network from db
  */
 int getISPinfo (KR_API *, char *, KRNET_API *);
@@ -65,11 +60,6 @@ int getISPinfo (KR_API *, char *, KRNET_API *);
  * get USERDB information of each network from db
  */
 int getHostIP (KR_API *, char *, USERDB *);
-
-/*
- * free memory that used db query function
- */
-void kr_free_array (char **);
 
 /*
  * init information structure

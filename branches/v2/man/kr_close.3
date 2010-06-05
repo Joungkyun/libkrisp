@@ -14,7 +14,6 @@ geoip handler 는 kr_open 에서 담당하게 되므로, 신경쓸 필요가 없
 .SH 예제
 .nf
 #include <krisp.h>
-extern char dberr[1024];
 
 int main (void) {
     KR_API *db;
@@ -24,7 +23,7 @@ int main (void) {
 	db = (KR_API *) malloc (sizeof (KR_API));
 
     if ( kr_open (db) ) {
-        fprintf (stderr, "ERROR Connect: %s\\n", dberr);
+        fprintf (stderr, "ERROR Connect: %s\\n", db->err);
 		free (db);
         return 1;
     }

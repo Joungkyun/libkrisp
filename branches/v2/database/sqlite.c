@@ -1,5 +1,5 @@
 /*
- * $Id: sqlite.c,v 1.5 2006-11-28 19:39:08 oops Exp $
+ * $Id: sqlite.c,v 1.5.2.1 2010-06-05 10:56:25 oops Exp $
  */
 
 #include <sys/types.h>
@@ -7,10 +7,10 @@
 #include <unistd.h>
 
 void kr_dbError (KR_API *db) {
-	memset (dberr, 0, 1024);
-	if ( db->err != NULL )
-		strcpy (dberr, db->err);
-	sqlite_freemem (db->err);
+	memset (db->err, 0, 1024);
+	if ( db->error != NULL )
+		strcpy (db->err, db->error);
+	sqlite_freemem (db->error);
 }
 
 int kr_dbFree (KR_API *db) {
