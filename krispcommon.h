@@ -1,5 +1,5 @@
 /*
- * $Id: krispcommon.h,v 1.24 2006-11-28 19:52:22 oops Exp $
+ * $Id: krispcommon.h,v 1.24.2.1 2010-06-05 10:56:25 oops Exp $
  */
 
 #ifndef COMMON_H
@@ -122,9 +122,10 @@ typedef struct db_argument {
 	int				r;		/* execute result code */
 	int				rows;	/* vm rows */
 	int				cols;	/* number of columns */
-	char *			err;	/* vm error message */
+	char *			error;	/* vm error message */
 	const char **	rowdata;
 	const char **	colname;
+	char			err[1024]; /* DB error messages */
 	GeoIPvar *		gi;		/* GeoIP resource */
 } KR_API;
 
@@ -168,10 +169,6 @@ extern short geocity_type;
 extern short geoisp_type;
 extern short geo_type;
 #endif
-#endif
-
-#ifndef DBERRVAR
-extern char dberr[1024];
 #endif
 
 #endif

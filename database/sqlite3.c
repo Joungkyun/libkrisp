@@ -1,15 +1,15 @@
 /*
- * $Id: sqlite3.c,v 1.6 2006-11-28 19:39:08 oops Exp $
+ * $Id: sqlite3.c,v 1.6.2.1 2010-06-05 10:56:25 oops Exp $
  */
 
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
 
-void kr_dbError (int code, const char *err) {
-	memset (dberr, 0, 1024);
-	if ( code )
-		strcpy (dberr, err);
+void kr_dbError (sqlite3 *h, char *err) {
+	memset (err, 0, 1024);
+	if ( sqlite3_errcode (h) )
+		strcpy (err, sqlite3_errmsg (h));
 }
 
 int kr_dbFree (KR_API *db) {
@@ -32,7 +32,7 @@ int kr_dbConnect (KR_API *db, char *file) {
 	int l;
 
 	if ( (db->r = sqlite3_open ((file != NULL) ? file : DBPATH, &db->c)) ) {
-		kr_dbError (sqlite3_errcode(db->c), sqlite3_errmsg(db->c));
+		kr_dbError (db->c, db->err);
 		return -1;
 	}
 
@@ -71,7 +71,7 @@ int kr_dbQuery (KR_API *db, char * sql, int t) {
 	db->r = sqlite3_prepare (c, sql, strlen (sql), &db->vm, NULL);
 
 	if ( db->r != SQLITE_OK ) {
-		kr_dbError (sqlite3_errcode(c), sqlite3_errmsg(c));
+		kr_dbError (c, db->err);
 		return 1;
 	}
 
@@ -123,7 +123,7 @@ int kr_dbFetch (KR_API *db, int t) {
 			db->vm = NULL;
 
 			if ( db->r != SQLITE_OK ) {
-				kr_dbError (sqlite3_errcode(c), sqlite3_errmsg(c));
+				kr_dbError (c, db->err);
 				return -1;
 			}
 

@@ -1,5 +1,5 @@
 /*
- * $Id: krnet.c,v 1.4 2006-06-20 03:32:11 oops Exp $
+ * $Id: krnet.c,v 1.4.2.1 2010-06-05 10:56:25 oops Exp $
  */
 
 #include <krispcommon.h>
@@ -21,6 +21,8 @@ unsigned long ip2long (char *ip) {
 
 /*
  * Converts IPv4 address into a string in Internet standard dotted format
+ * The string is returned in a statically allocated buffer, which subsequent
+ * calls will overwrite.
  */
 char * long2ip (unsigned long num) {
 	struct in_addr addr;
