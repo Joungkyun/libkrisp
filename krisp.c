@@ -1,5 +1,5 @@
 /*
- * $Id: krisp.c,v 1.65.2.1 2010-06-05 10:56:25 oops Exp $
+ * $Id: krisp.c,v 1.65.2.2 2010-06-06 19:58:58 oops Exp $
  */
 
 #include <stdio.h>
@@ -261,7 +261,7 @@ int kr_search (KRNET_API *isp, KR_API *db) { // {{{
 	/*
 	 * if ip is bigger than broadcast, this is miss match
 	 */
-	if ( cp.ip > ip2long (isp->broadcast) ) {
+	if ( ! strlen (isp->broadcast) || cp.ip > ip2long (isp->broadcast) ) {
 		initStruct (isp);
 		sprintf (isp->key, "%lu", cp.ip);
 		r = 1;
