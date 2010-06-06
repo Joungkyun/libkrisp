@@ -1,11 +1,12 @@
 Changelog
 
-$Id: Changes,v 1.80.2.5 2010-06-06 18:33:20 oops Exp $
+$Id: Changes,v 1.80.2.6 2010-06-06 18:35:07 oops Exp $
 
 * 2.1.5
 
 Mon, Jun 07 2010 JoungKyun.Kim <http://oops.org>
 	- fixed '-version-info' warning on compile time
+	- fixed wrong longip type (char(10) -> unsigned integer)
 
 
 * 2.1.4

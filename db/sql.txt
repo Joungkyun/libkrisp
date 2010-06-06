@@ -1,4 +1,4 @@
-CREATE TABLE isp (   longip char(10) NOT NULL DEFAULT '0',   network char(15) NOT NULL DEFAULT '0.0.0.0',   broadcast char(15) NOT NULL DEFAULT '0.0.0.0',   netmask char(15) NOT NULL DEFAULT '0.0.0.0',   organization varchar,   servicename varchar,   PRIMARY KEY (longip));
+CREATE TABLE isp (   longip unsigned integer NOT NULL DEFAULT '0',   network char(15) NOT NULL DEFAULT '0.0.0.0',   broadcast char(15) NOT NULL DEFAULT '0.0.0.0',   netmask char(15) NOT NULL DEFAULT '0.0.0.0',   organization varchar,   servicename varchar,   PRIMARY KEY (longip));
 
 INSERT INTO isp VALUES ('453050368', '27.1.0.0', '27.1.255.255', '255.255.0.0', '주식회사 지에스강남방송', 'KNCTV');
 INSERT INTO isp VALUES ('455278592', '27.35.0.0', '27.35.255.255', '255.255.0.0', '주식회사에이치씨엔', 'HCN');
