@@ -1,0 +1,63 @@
+$Id: README,v 1.9.2.2 2010-06-05 11:43:58 oops Exp $
+
+libkrisp - Korea ISP library
+
+작성: 김정균 2010.06.05 http://oops.org
+
+자세한 내용은 http://devel.oops.org/ 의 libkrisp section 을 참고하기 바란다.
+
+libkrisp 는 한국의 ip address 에 대한 ISP 정보를 얻기 위한 라이브러리이다.
+이 library 를 사용하기 위해서는 sqlite library 가 필요하며, sqlite2 또는 sqlite3
+이 필요하다. sqlite2 와 sqlite3 이 동시에 설치가 되어 있으면, sqlite3 을 이용
+하며, sqlite3 을 사용하는 것을 권장한다. (sqlite2 는 가끔 오동작을 한다.)
+
+이 library는 thread safe 하지 않음을 주의 하도록 한다. thread에서 사용을 하려면,
+각 thread에서 krisp handle을 각각 열어야 한다. 또한, dberr global 변수를
+사용하지 말고 KR_API의 err member를 사용하도록 한다.
+
+간단한 사용법은 아래와 같다. (자세한 사항은 'man 3 kr_search' 를 참고한다.)
+
+#include <krisp.h>
+
+int main (void) {
+    KR_API db;
+    KRNET_API isp;
+    char *ip = "168.126.63.1";
+
+	db.gi = NULL;
+
+    if ( kr_open (&db) ) {
+        fprintf (stderr, "ERROR Connect: %s\n", db->err);
+        return 1;
+    }
+
+	strcpy (isp.ip, ip);
+    kr_search (&isp, &db, NULL);
+
+	kr_close (&db);
+
+    printf ("%-15s %-15s %-20s %-15s %-15s %s\n",
+            ip, isp.ip, isp.icode, isp.network, isp.broadcast, isp.iname);
+
+    return 0;
+}
+
+또한, configure 시에 --with-geoip 옵션을 이용하여 geoip 를 연동할 수 있다.
+geoip database 는 국가 database, ISP database, City database 를 지원한다.
+
+netinfos structure 는 다음과 같이 구성이 되어 있다.
+
+struct netinfos {
+    char            key[16];
+    char            ip[16];
+    char            netmask[16];
+    char            network[16];
+    char            broadcast[16];
+    char            icode[128];
+    char            iname[128];
+    char            ccode[4];
+    char            cname[128];
+};
+
+geoip 를 추가하는 예제는 krisplookup.c 를 참고하기 바란다. 아주 간단한 소스
+이다.

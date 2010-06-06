@@ -1,0 +1,87 @@
+.TH KR_OPEN 1 "29 Nov 2006"
+.UC 4
+.SH 이름
+kr_open - libkrisp 의 database 를 연다.
+.SH 사용법
+.I #include <krips.h>
+.br
+.I int kr_open (KR_API *db, char *path)
+.SH 설명
+kr_open() 함수는 libkrisp 를 링크하여 databse 파일을 열기 위해 사용한다.
+kr_open() 함수의 argument 는 database 연결에 사용되는 db_argument structure 와
+database 파일의 경로를 지정을 한다.
+.PP
+db_argument structure 는 krispcommon.h 에 정의가 되어 있으며, kr_open 을 호출하기
+전에 다음과 같이 정의 되어 있어야 한다.
+.PP
+.I KR_API db;
+.br
+.I if ( kr_open (&db, NULL) ) {
+.br
+.I ..
+.br
+.I }
+.PP
+geoip 연동시에는 전역변수 geocity 값을 1로 지정을 하면, GeoIPCity database 가 존재할
+경우 GeoIPCity 의 값을 가져온다. 다만, GeoIPCity 의 경우 database 가 아주 크기 때문에,
+apache 같은 환경에서 사용시에 memory 고갈이 되어 out of memory 가 발생할 수 있다.
+.PP
+또한, 2.0.2 부터는 GeoIP database 의 open type 을 전역 변수로 지정할 수 있다.
+아래 예제를 참조하도록 한다.
+.PP
+.SH 반환값
+성공시에 0 을 반환하며, 실패시에 1 을 반환한다.
+.SH 예제
+.nf
+#include <krisp.h>
+
+int main (void) {
+    KR_API db;
+    KRNET_API isp;
+    char *ip = "168.126.63.1";
+
+	db = (KR_API *) malloc (sizeof (KR_API));
+
+#ifdef HAVE_LIBGEOIP
+    /* set 1, search GeoIPCity database if enabled search GeoIPCity */
+    short geocity      = 0;
+    if ( geocity )
+        short geocity_type = GEOIP_INDEX_CACHE | GEOIP_CHECK_CACHE;
+    short geoisp_type  = GEOIP_INDEX_CACHE | GEOIP_CHECK_CACHE;
+    short geo_type     = GEOIP_MEMORY_CACHE | GEOIP_CHECK_CACHE;
+#endif
+
+    if ( kr_open (db) ) {
+        fprintf (stderr, "ERROR Connect: %s\\n", db->err);
+		free (db);
+        return 1;
+    }
+
+    strcpy (isp.ip, ip);
+	db.gi = NULL;
+    kr_search (&isp, db);
+
+	kr_close (db);
+	free (db);
+
+    printf ("%-15s %-15s %-20s %-15s %-15s %s\\n",
+            ip, isp.ip, isp.serv, isp.network, isp.broadcast, isp.org);
+
+#ifdef HAVE_LIBGEOIP
+	printf ("%s %s\\n", isp.ccode, isp.cname);
+	if ( geocity )
+		printf ("%s\\n", isp.city);
+#endif
+    return 0;
+}
+.fi
+.SH 저자
+김정균
+.SH 버그 리포트
+<http://www.oops.org> 의 QnA 게시판을 이용한다.
+.SH 저작권
+Copyright (c) 2006 OOPS Development Organization
+
+이 프로그램은 LGPL 을 따르며, 사용시의 어떠한 문제에 대하여 보증하지 않는다.
+.SH "참고"
+krispmkdb(1), krispmkdb(1), krisp_version(3), kr_close(3), kr_search(3)

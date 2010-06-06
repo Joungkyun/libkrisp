@@ -1,0 +1,147 @@
+# $Id: Makefile.in,v 1.19.2.1 2010-06-06 18:33:05 oops Exp $
+srcdir          = @srcdir@
+top_srcdir      = @top_srcdir@
+builddir        = @builddir@
+top_builddir    = .
+
+build           = @build@
+build_cpu       = @build_cpu@
+build_vendor    = @build_vendor@
+build_os        = @build_os@
+host            = @host@
+host_cpu        = @host_cpu@
+host_vendor     = @host_vendor@
+
+PROG            = @PACKAGE_NAME@
+VERSION         = @PACKAGE_VERSION@
+CC              = @CC@ -Wall
+CFLAGS          = @CFLAGS@
+CPPFLAGS        = -I. @CPPFLAGS@
+LIBS            = @LIBS@
+LDFLAGS         = @LDFLAGS@ $(LIBS)
+DEFS            = @DEFS@ $(CPPFLAGS)
+
+OBJECT          = krdb.lo krnet.lo krisp.lo
+HEADER_NAME     = krisp-config krispcommon krisp krdb krversion
+
+SONAME_MAJOR    = @SONAME_MAJOR@
+SONAME_MINOR    = @SONAME_MINOR@
+SONAME_REVISION = @SONAME_REVISION@
+SONAME_INFO     = @SONAME_INFO@
+SONAME_VERSION  = @SONAME_VERSION@
+
+prefix          = @prefix@
+exec_prefix     = @exec_prefix@
+datadir         = @datadir@
+includedir      = @includedir@
+libdir          = @libdir@
+bindir          = @bindir@
+mandir          = @mandir@
+DESTDIR         =
+
+LIBTOOL         = @LIBTOOL@
+INSTALL         = @INSTALL@
+RM              = @RM@ -f
+MAKE            = @MAKE@
+MKDIR           = @MKDIR@ -p
+STRIP           = @STRIP@
+LN              = @LN_S@
+MV              = @MV@
+PERL            = @PERL@
+SQLITE			= @SQLITE@
+
+CC_OPT          = $(CC) $(CFLAGS) $(DEFS)
+LINK            = $(LIBTOOL) --mode=link $(CC_OPT) -rpath $(libdir) -version-info $(SONAME_INFO)
+PLINK           = $(LIBTOOL) --mode=link $(CC_OPT) -rpath $(libdir)
+COMPILE         = $(LIBTOOL) --mode=compile $(CC_OPT) $(DEFS) -prefer-pic
+P_LIBTOOL       = $(LIBTOOL) --mode=install @INSTALL_PROGRAM@ -m755
+D_LIBTOOL       = $(LIBTOOL) --mode=install @INSTALL_DATA@ -m644
+L_LIBTOOL       = $(LIBTOOL) --mode=install $(INSTALL)
+
+MAN1            = krisplookup krispmkdb
+MAN3            = krisp_version kr_open kr_close kr_search
+
+
+all: $(OBJECT) krisplookup.lo krispmkdb.lo $(PROG)-config $(PROG)-spec
+	$(MAKE) libs
+	$(PLINK) -o $(PROG)lookup $(PROG)lookup.c libkrisp.la
+	$(PLINK) -o $(PROG)mkdb $(PROG)mkdb.c libkrisp.la
+
+krdb.lo: krdb.c database/sqlite.c database/sqlite3.c krdb.h.in krispcommon.h
+	$(INSTALL) -m644 krdb.h.in krdb.h
+	$(PERL) -pi -e 's!\@dbpath\@!$(datadir)/krisp!g' krdb.h
+	$(COMPILE) -o $@ -c $<
+
+krisp.lo: krisp.c krdb.h krisp.h krispcommon.h
+	$(COMPILE) -o $@ -c $<
+
+krnet.lo: krnet.c krnet.h
+	$(COMPILE) -o $@ -c $<
+
+krisplookup.lo: krisplookup.c krispcommon.h
+	$(COMPILE) -o $@ -c $<
+
+krispmkdb.lo: krispmkdb.c krispcommon.h krisp.h krdb.h
+	$(COMPILE) -o $@ -c $<
+
+libs:
+	$(LINK) -o lib$(PROG).la $(OBJECT) $(LDFLAGS)
+	$(PERL) -pi -e 's! /[^ ]*libsqlite.la! -lsqlite!g' .libs/libkrisp.lai libkrisp.la
+	$(PERL) -pi -e 's! /[^ ]*libsqlite3.la! -lsqlite3!g' .libs/libkrisp.lai libkrisp.la
+	$(PERL) -pi -e 's! /[^ ]*libGeoIP.la! -lGeoIP!g' .libs/libkrisp.lai libkrisp.la
+
+data:
+	./krispmkdb -s db/$(PROG).dat db/sql.txt
+
+krisp-config:
+	$(INSTALL) -m755 $(PROG)-config.in $(PROG)-config ; \
+	$(PERL) -pi -e "s!\@prefix\@!$(prefix)!g" $(PROG)-config ; \
+	$(PERL) -pi -e "s!\@exec_prefix\@!$(exec_prefix)!g" $(PROG)-config ; \
+	$(PERL) -pi -e "s!\@VERSION\@!$(VERSION)!g" $(PROG)-config ; \
+	$(PERL) -pi -e "s!\@includedir\@!$(includedir)!g" $(PROG)-config ; \
+	$(PERL) -pi -e "s!\@libdir\@!$(libdir)!g" $(PROG)-config ; \
+	$(PERL) -pi -e "s!\@CFLAGS\@!$(CFLAGS)!g" $(PROG)-config ; \
+	$(PERL) -pi -e "s!\@prog\@!$(PROG)!g" $(PROG)-config ; \
+
+krisp-spec:
+	$(INSTALL) -m644 lib$(PROG).spec.in lib$(PROG).spec
+	$(PERL) -pi -e "s!\@date\@!`LANG= date +"%a %b %d %Y"`!g" lib$(PROG).spec
+	$(PERL) -pi -e "s!\@version\@!$(VERSION)!g" lib$(PROG).spec
+
+install: install-header install-data install-man
+	$(MKDIR) $(DESTDIR)$(bindir)
+	$(MKDIR) $(DESTDIR)$(libdir)
+	$(P_LIBTOOL) $(PROG)-config $(DESTDIR)$(bindir)/$(PROG)-config
+	$(P_LIBTOOL) $(PROG)lookup $(DESTDIR)$(bindir)/$(PROG)lookup
+	$(P_LIBTOOL) $(PROG)mkdb $(DESTDIR)$(bindir)/$(PROG)mkdb
+	$(L_LIBTOOL) lib$(PROG).la $(DESTDIR)$(libdir)/lib$(PROG).la
+	$(LIBTOOL) --finish $(libdir)
+
+install-data:
+	$(MKDIR) $(DESTDIR)$(datadir)/$(PROG)
+	for i in krisp.dat iplist.txt sql.txt ; do \
+		$(D_LIBTOOL) db/$$i $(DESTDIR)$(datadir)/$(PROG)/ ; \
+	done
+
+install-man:
+	$(MKDIR) $(DESTDIR)$(mandir)/ko/man1
+	$(MKDIR) $(DESTDIR)$(mandir)/ko/man3
+	for i in $(MAN1); do \
+		$(D_LIBTOOL) man/$$i.1 $(DESTDIR)$(mandir)/ko/man1/ ; \
+	done
+	for i in $(MAN3); do \
+		$(D_LIBTOOL) man/$$i.3 $(DESTDIR)$(mandir)/ko/man3/ ; \
+	done
+
+install-header:
+	$(MKDIR) $(DESTDIR)$(includedir)
+	for i in $(HEADER_NAME); do \
+		$(D_LIBTOOL) $$i.h $(DESTDIR)$(includedir)/ ; \
+	done
+
+clean:
+	-$(RM) -r *.o *.lo* *.la* $(PROG)lookup $(PROG)mkdb .libs $(PROG)-config krdb.h lib$(PROG).spec db/$(PROG).dat
+
+distclean: clean
+	-$(RM) -r libtool config.log config.status Makefile
+	-$(RM) -r $(PROG)-config.h *~
