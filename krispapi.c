@@ -1,5 +1,5 @@
 /*
- * $Id: krispapi.c,v 1.1 2010-06-07 11:31:26 oops Exp $
+ * $Id: krispapi.c,v 1.2 2010-06-07 18:03:02 oops Exp $
  */
 
 #include <stdio.h>
@@ -22,6 +22,7 @@ void initRawStruct (RAW_KRNET_API *n, int mfree) { // {{{
 	//memset (n->ip, 0, 1);
 	n->start = 0;
 	n->end   = 0;
+	n->size  = 0;
 	if ( mfree && n->dummydata != NULL )
 		free (n->dummydata);
 	n->dummydata = NULL;
