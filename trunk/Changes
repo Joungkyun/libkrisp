@@ -1,8 +1,11 @@
 Changelog
 
-$Id: Changes,v 1.81 2010-06-07 11:31:26 oops Exp $
+$Id: Changes,v 1.82 2010-06-07 16:23:20 oops Exp $
 
 * 3.0.0
+
+Tue, Jun  8 2010 JoungKyun.Kim <http://oops.org>
+	- init verbose member of KR_API to 0 on kr_open
 
 Sat, May 22 2010 JoungKyun.Kim <http://oops.org>
 	- release 3.0.0
