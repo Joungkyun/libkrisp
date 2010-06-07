@@ -1,5 +1,5 @@
 /*
- * $Id: krisp.c,v 1.68 2010-06-07 16:29:52 oops Exp $
+ * $Id: krisp.c,v 1.69 2010-06-07 18:03:02 oops Exp $
  */
 
 #include <stdio.h>
@@ -83,33 +83,31 @@ jumpNet:
 	/*
 	 * Parsing data
 	 */
-	{
-		int r = parseDummyData (&raw.dummy, raw.dummydata, 0);
+	raw.size = parseDummyData (&raw.dummy, raw.dummydata, 0);
 
-		if ( r < 3 )
-			goto goWrongData;
+	if ( raw.size < 3 )
+		goto goWrongData;
 
-		// ISPCODE|ISPNAME
-		strcpy (isp->ccode, (strlen (raw.dummy[0]) == 0) ? "--" : raw.dummy[0]);
-		strcpy (isp->cname, (strlen (raw.dummy[1]) == 0) ? "N/A" : raw.dummy[1]);
-		strcpy (isp->iname, (strlen (raw.dummy[3]) == 0) ? "N/A" : raw.dummy[3]);
-		if ( strlen (raw.dummy[2]) )
-			strcpy (isp->icode, raw.dummy[2]);
-		else {
-			if ( strcmp (isp->iname, "N/A") == 0 )
-				strcpy (isp->icode, "--");
-			else
-				strcpy (isp->icode, isp->iname);
-		}
+	// ISPCODE|ISPNAME
+	strcpy (isp->ccode, (strlen (raw.dummy[0]) == 0) ? "--" : raw.dummy[0]);
+	strcpy (isp->cname, (strlen (raw.dummy[1]) == 0) ? "N/A" : raw.dummy[1]);
+	strcpy (isp->iname, (strlen (raw.dummy[3]) == 0) ? "N/A" : raw.dummy[3]);
+	if ( strlen (raw.dummy[2]) )
+		strcpy (isp->icode, raw.dummy[2]);
+	else {
+		if ( strcmp (isp->iname, "N/A") == 0 )
+			strcpy (isp->icode, "--");
+		else
+			strcpy (isp->icode, isp->iname);
+	}
 
 goWrongData:
 
-		if ( isp->verbose ) {
-			fprintf (stderr, "DEBUG: TABLE  => %s\n", db->table);
-			fprintf (stderr, "DEBUG: DATA   => %s\n", raw.dummydata);
-			fprintf (stderr, "DEBUG: ISP    => %s (%s)\n", isp->iname, isp->icode);
-			fprintf (stderr, "DEBUG: NATION => %s (%s)\n", isp->cname, isp->ccode);
-		}
+	if ( isp->verbose ) {
+		fprintf (stderr, "DEBUG: TABLE  => %s\n", db->table);
+		fprintf (stderr, "DEBUG: DATA   => %s\n", raw.dummydata);
+		fprintf (stderr, "DEBUG: ISP    => %s (%s)\n", isp->iname, isp->icode);
+		fprintf (stderr, "DEBUG: NATION => %s (%s)\n", isp->cname, isp->ccode);
 	}
 
 	// second argues is set ture, free dummy member
@@ -153,13 +151,11 @@ int kr_search_ex (KRNET_API_EX *raw, KR_API *db) { // {{{
 	/*
 	 * Parsing data
 	 */
-	{
-		parseDummyData (&(raw->dummy), raw->dummydata, 0);
+	raw->size = parseDummyData (&(raw->dummy), raw->dummydata, 0);
 
-		if ( raw->verbose ) {
-			fprintf (stderr, "DEBUG: TABLE  => %s\n", db->table);
-			fprintf (stderr, "DEBUG: DATA   => %s\n", raw->dummydata);
-		}
+	if ( raw->verbose ) {
+		fprintf (stderr, "DEBUG: TABLE  => %s\n", db->table);
+		fprintf (stderr, "DEBUG: DATA   => %s\n", raw->dummydata);
 	}
 
 	db->table = "krisp";
