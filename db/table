@@ -6,3 +6,6 @@ CREATE TABLE krisp
     PRIMARY KEY (start DESC),
     UNIQUE (end)
 );
+
+.sep "\t"
+.imp krisp.csv krisp
