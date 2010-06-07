@@ -1,5 +1,5 @@
 /*
- * $Id: krisp.c,v 1.66 2010-06-07 11:31:26 oops Exp $
+ * $Id: krisp.c,v 1.67 2010-06-07 16:23:20 oops Exp $
  */
 
 #include <stdio.h>
@@ -25,6 +25,8 @@ int kr_open (KR_API **db, char *file) { // {{{
 		free (*db);
 		return 1;
 	}
+
+	*db->verbose = 0;
 
 	return 0;
 } // }}}
