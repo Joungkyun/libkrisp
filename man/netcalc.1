@@ -1,0 +1,41 @@
+.TH NETCALC 1 "22 May 2010"
+.UC 4
+.SH 이름
+.BI netcalc
+\- 주어진 네트워크 계산 유틸리티
+.SH 사용법
+.BI "netcalc \-[abhmnps] " IP " " address "/[" mask "|" prefix "]"
+.br
+.BI "netcalc \-[abhmnps] " StartIP " " EndIP
+.SH 설명
+.BI netcalc
+명령은 주어진 네트워크나 또는 range에 대한 broadcast, network, netmask,
+network prefix를 계산한다. 명령행 인자를 네트워크가 아닌 range로
+주었을 경우에는 해당 range가 포함된 최소 네트워크를 찾아서 그 결과를
+출력한다.
+.PP
+.SH 옵션
+.IP "-a"
+-bmnp 와 동일하다. 모든 값을 출력한다.
+.IP "-b"
+주어진 네트워크의 broadcast를 출력한다.
+.IP "-m"
+주어진 네트워크의 network mask를 출력한다.
+.IP "-n"
+주어진 네트워크의 network를 출력한다.
+.IP "-p"
+주어진 네트워크의 network prefix를 출력한다.
+.IP "-s"
+쉘 변수 형식으로 출력을 한다.
+.IP "-h"
+netcalc의 사용법을 출력한다.
+.SH 저자
+김정균
+.SH 버그 리포트
+<http://oops.org> 의 QnA 게시판을 이용한다.
+.SH 저작권
+Copyright (c) 2010 JoungKyun.Kim <http://oops.org>
+
+이 프로그램은
+.BI GPL
+을 따르며, 사용시의 어떠한 문제에 대하여 보증하지 않는다.

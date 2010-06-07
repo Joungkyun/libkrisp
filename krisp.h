@@ -1,30 +1,28 @@
 /*
- * $Id: krisp.h,v 1.14 2006-11-28 19:39:08 oops Exp $
+ * $Id: krisp.h,v 1.15 2010-06-07 11:31:26 oops Exp $
  */
 
-#ifndef KRIP_H
-#define KRIP_H
+#ifndef KR_ISP_H
+#define KR_ISP_H
 
 #include <krversion.h>
 #include <krispcommon.h>
-#include <krdb.h>
+#include <krispapi.h>
 
 /*
- *
- * user level function prototype
- *
+ * KRISP user level function prototype
  */
 
 /*
  * print krisp version
  */
-char *krisp_version (void);
-char *krisp_uversion (void);
+char * krisp_version (void);
+char * krisp_uversion (void);
 
 /*
  * open krisp database
  */
-int kr_open (KR_API *, char *);
+int kr_open (KR_API **, char *);
 
 /*
  * close krisp database
@@ -34,54 +32,50 @@ void kr_close (KR_API *);
 /*
  * search isp information of given ip address
  */
-int kr_search (KRNET_API *isp, KR_API *db);
+int kr_search (KRNET_API *, KR_API *);
+int kr_search_ex (KRNET_API_EX *, KR_API *);
 
 /*
- *  krisp GeoIP database open API
- */
-GeoIPvar * krGeoIP_open (KR_API *db);
-
-
-/* -------------------{{{ not use on user level---------------------- */
-
-
-/*
- *
- * not use on user level
- *
+ * KRISP network conversion api
  */
 
 /*
- * get netmask of each A class ip from db
+ * Converts a string containing an (IPv4) Internet Protocol
+ * dotted address into a proper address
  */
-int kr_netmask (KR_API *, char *, struct netmasks *);
+ulong kr_ip2long (char *);
 
 /*
- * get ISP information of each network from db
+ * Converts IPv4 address into a string in Internet standard dotted format
+ * The string is returned in a statically allocated buffer, which subsequent
+ * calls will overwrite.
  */
-int getISPinfo (KR_API *, char *, KRNET_API *);
+char * kr_long2ip (ulong);
 
 /*
- * get USERDB information of each network from db
+ * convert prefix to long
  */
-int getHostIP (KR_API *, char *, USERDB *);
+ulong kr_prefix2long (short);
 
 /*
- * free memory that used db query function
+ * return long type of subnet maak with start ip and end ip
  */
-void kr_free_array (char **);
+ulong kr_netmask (ulong start, ulong end);
 
 /*
- * init information structure
+ * return long type of network address
  */
-void initStruct (KRNET_API *n);
+ulong kr_network (ulong ip, ulong mask);
 
 /*
- * convert ip address to netlong type
+ * return long type of broadcast address
  */
-unsigned long ip2long (char *ip);
+ulong kr_broadcast (ulong ip, ulong mask);
 
-/* }}} */
+/*
+ * return network prefix of subnet mask with start ip and end ip
+ */
+short kr_prefix (ulong, ulong);
 
 #endif
 

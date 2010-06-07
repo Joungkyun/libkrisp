@@ -1,5 +1,5 @@
-%define with_geoip 1
 %define _unpackaged_files_terminate_build 0
+%define sqlitepkgname sqlite3
 
 Summary: Korean ISP library
 Summary(ko): 한국 ISP 라이브러리
@@ -7,25 +7,19 @@ Name: libkrisp
 Version: @version@
 Release: 1
 Epoch: 1
-Copyright: LGPL
+License: LGPL
 Group: System Environment/Libraries
-%if %{with_geoip}
-Requires: GeoIP
-BuildRequires: GeoIP-devel
-%endif
-Requires: sqlite
-BuildRequires: sqlite-devel
+Requires: %{sqlitepkgname}
+BuildRequires: %{sqlitepkgname}-devel
 Source0: ftp://mirror.oops.org/pub/Linux/OOPS/Source/${name}/%{name}-%{version}.tar.bz2
 URL: http://devel.oops.org
 Buildroot: /var/tmp/%{name}-%{version}-root
 
 %description
 The libkrisp is library that get Korean IPS information from IP address.
-If you want to use with geoip, give --with-geoip with configure.
 
 %description -l ko
-libkrisp 는 IP 주소로 부터 한국 ISP 정보를 얻기 위한 라이브러리다. geoip
-정보를 같이 사용하고 싶다면, configure 시에 --with-geoip 옵션을 주면 된다.
+libkrisp 는 IP 주소로 부터 한국 ISP 정보를 얻기 위한 라이브러리이다.
 
 %package devel
 Summary: Header and object files for development using libkrisp
@@ -34,18 +28,18 @@ Group: System Environment/Libraries
 
 %description devel
 The libkrisp-devel package contains the header and object files necessary
-for developing programs which use the olibc libraries.
+for developing programs which use the libkrisp libraries.
 
 %description devel -l ko
-libkrisp-devel 패키지는 olibc 라이브러리를 이용하여 개발을 하기 위한 목적
+libkrisp-devel 패키지는 libkrisp 라이브러리를 이용하여 개발을 하기 위한 목적
 코드와 헤더 파일들을 포함하고 있다.
 
 %prep
-rm -rf $RPM_BUILD_ROOT
+rm -rf %{buildroot}
 %setup -q
 
 %build
-%configure --with-geoip
+%configure
 
 %{__make} %{?_smp_mflags}
 
@@ -53,10 +47,10 @@ rm -rf $RPM_BUILD_ROOT
 %{__make} data
 
 %install
-%{__make} DESTDIR=${RPM_BUILD_ROOT} install
+%{__make} DESTDIR=%{buildroot} install
 
 %clean
-%{__rm} -rf $RPM_BUILD_ROOT
+%{__rm} -rf %{buildroot}
 
 %post
 /sbin/ldconfig
@@ -82,6 +76,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/ko/man3/*.3*
 
 %changelog
-* @date@ JoungKyun.Kim <http://www.oops.org> - @version@
+* @date@ JoungKyun.Kim <http://oops.org> - @version@
 - release @version@
 

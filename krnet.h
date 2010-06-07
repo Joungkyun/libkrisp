@@ -1,14 +1,21 @@
 /*
- * $Id: krnet.h,v 1.2 2006-06-20 03:32:11 oops Exp $
+ * $Id: krnet.h,v 1.3 2010-06-07 11:31:27 oops Exp $
  */
 
 #ifndef KRNET_H
 #define KRNET_H
 
-unsigned long ip2long (char *ip);
-char * long2ip (unsigned long num);
-int makeNetworkInfo (char *ip, KRNET_API *n);
+short valid_address (char *);
+ulong ip2long (char *);
+char * long2ip (ulong);
 
+short long2prefix (ulong);
+ulong prefix2long (short);
+short guess_prefix (ulong, ulong);
+ulong guess_netmask (ulong, ulong);
+ulong netmask (ulong, ulong);
+ulong network (ulong, ulong);
+ulong broadcast (ulong, ulong);
 #endif
 
 /*

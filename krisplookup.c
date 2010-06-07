@@ -1,5 +1,5 @@
 /*
- * $Id: krisplookup.c,v 1.33 2009-12-28 20:23:05 oops Exp $
+ * $Id: krisplookup.c,v 1.34 2010-06-07 11:31:26 oops Exp $
  */
 
 #include <krisp.h>
@@ -16,16 +16,15 @@
 #ifdef HAVE_ICONV_H
 #include <iconv.h>
 #include <errno.h>
-#define DB_CHARSET "EUC-KR"
+#define LOCALEALIAS "/usr/share/locale/locale.alias"
+#define DB_CHARSET "UTF8"
 #define FORCE_NOTHING 0
 #define FORCE_UTF8 1
 #define FORCE_EUCKR 2
 #endif
 
-extern short verbose;
-
 #ifdef HAVE_GETOPT_LONG
-static struct option long_options [] = {
+static struct option long_options [] = { // {{{
 	/* Options without arguments: */
 	{ "help", no_argument, NULL, 'h' },
 	{ "verbose", no_argument, NULL, 'v' },
@@ -35,58 +34,78 @@ static struct option long_options [] = {
 	/* Options accepting an argument: */
 	{ "datafile", required_argument, NULL, 'f' },
 	{ 0, 0, 0, 0 }
-};
+}; // }}}
 #endif
 
-short confirm_local_charset (void) {
-	char * lang_env = getenv ("LANG");
-	char * lcharset = strrchr (lang_env + 1, '.');
+#ifdef HAVE_ICONV_H
+char * confirm_local_charset (void) { // {{{
+	char *	lang_env = getenv ("LANG");
+	char *	lcharset = strrchr (lang_env + 1, '.');
+	char	buf[1024];
+	char *	tmp;
 
-	if ( ! strcmp (".eucKR", lcharset) || ! strcmp (".euckr", lcharset)
-		|| ! strcmp (".euc-kr", lcharset) || ! strcmp (".EUC-KR", lcharset)
-		|| ! strcmp (".euc-KR", lcharset) ) {
-		return ( ! strcmp ("EUC-KR", DB_CHARSET) ) ? FORCE_NOTHING : FORCE_EUCKR;
-	} else {
-		return ( ! strcmp ("UTF8", DB_CHARSET) ) ? FORCE_NOTHING : FORCE_UTF8;
+	if ( lcharset == NULL ) {
+		struct stat		f;
+		FILE *			fp;
+		char *			line;
+
+		f.st_size = 0;
+		if ( stat (LOCALEALIAS, &f) == -1 )
+			return NULL;
+		
+		if ( (fp = fopen (LOCALEALIAS, "r")) == NULL )
+			return NULL;
+
+		while ( fgets (buf, 1024, fp) != NULL ) {
+			if ( buf[0] < 97 && buf[0] > 122 )
+				continue;
+
+			if ( (line = strstr (buf, lang_env)) != NULL ) {
+				if ( (tmp = strchr (buf, '.')) != NULL )
+					return tmp + 1;
+			}
+		}
+
+		return NULL;
 	}
-}
 
-void usage (char *prog) {
+	if ( ! strcasecmp (".utf-8", lcharset) || ! strcasecmp (".utf8", lcharset) )
+		return "UTF8";
+
+	return lcharset + 1;
+} // }}}
+#endif
+
+void usage (char *prog) { // {{{
 	fprintf (stderr, "%s v%s: Resolved korea range ISP inforamtion\n", prog, krisp_version ());
 	fprintf (stderr, "Usage: %s [option] ip-address\n", prog);
 	fprintf (stderr, "Options:\n");
 	fprintf (stderr, "         -f path, --datafile=path     set user define database file\n");
 	fprintf (stderr, "         -h , --help                  print this message\n");
-	fprintf (stderr, "         -c , --city                  search geoip city database\n");
 	fprintf (stderr, "         -i , --isp                   only print isp code\n");
 	fprintf (stderr, "         -n , --nation                only print nation code\n\n");
 
 	exit (1);
-}
+} // }}}
 
-int main (int argc, char ** argv) {
-	KR_API *db;
-	KRNET_API isp;
-	struct stat f;
-	char * ip;
-	int opt;
-	char *datafile = NULL;
-	short city = 0;
-	short onlyisp = 0;
-	short onlynation = 0;
+int main (int argc, char **argv) {
+	KR_API *		db;
+	KRNET_API		isp;
+	KRNET_API_EX	u_isp;
+	struct stat		f;
+	char *			ip;
+	int				opt, r;
+	char *			datafile = NULL;
+	short			onlyisp = 0;
+	short			onlynation = 0;
+	short			verbose = 0;
 
 #ifdef HAVE_GETOPT_LONG
-	while ( (opt = getopt_long (argc, argv, "cf:hinv", long_options, (int *) 0)) != EOF ) {
+	while ( (opt = getopt_long (argc, argv, "f:hinv", long_options, (int *) 0)) != EOF ) {
 #else
-	while ( (opt = getopt (argc, argv, "cf:hinv")) != EOF ) {
+	while ( (opt = getopt (argc, argv, "f:hinv")) != EOF ) {
 #endif
 		switch (opt) {
-			case 'c' :
-				city = 1;
-#ifdef HAVE_LIBGEOIP
-				geocity = 1;
-#endif
-				break;
 			case 'f' :
 				datafile = optarg;
 				break;
@@ -130,26 +149,28 @@ int main (int argc, char ** argv) {
 		return 1;
 	}
 
-	db = (KR_API *) malloc (sizeof (KR_API));
-
 	/* database open */
-	if ( kr_open (db, (datafile != NULL) ? datafile : NULL) ) {
-		fprintf (stderr, "ERROR Connect: %s\n", dberr);
+	if ( (r = kr_open (&db, (datafile != NULL) ? datafile : NULL)) > 0 ) {
+		if ( r == 2 )
+			fprintf (stderr, "ERROR: kr_open:: failed memory allocation\n");
+		else
+			fprintf (stderr, "ERROR Connect: %s\n", db->err);
 		return 1;
 	}
 
+	isp.verbose = verbose;
+	db->verbose = verbose;
 	ip = argv[optind];
 
-	if ( strlen (ip) > 255 ) {
-		strncpy (isp.ip, ip, 255);
-		isp.ip[255] = 0;
-	} else {
-		strcpy (isp.ip, ip);
+	safecpy_256 (isp.ip, ip);
+	if ( kr_search (&isp, db) ) {
+		fprintf (stderr, "ERROR: %s\n", db->err);
+		kr_close (db);
+		return 1;
 	}
-	kr_search (&isp, db);
 
 	if ( verbose )
-		printf ("\n");
+		fprintf (stderr, "\n");
 
 	if ( onlyisp ) {
 		printf ("%s\n", isp.icode);
@@ -157,28 +178,22 @@ int main (int argc, char ** argv) {
 		printf ("%s\n", isp.ccode);
 	} else {
 #ifdef HAVE_ICONV_H
-		short lcharset;
-		iconv_t cd;
-		char * ispname, * to;
-		size_t flen, tlen;
-		char * srcname = (char *) isp.iname;
+		char *	lcharset;
+		iconv_t	cd;
+		char *	ispname, * to;
+		size_t	flen, tlen;
+		char *	srcname = (char *) isp.iname;
 
 		lcharset = confirm_local_charset ();
 		flen = strlen (srcname);
 
-		switch (lcharset) {
-			case FORCE_UTF8 :
-				tlen = flen * 4 + 1;
-				cd = iconv_open ("UTF-8", "CP949");
-				break;
-			case FORCE_EUCKR :
-				tlen = flen + 1;
-				cd = iconv_open ("CP949", "UTF-8");
-				break;
-			default :
-				tlen = 1;
-				cd = (iconv_t)(-1);
-		}	
+		if ( lcharset == NULL || ! strcmp (DB_CHARSET, lcharset) ) {
+			tlen = 1;
+			cd = (iconv_t)(-1);
+		} else {
+			tlen = ! strcmp (lcharset, "UTF8") ? flen * 4 + 1 : flen + 1;
+			cd = iconv_open (lcharset, DB_CHARSET);
+		}
 
 		if ( cd == (iconv_t)(-1) ) {
 			ispname = strdup (isp.iname);
@@ -213,21 +228,31 @@ noconvert:
 		free (ispname);
 #endif
 
-		printf ("SUBNET : %s\n", isp.netmask);
-		printf ("NETWORK: %s\n", isp.network);
-		printf ("BCAST  : %s\n", isp.broadcast);
-		printf ("NATION : %s (%s)\n", isp.cname, isp.ccode);
-		if ( city ) {
-			printf ("CITY   : %s", isp.city);
-			if ( strlen (isp.region) && strcmp (isp.region, "N/A") )
-				printf (", %s", isp.region);
-			printf ("\n");
-		}
+		printf ("SUBNET    : %s\n", kr_long2ip (isp.netmask));
+		printf (
+				"NETWORK   : %s\n",
+				kr_long2ip (kr_network (isp.start, isp.netmask))
+		);
+		printf (
+				"BROADCAST : %s\n",
+				kr_long2ip (kr_broadcast(isp.start, isp.netmask))
+		);
+		printf ("DB RANGE  : %s - ", kr_long2ip (isp.start));
+		printf ("%s\n", kr_long2ip (isp.end));
+		printf ("NATION    : %s (%s)\n", isp.cname, isp.ccode);
 	}
 
 	/* database close */
 	kr_close (db);
-	free (db);
 
 	return 0;
 }
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * c-basic-offset: 4
+ * End:
+ * vim600: noet sw=4 ts=4 fdm=marker
+ * vim<600: noet sw=4 ts=4
+ */
