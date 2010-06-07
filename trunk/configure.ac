@@ -1,11 +1,11 @@
 # Process this file with autoconf to produce a configure script.
 # Configure template for krisp library
 #
-# $Id: configure.ac,v 1.24 2010-04-09 18:18:23 oops Exp $
+# $Id: configure.ac,v 1.25 2010-06-07 11:31:26 oops Exp $
 
 #
 AC_PREREQ(2.59)
-AC_INIT([krisp], [2.1.3], [http://oops.org])
+AC_INIT([krisp], [3.0.0], [http://oops.org])
 AC_CONFIG_SRCDIR([krisp.h])
 AC_CONFIG_HEADER([krisp-config.h])
 AC_PREFIX_DEFAULT([/usr/local])
@@ -16,7 +16,7 @@ AC_SUBST(SONAME_MAJOR)
 AC_SUBST(SONAME_MINOR)
 AC_SUBST(SONAME_REVISION)
 
-SONAME_MAJOR=1
+SONAME_MAJOR=2
 SONAME_MINOR=0
 SONAME_REVISION=0
 SONAME_VERSION=$SONAME_MAJOR.$SONAME_MINOR.$SONAME_REVISION
@@ -34,9 +34,6 @@ AC_PROG_LIBTOOL
 
 AC_ARG_WITH(sqlite,
 [  --with-sqlite=PATH      sqlite path [[default: /usr]]])
-
-AC_ARG_WITH(geoip,
-[  --with-geoip=PATH       support geoip extension [[default: /usr]]])
 
 AC_ARG_WITH(libiconv,
 [  --with-libiconv=PATH    libiconv prefix])
@@ -117,27 +114,6 @@ if test "$ac_cv_lib_sqlite3_sqlite3_open" != "yes"; then
 	AC_CHECK_LIB(sqlite, sqlite_open,,[AC_MSG_ERROR([Can't not found sqlte library (-lsqlite)])])
 fi
 
-if test "x$with_geoip" != "x"; then
-	SEARCHPATH="$with_geoip /usr /usr/local /opt"
-
-	geoiplib=
-	geoipheader=
-	for i in $SEARCHPATH
-	do
-		if test -f "$i/lib/libGeoIP.so" -o -f "$i/lib/libGeoIP.a"; then
-			export LDFLAGS="-L$i/lib $LDFLAGS"
-		elif test -f "$i/lib64/libGeoIP.so" -o -f "$i/lib64/libGeoIP.a"; then
-			export LDFLAGS="-L$i/lib64 $LDFLAGS"
-		fi
-
-		if test -f "$i/include/GeoIP.h"; then
-			export CPPFLAGS="-I$i/include $CPPFLAGS"
-		fi
-	done
-
-	AC_CHECK_LIB(GeoIP, GeoIP_new,, [AC_MSG_ERROR([Can't not found GeoIP library (-lGeoIP)])])
-fi
-
 if test "x$with_libiconv" != "x"; then
 	if test -f "$with_libiconv/lib/libiconv.so" -o -f "$with_libiconv/lib/libiconv.a"; then
 		export LDFLAGS="$LDFLAGS -L$with_libiconv/lib"
@@ -158,9 +134,6 @@ AC_HEADER_STDC
 #sqlite3.h
 AC_CHECK_HEADERS([arpa/inet.h getopt.h netinet/in.h stdio.h stdlib.h \
 					string.h sys/socket.h sqlite3.h sqlite.h iconv.h])
-if test "xwith_geoip" != "x"; then
-	AC_CHECK_HEADERS([GeoIP.h])
-fi
 
 # Checks for typedefs, structures, and compiler characteristics.
 AC_C_CONST

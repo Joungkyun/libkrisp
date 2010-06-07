@@ -1,42 +1,58 @@
-.TH KR_CLOSE 1 "04 Sep 2006"
+.TH KR_CLOSE 3 "21 Nay 2010"
 .UC 4
 .SH 이름
-kr_close - libkrisp 의 database 를 닫는다.
+kr_close - libkrisp 의 database handle을 종료하고 memory를 해제한다.
 .SH 사용법
-.I #include <krips.h>
+.BI "#include <krips.h>"
 .br
-.I void kr_close (KR_API *db);
+.BI "void kr_close (KR_API *" db ");"
 .SH 설명
-kr_close() 함수는 libkrisp 를 링크하여 kr_open () 에 의해 열려진 db handler 를
-닫는데 사용을 한다. geoip handler 역시 kr_close() 함수에서 처리가 된다. 2.0 부터는
-geoip handler 는 kr_open 에서 담당하게 되므로, 신경쓸 필요가 없다.
+.BI kr_close
+API는 libkrisp 를 링크하여
+.BI kr_open
+API에 의해 열려진 db handler 를 종료하고, memory를 해제한다.
+.BI kr_open
+API로 열려진
+.BI KR_API
+structure는 이 API를 이용하여 꼭 종료가 되어야 한다.
 .PP
 .SH 예제
 .nf
 #include <krisp.h>
-extern char dberr[1024];
 
 int main (void) {
-    KR_API *db;
+    KR_API * db;
     KRNET_API isp;
-    char *ip = "168.126.63.1";
+    char * addr = "kns.kornet.net";
+    int r;
+    char * database = NULL;
 
-	db = (KR_API *) malloc (sizeof (KR_API));
-
-    if ( kr_open (db) ) {
-        fprintf (stderr, "ERROR Connect: %s\\n", dberr);
-		free (db);
+    if ( (r = kr_open (&db, database)) > 0 ) {
+        if ( r == 2 )
+            fprintf (stderr, "ERROR: kr_open:: failed memory allocation\\n");
+        else
+            fprintf (stderr, "ERROR Connect: %s\\n", db->err);
         return 1;
     }
 
-    strcpy (isp.ip, ip);
-    kr_search (&isp, db);
+    isp.verbose = 0;
+    // defined safecpy_256 in krispapi.h
+    safecpy_256 (isp.ip, addr);
+    if ( kr_search (&isp, db) ) {
+        printf ("ERROR: %s\\n", db->err);
+        kr_close (db);
+        return 1;
+    }
 
-	kr_close (db);
-	free (db);
+    kr_close (db);
 
-    printf ("%-15s %-15s %-20s %-15s %-15s %s\\n",
-            ip, isp.ip, isp.serv, isp.network, isp.broadcast, isp.org);
+    /*
+     * kr_long2ip is returned in a statically allocated buffer, which
+     * subsequent calls will overwrite.
+     */
+    printf ("%-15s %-15s %-20s", ip, isp.ip, isp.icode);
+    printf ("%-15s ", kr_long2ip (isp.start));
+    printf ("%-15s %s", kr_long2ip (isp.end), isp.iname);
 
     return 0;
 }
@@ -44,10 +60,12 @@ int main (void) {
 .SH 저자
 김정균
 .SH 버그 리포트
-<http://www.oops.org> 의 QnA 게시판을 이용한다.
+<http://oops.org> 의 QnA 게시판을 이용한다.
 .SH 저작권
-Copyright (c) 2006 OOPS Development Organization
+Copyright (c) 2010 JoungKyun.Kim <http://oops.org>
 
-이 프로그램은 LGPL 을 따르며, 사용시의 어떠한 문제에 대하여 보증하지 않는다.
+이 API는
+.BI LGPL
+을 따르며, 사용시의 어떠한 문제에 대하여 보증하지 않는다.
 .SH "참고"
-krispmkdb(1), krispmkdb(1), krisp_version(3), kr_open(3), kr_search(3)
+kr_open(3), kr_search(3), kr_long2ip(3)

@@ -1,9 +1,9 @@
 /*
- * $Id: krispcommon.h,v 1.24 2006-11-28 19:52:22 oops Exp $
+ * $Id: krispcommon.h,v 1.25 2010-06-07 11:31:26 oops Exp $
  */
 
-#ifndef COMMON_H
-#define COMMON_H
+#ifndef KR_COMMON_H
+#define KR_COMMON_H
 
 #ifdef HAVE_CONFIG_H
 #include <krisp-config.h>
@@ -20,159 +20,63 @@
 #include <sqlite.h>
 #endif
 
-#define DBTYPE_KRISP  0
-#define DBTYPE_USERDB 1
-
-/*
- * GeoIP extension start
- */
-#ifdef HAVE_LIBGEOIP
-#ifdef HAVE_GEOIP_H 
-#include <GeoIP.h>
-#include <GeoIPCity.h>
-void _GeoIP_setup_dbfilename (void);
-#define INCLUDE_GEOIP_HEADER_OK
+#ifndef true
+#define true 1
+#define false 0
 #endif
-#endif
-
-#ifndef INCLUDE_GEOIP_HEADER_OK
-typedef struct GeoIPTag {
-	FILE *GeoIPDatabase;
-	char *file_path;
-	unsigned char *cache;
-	unsigned char *index_cache;
-	unsigned int *databaseSegments;
-	char databaseType;
-	time_t mtime;
-	int flags;
-	char record_length;
-	int record_iter; /* used in GeoIP_next_record */
-} GeoIP;
-
-typedef enum { 
-	GEOIP_STANDARD = 0,
-	GEOIP_MEMORY_CACHE = 1,
-	GEOIP_CHECK_CACHE = 2,
-	GEOIP_INDEX_CACHE = 4,
-} GeoIPOptions;
-
-typedef enum {
-	GEOIP_COUNTRY_EDITION     = 1,
-	GEOIP_REGION_EDITION_REV0 = 7,
-	GEOIP_CITY_EDITION_REV0   = 6,
-	GEOIP_ORG_EDITION         = 5,
-	GEOIP_ISP_EDITION         = 4,
-	GEOIP_CITY_EDITION_REV1   = 2,
-	GEOIP_REGION_EDITION_REV1 = 3,
-	GEOIP_PROXY_EDITION       = 8,
-	GEOIP_ASNUM_EDITION       = 9,
-	GEOIP_NETSPEED_EDITION    = 10,
-	GEOIP_DOMAIN_EDITION      = 11
-} GeoIPDBTypes;
-
-typedef struct GeoIPRecordTag {
-	char *country_code;
-	char *country_code3;
-	char *country_name;
-	char *region;
-	char *city;
-	char *postal_code;
-	float latitude;
-	float longitude;
-	int dma_code;
-	int area_code;
-} GeoIPRecord;
-
-#define GEOIP_API
-GEOIP_API GeoIP* GeoIP_new(int flags);
-GEOIP_API void GeoIP_delete(GeoIP* gi);
-GEOIP_API int GeoIP_id_by_name (GeoIP* gi, const char *host);
-GEOIP_API int GeoIP_db_avail(int type);
-GEOIP_API char *GeoIP_org_by_name (GeoIP* gi, const char *host);
-GeoIPRecord * GeoIP_record_by_name (GeoIP* gi, const char *host);
-void GeoIPRecord_delete (GeoIPRecord *gir);
-extern const char GeoIP_country_code[247][3];
-extern const char * GeoIP_country_name[247];
-#endif
-
-typedef struct GeoIPvarTag {
-	GeoIP *		gid;
-	GeoIP *		gic;
-	GeoIP *		gip;
-} GeoIPvar;
-/*
- * GeoIP extension end
- */
-
-struct netmasks {
-	int				nums;
-	char **			mask;
-};
 
 typedef struct db_argument {
 #if defined(HAVE_LIBSQLITE3)
-	sqlite3			*c;		/* db resource */
-	sqlite3			*h;		/* userdb db resource */
-	sqlite3_stmt	*vm;	/* sqlite vm */
+	sqlite3	*		c;		// db resource
+	sqlite3_stmt *	vm;		// sqlite vm
 #else
-	sqlite			*c;		/* db resource */
-	sqlite			*h;		/* userdb db resource */
-	sqlite_vm		*vm;	/* sqlite vm */
+	sqlite *		c;		// db resource
+	sqlite_vm *		vm;		// sqlite vm
 #endif
-	int				r;		/* execute result code */
-	int				rows;	/* vm rows */
-	int				cols;	/* number of columns */
-	char *			err;	/* vm error message */
+	short			verbose;
+	short			r;		// execute result code
+	short			final;  // force finalize
+	int				rows;	// vm rows
+	int				cols;	// number of columns
+#if defined(HAVE_LIBSQLITE)
+	char *			dberr;	// vm error message
+#endif
+	char 			err[1024];
+	char *          table;
+	char *			old_table;
 	const char **	rowdata;
 	const char **	colname;
-	GeoIPvar *		gi;		/* GeoIP resource */
 } KR_API;
 
+typedef struct raw_netinfos {
+	short           verbose;
+	char			ip[16];
+	ulong			start;
+	ulong			end;
+	char **			dummy;
+	char *			dummydata;
+} RAW_KRNET_API;
+
+#define KRNET_API_EX RAW_KRNET_API
+
 typedef struct netinfos {
-	char			key[16];
+	short			verbose;
 	char			ip[256];
-	char			netmask[16];
-	char			network[16];
-	char			broadcast[16];
-	char			icode[128];
-	char			iname[128];
+	ulong			netmask;
+	ulong			start;
+	ulong			end;
+	char			icode[64];
+	char			iname[64];
 	char			ccode[4];
-	char			cname[128];
-	char			city[64];
-	char			region[4];
+	char			cname[64];
 } KRNET_API;
 
 struct cinfo {
-	unsigned long	ip;
-	unsigned long	mask;
-	unsigned long	network;
-	unsigned long	broad;
+	ulong	ip;
+	ulong	mask;
+	ulong	network;
+	ulong	bcast;
 };
-
-typedef struct userdbs {
-	char			ccode[4];
-	char			cname[128];
-	char			icode[128];
-	char			iname[128];
-	char			city[64];
-	char			region[4];
-	int				flag;
-} USERDB;
-
-#ifndef GEOCITYVAR
-#ifdef HAVE_LIBGEOIP
-/* set 1, search GeoIPCity database if enabled search GeoIPCity
- * default value is 0 */
-extern short geocity;
-extern short geocity_type;
-extern short geoisp_type;
-extern short geo_type;
-#endif
-#endif
-
-#ifndef DBERRVAR
-extern char dberr[1024];
-#endif
 
 #endif
 

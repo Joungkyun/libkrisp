@@ -1,89 +1,126 @@
-.TH KR_OPEN 1 "29 Nov 2006"
+.TH KR_OPEN 3 "22 May 2010"
 .UC 4
 .SH 이름
 kr_open - libkrisp 의 database 를 연다.
 .SH 사용법
-.I #include <krips.h>
+.BI "#include <krips.h>"
 .br
-.I int kr_open (KR_API *db, char *path)
+.BI "typedef struct " db_argument " {"
+.br
+.BI "#if defined(HAVE_LIBSQLITE3)"
+.br
+.BI "    sqlite3 *       " c ";      // db resource"
+.br
+.BI "    sqlite3_stmt *  " vm ";     // sqlite vm"
+.br
+.BI "#else"
+.br
+.BI "    sqlite *        " c ";      // db resource"
+.br
+.BI "    sqlite_vm *     " vm ";     // sqlite vm"
+.br
+.BI "#endif"
+.br
+.BI "    short           " r ";      // execute result code"
+.br
+.BI "    short           " final ";  // force finalize"
+.br
+.BI "    int             " rows ";   // vm rows"
+.br
+.BI "    int             " cols ";   // number of columns"
+.br
+.BI "#if defined(HAVE_LIBSQLITE)"
+.br
+.BI "    char *          " dberr ";  // vm error message"
+.br
+.BI "#endif"
+.br
+.BI "    char            " err[1024] ";"
+.br
+.BI "    char *          " table ";"
+.br
+.BI "    char *          " old_table ";"
+.br
+.BI "    const char **   " rowdata ";"
+.br
+.BI "    const char **   " colname ";"
+.br
+.BI "} " KR_API ";"
+.br
+.BI "int kr_open (KR_API **" db ", char *" path ")"
 .SH 설명
-kr_open() 함수는 libkrisp 를 링크하여 databse 파일을 열기 위해 사용한다.
-kr_open() 함수의 argument 는 database 연결에 사용되는 db_argument structure 와
-database 파일의 경로를 지정을 한다.
+.BI kr_open
+API는 libkrisp 를 링크하여 databse 파일을 열기 위해 사용한다.
+.BI kr_open
+API의 argument 는 database 연결에 사용되는
+.BI KR_API
+structure 와 database 파일의 경로를 지정을 한다.
 .PP
-db_argument structure 는 krispcommon.h 에 정의가 되어 있으며, kr_open 을 호출하기
-전에 다음과 같이 정의 되어 있어야 하며, db error 를 처리하기 위하여 전역 변수로
-extern char dberr[] 이 정의 되어져야 한다. (예제를 참고한다.)
+.BI KR_API
+structure 는 krispcommon.h 에 정의가 되어 있으며, kr_open 을 호출하기
+전에 다음과 같이 정의 되어 있어야 한다.
 .PP
-.I KR_API db;
+.BI "KR_API *" db ";"
 .br
-.I if ( kr_open (&db, NULL) ) {
+.BI "if ( kr_open (&" db ", NULL) ) {"
 .br
-.I ..
+.BI "    .."
 .br
-.I }
-.PP
-geoip 연동시에는 전역변수 geocity 값을 1로 지정을 하면, GeoIPCity database 가 존재할
-경우 GeoIPCity 의 값을 가져온다. 다만, GeoIPCity 의 경우 database 가 아주 크기 때문에,
-apache 같은 환경에서 사용시에 memory 고갈이 되어 out of memory 가 발생할 수 있다.
-.PP
-또한, 2.0.2 부터는 GeoIP database 의 open type 을 전역 변수로 지정할 수 있다.
-아래 예제를 참조하도록 한다.
+.BI "}"
 .PP
 .SH 반환값
-성공시에 0 을 반환하며, 실패시에 1 을 반환한다.
+성공시에 0 을 반환하며, 실패시에 1 또는 2를 반환한다. 2를 반환한 경우에는
+memory allocation에 실패한 경우이기 때문에 예제와 같이 예외 처리를 해 주어야
+한다.
 .SH 예제
 .nf
 #include <krisp.h>
-extern char dberr[1024];
 
 int main (void) {
-    KR_API db;
+    KR_API * db;
     KRNET_API isp;
-    char *ip = "168.126.63.1";
+    char * addr = "kns.kornet.net";
+    int r;
+    char * database = NULL;
 
-	db = (KR_API *) malloc (sizeof (KR_API));
-
-#ifdef HAVE_LIBGEOIP
-    /* set 1, search GeoIPCity database if enabled search GeoIPCity */
-    short geocity      = 0;
-    if ( geocity )
-        short geocity_type = GEOIP_INDEX_CACHE | GEOIP_CHECK_CACHE;
-    short geoisp_type  = GEOIP_INDEX_CACHE | GEOIP_CHECK_CACHE;
-    short geo_type     = GEOIP_MEMORY_CACHE | GEOIP_CHECK_CACHE;
-#endif
-
-    if ( kr_open (db) ) {
-        fprintf (stderr, "ERROR Connect: %s\\n", dberr);
-		free (db);
+    if ( (r = kr_open (&db, database)) > 0 ) {
+        if ( r == 2 )
+            fprintf (stderr, "ERROR: kr_open:: failed memory allocation\\n");
+        else
+            fprintf (stderr, "ERROR Connect: %s\\n", db->err);
         return 1;
     }
 
-    strcpy (isp.ip, ip);
-	db.gi = NULL;
-    kr_search (&isp, db);
+    isp.verbose = 0;
+    safecpy_256 (isp.ip, addr);
+    if ( kr_search (&isp, db) ) {
+        printf ("ERROR: %s\\n", db->err);
+        kr_close (db);
+        return 1;
+    }
 
-	kr_close (db);
-	free (db);
+    kr_close (db);
 
-    printf ("%-15s %-15s %-20s %-15s %-15s %s\\n",
-            ip, isp.ip, isp.serv, isp.network, isp.broadcast, isp.org);
+    /*
+     * kr_long2ip is returned in a statically allocated buffer, which
+     * subsequent calls will overwrite.
+     */
+    printf ("%-15s %-15s %-20s", ip, isp.ip, isp.icode);
+    printf ("%-15s ", kr_long2ip (isp.start));
+    printf ("%-15s %s", kr_long2ip (isp.end), isp.iname);
 
-#ifdef HAVE_LIBGEOIP
-	printf ("%s %s\\n", isp.ccode, isp.cname);
-	if ( geocity )
-		printf ("%s\\n", isp.city);
-#endif
     return 0;
 }
 .fi
 .SH 저자
 김정균
 .SH 버그 리포트
-<http://www.oops.org> 의 QnA 게시판을 이용한다.
+<http://oops.org> 의 QnA 게시판을 이용한다.
 .SH 저작권
-Copyright (c) 2006 OOPS Development Organization
+Copyright (c) 2010 JoungKyun.Kim <http://oops.org>
 
-이 프로그램은 LGPL 을 따르며, 사용시의 어떠한 문제에 대하여 보증하지 않는다.
+이 API는
+.BI LGPL
+을 따르며, 사용시의 어떠한 문제에 대하여 보증하지 않는다.
 .SH "참고"
-krispmkdb(1), krispmkdb(1), krisp_version(3), kr_close(3), kr_search(3)
+kr_close(3), kr_search(3), kr_long2ip(3)

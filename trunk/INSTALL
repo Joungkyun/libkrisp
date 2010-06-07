@@ -1,6 +1,6 @@
 libkrisp 설치 문서
 
-$Id: INSTALL,v 1.4 2006-06-30 06:26:48 oops Exp $
+$Id: INSTALL,v 1.5 2010-06-07 11:31:26 oops Exp $
 
 
 1. Quick Install
@@ -14,7 +14,10 @@ make install
 2. configure
 
 libkrisp 의 configure 는 GNU autoconf 를 이용한다.  옵션은 gnu configure 의 기본
-옵션외에 --with-geoip 옵션만 있다. 이는 geoip 를 같이 연동할 경우 사용한다.
+옵션 외에 --with-sqlite와 --with-iconv 옵션을 이용할 수 있다. --with-sqlite 옵션
+은 sqlite가 system ld path에 설치되어 있지 않을 경우 sqlite의 prefix를 지정해 준
+다. --with-iconv는 libiconv의 prefix를 지정해 준다. 리눅스의 경우 glibc에서 기본
+으로 iconv를 지원하기 때문에 --with-iconv 줄 필요가 없다.
 
 그 외에, CFLAGS, DEFS, LIBS, LDFLAGS, CPPFLAGS 등을 사용할 수 있다.
 
@@ -26,11 +29,14 @@ libkrisp 의 configure 는 GNU autoconf 를 이용한다.  옵션은 gnu configu
 
 4. make data
 
-db/sql.txt 를 이용하여, sqlite database 를 생성한다. db/krisp.dat 가 존재한다면,
-생략해도 무방하다. 없으면 해 주어야 한다.  db/krisp.dat 를 생성하는데, 이 파일이
-없으면, install 시에 에러가 발생한다.
+data/krisp.csv를 이용하여 sqlite database를 생성한다.  data/krisp.dat가 존재한다
+면 생략해도 무방하다. 없으면 해주어야 한다.  db/krisp.dat 를 생성하는데, 이 파일
+이 없으면, install 시에 에러가 발생한다.
+
+database 생성에 대한 자세한 내용은 http://devel.oops.org/viewtopic.php?t=69 문서
+를 참고 하도록 한다.
 
 5. make isntall
 
-make DESTDIR=PATH install 과 같이 하여 DESTDIR 에 설치를 할 수 있다. 테스트 시나
+'make DESTDIR=PATH install'과 같이 하여 DESTDIR에 설치를 할 수 있다. 테스트시나
 패키징시에 사용할 수 있다.

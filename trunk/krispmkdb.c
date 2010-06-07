@@ -1,5 +1,5 @@
 /*
- * $Id: krispmkdb.c,v 1.9 2006-11-25 18:58:50 oops Exp $
+ * $Id: krispmkdb.c,v 1.10 2010-06-07 11:31:26 oops Exp $
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -16,160 +16,277 @@
 #endif
 
 #define FILEBUF 1024
-#define DEFSAVE "./krisp-new.dat"
 
 #ifdef HAVE_GETOPT_LONG
-static struct option long_options [] = {
+static struct option long_options [] = { // {{{
 	/* Options without arguments: */
 	{ "help", no_argument, NULL, 'h' },
-			    
+	{ "assume-yes", no_argument, NULL, 'y' },
+
 	/* Options accepting an argument: */
-	{ "savepath", required_argument, NULL, 's' },
+	{ "table-name", required_argument, NULL, 't' },
+	{ "csv-file", required_argument, NULL, 'c' },
 	{ 0, 0, 0, 0 }
-};
+}; // }}}
 #endif
 
-void usage (void) {
-	fprintf (stderr, "krmakedb v%s: Make libkrisp database utility\n", KRISP_VERSION);
-	fprintf (stderr, "USAGE: krmakedb [option] ip_list_sql_file_path\n");
+void usage (void) { // {{{
+	fprintf (stderr, "krispmkdb v%s: Make libkrisp database utility\n", KRISP_VERSION);
+	fprintf (stderr, "USAGE: krispmkdb [option] database\n");
 	fprintf (stderr, "Options:\n");
-	fprintf (stderr, "    -s path, --savepath=path   save data file path (def: ./krisp-new.dat)\n");
+	fprintf (stderr, "    -c, --csv-file=PATH        input data file with tab csv format\n");
+	fprintf (stderr, "    -t, --table-name=NAME      table name\n");
+	fprintf (stderr, "    -y, --assum-yes            Assume yes\n");
 	fprintf (stderr, "    -h, --help                 print this message\n");
 
 	exit (1);
-}
+} // }}}
 
-char * getlist (char *file) {
-	struct stat f;
-	FILE *fp;
-	size_t r;
-	char tmp[FILEBUF+1], *buf;;
+int check_csv (char * file) { // {{{
+	struct stat	f;
+	size_t		r;
 
 	f.st_size = 0;
 	r = stat (file, &f);
 
 	if ( r == -1 ) {
-		fprintf (stderr, "ERROR: Can't open ISP ip list file %s\n", file);
-		return NULL;
+		fprintf (stderr, "ERROR: Can't open csv format file (%s)\n", file);
+		return 1;
 	}
 
 	if ( f.st_size < 1 ) {
-		fprintf (stderr, "ERROR: %s size is zero\n", file);
-		return NULL;
-	}
-
-	if ( (fp = fopen (file, "rb")) == NULL ) {
-		fprintf (stderr, "ERROR: Can't open %s in read mode\n", file);
-		return NULL;
-	}
-
-	buf = (char *) malloc (sizeof (char) * (f.st_size + 1));
-	memset (buf, 0, sizeof (char) * (f.st_size + 1));
-
-	memset (tmp, 0, FILEBUF+1);
-	while ( (r = fread (tmp, sizeof (char), FILEBUF, fp)) > 0 ) {
-		strcat (buf, tmp);
-		memset (tmp, 0, FILEBUF+1);
-	}
-
-	fclose (fp);
-
-	return buf;
-}
-
-int main (int argc, char **argv) {
-	KR_API *db;
-	char *ipfile;
-	char *savedb = NULL;
-	char *buf, *sql, *sql_t;
-	int r, len;
-	char output[80];
-	int opt;
-
-#ifdef HAVE_GETOPT_LONG
-	while ( (opt = getopt_long (argc, argv, "s:h", long_options, (int *) 0)) != EOF ) {
-#else
-	while ( (opt = getopt (argc, argv, "s:h")) != EOF ) {
-#endif
-		switch (opt) {
-			case 's' :
-				savedb = optarg;
-				break;
-			default:
-				usage ();
-				return 1;
-		}
-	}
-
-	if ( argc - optind < 1 || argc == 1 ) {
-		usage ();
+		 fprintf (stderr, "ERROR: %s size is zero\n", file);
 		return 1;
 	}
-
-	ipfile = argv[optind];
-
-	db = (KR_API *) malloc (sizeof (KR_API));
-
-	if ( kr_open (db, (savedb != NULL ) ? savedb : DEFSAVE) ) {
-		fprintf (stderr, "ERROR: DB connect failed (%s)\n", dberr);
-		return 1;
-	}
-	
-	if ( (buf = getlist (ipfile)) == NULL ) {
-		kr_close (db);
-		free (db);
-		fprintf (stderr, "ERROR: %s is empty\n", ipfile);
-		return 1;
-	}
-
-	//printf ("%s\n", buf);
-	
-	sql = buf;
-	while ( 1 ) {
-		sql_t = strchr (sql, '\n');
-		if ( sql_t == NULL )
-			break;
-
-		sql[sql_t - sql] = 0;
-
-		if ( (len = strlen (sql)) ) {
-			if ( len > 77 ) {
-				strncpy (output, sql, 77);
-				output[77] = 0;
-			} else {
-				strcpy (output, sql);
-			}
-			printf ("=> %s\n", output);
-
-			if ( kr_dbQuery (db, sql, DBTYPE_KRISP) ) {
-				fprintf (stderr, "\nERROR: query failed (%s)\n", dberr);
-				kr_close (db);
-				free (buf);
-				free (db);
-				return 1;
-			}
-
-			while ( ! (r = kr_dbFetch (db, DBTYPE_KRISP) ) ) {
-				// not actions
-			}
-
-			if ( r == -1 ) {
-				fprintf (stderr, "\nERROR: fetch failed (%s)\n", dberr);
-				kr_close (db);
-				free (buf);
-				free (db);
-				return 1;
-			}
-		}
-
-		sql = sql_t + 1;
-	}
-
-	kr_close (db);
-	free (buf);
-	free (db);
 
 	return 0;
+} // }}}
+
+void back (size_t no) { // {{{
+	int	go = 0;
+	int	i;
+
+	if ( no == 0 )
+		return;
+
+	if ( no < 10 )
+		go = 0;
+	else
+		while ( (no /= 10) )
+			go++;
+
+	go++;
+	for (i=0; i<go; i++ )
+		fprintf (stderr, "%c", 0x08);
+} // }}}
+
+short put_data (KR_API * db, char * csv) { // {{{
+	FILE *	fp;
+	char	sql[2048];
+	char	tmp[FILEBUF + 1];
+	char **	buf;
+	size_t	r, i;
+	char *	quote_string;
+
+	if ( (fp = fopen (csv, "rb")) == NULL ) {
+		fprintf (stderr, "ERROR: Can't open %s in read mode\n", csv);
+		return 1;
+	}
+
+	memset (tmp, 0, FILEBUF + 1);
+	i = 0;
+	fprintf (stderr, "Loading %s to %s table .. ", csv, db->table);
+	while ( fgets (tmp, FILEBUF, fp) != NULL ) {
+		back (i);
+
+		for ( r=strlen (tmp) - 1; r>=0; r-- ) {
+			if ( tmp[r] != '\r' && tmp[r] != '\n' )
+				break;
+			tmp[r] = 0;
+		}
+		r = parseDummyData (&buf, tmp, '\t');
+
+		/*
+		printf ("## r      : %d\n", r);
+		printf ("## buf[0] : %s\n", buf[0]);
+		printf ("## buf[1] : %s\n", buf[1]);
+		printf ("## buf[2] : %s\n", buf[2]);
+		 */
+
+		if ( r != 3 || buf == NULL ) {
+			fprintf (stderr, "\nERROR: Data format error. (Require 3 fields)\n");
+			free (buf);
+			return 1;
+		}
+
+		quote_string = kr_dbQuote_f (buf[2]);
+		sprintf (
+				sql,
+				"INSERT INTO %s VALUES (%s, %s, '%s')",
+				db->table,
+				buf[0],
+				buf[1],
+				quote_string
+		);
+		free (quote_string);
+
+		if ( kr_dbExecute (db, sql) ) {
+			fprintf (stderr, "\nERROR: failed to insert data (%s)\n", db->err);
+			fprintf (stderr, "%s\n", sql);
+			free (buf);
+			return 1;
+		}
+
+		memset (tmp, 0, FILEBUF + 1);
+		free (buf);
+		buf = NULL;
+
+		fprintf (stderr, "%d", ++i);
+	}
+	fprintf (stderr, "\nLoad success!");
+
+	return 0;
+} // }}}
+
+int main (int argc, char ** argv) {
+	KR_API *	db;
+	int			opt, r;
+	int			assume = 0;
+	int			exists_table = 0;
+	int			delete_table = 0;
+	char *		database = NULL;
+	char *		table = NULL;
+	char *		csv = NULL;
+	
+#ifdef HAVE_GETOPT_LONG
+	while ( (opt = getopt_long (argc, argv, "c:t:hy", long_options, (int *) 0)) != EOF ) {
+#else
+	while ( (opt = getopt (argc, argv, "c:t:hy")) != EOF ) {
+#endif
+		switch (opt) {
+			case 'c' :
+				csv = optarg;
+				break;
+			case 't' :
+				table = optarg;
+				if ( strlen (table) > 63 ) {
+					fprintf (stderr, "ERROR: Length of table name is less than 64 characters.\n");
+					exit (1);
+				}
+				break;
+			case 'y' :
+				assume++;
+				break;
+			default :
+				usage ();
+		}
+	}
+
+	if ( argc - optind < 1 || argc == 1 )
+		usage ();
+
+	database = argv[optind];
+
+	if ( database == NULL || table == NULL || csv == NULL )
+		usage ();
+
+	if ( check_csv (csv) )
+		return 1;
+
+	if ( (r = kr_open (&db, database)) > 0 ) {
+		if ( r == 2 )
+			fprintf (stderr, "ERROR: kr_open:: failed memory allocation\n");
+		else
+			fprintf (stderr, "ERROR: DB connect failed (%s)\n", db->err);
+		return 1;
+	}
+
+	db->table = table;
+	// Get existed table list
+	if ( kr_dbQuery (db, "SELECT tbl_name FROM sqlite_master WHERE type = 'table'") ) {
+		fprintf (stderr, "ERROR: %s\n", db->err);
+		kr_close (db);
+		return 1;
+	}
+
+	while ( ! (r = kr_dbFetch (db) ) ) {
+		if ( strcmp (db->rowdata[0], table) == 0 )
+			exists_table = 1;
+
+		kr_dbFree (db);
+		db->rows++;
+
+		// If table is exists, force finalize sqlite vm
+		if ( exists_table )
+			db->final = 1;
+	}
+
+	if ( exists_table ) {
+		char	yesno;
+
+		if ( assume ) {
+			delete_table++;
+			goto pass_assume;
+		}
+
+reassume:
+
+		printf ("%s table is already exists. Are you want to drop this table? [Y/N] ", table);
+		scanf ("%c", &yesno);
+
+		switch (yesno) {
+			case 'Y' :
+			case 'y' :
+				delete_table++;
+				break;
+			case 'N' :
+			case 'n' :
+				break;
+			default :
+				goto reassume;
+		}
+	}
+
+pass_assume:
+
+	if ( delete_table ) {
+		char	sql[256];
+		sprintf (sql, "DELETE FROM '%s'", table);
+		if ( kr_dbExecute (db, sql) ) {
+			fprintf (stderr, "ERROR: failed delete %s table (%s)\n", table, db->err);
+			kr_close (db);
+			return 1;
+		}
+	}
+
+	// Create table if table is not exist or drop table
+	if ( ! exists_table ) {
+		char	sql[256];
+
+		sprintf (
+			sql,
+			"CREATE TABLE '%s' "
+			"( "
+			"    start unsigned integer NOT NULL DEFAULT '0', "
+			"    end   unsigned integer NOT NULL DEFAULT '0', "
+			"    data  varchar NOT NULL DEFAULT '', "
+			"    PRIMARY KEY (start DESC), "
+			"    UNIQUE (end) "
+			")",
+			table
+		);
+
+		if ( kr_dbExecute (db, sql) ) {
+			fprintf (stderr, "ERROR: failed to create %s table (%s)\n", table, db->err);
+			kr_close (db);
+			return 1;
+		}
+	}
+
+	r = put_data (db, csv);
+	kr_close (db);
+
+	return r;
 }
 
 /*
