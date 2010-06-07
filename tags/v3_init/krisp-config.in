@@ -1,0 +1,67 @@
+#!/bin/sh
+# $Id: krisp-config.in,v 1.2 2006-06-09 04:35:08 oops Exp $
+
+prefix="@prefix@"
+exec_prefix="@exec_prefix@"
+exec_prefix_set=no
+includedir="@includedir@"
+la_file="@libdir@/lib@prog@.la"
+
+usage="\
+Usage: krisp-config [--prefix] [--exec-prefix] [--version] [--libs] [--defs] [--cflags]"
+
+if test $# -eq 0; then
+	echo "${usage}" 1>&2
+	exit 1
+fi
+
+. $la_file
+
+while test $# -gt 0; do
+	case "$1" in
+		-*=*) optarg=`echo "$1" | sed 's/[-_a-zA-Z0-9]*=//'` ;;
+		*) optarg= ;;
+	esac
+
+	case $1 in
+		--prefix=*)
+			prefix="$optarg"
+			if test "$exec_prefix_set" = no ; then
+				exec_prefix="$optarg"
+			fi
+			;;
+		--prefix)
+			echo -n " $prefix"
+			;;
+		--exec-prefix=*)
+			exec_prefix="$optarg"
+			exec_prefix_set=yes
+			;;
+		--exec-prefix)
+			echo -n " $exec_prefix"
+			;;
+		--version)
+			echo "@VERSION@"
+			exit 0
+			;;
+		--cflags)
+			echo -n " @CFLAGS@"
+			;;
+		--defs)
+			if test "${includedir}" != "/usr/include" ; then
+				includes="-I${includedir}"
+			fi
+			echo -n " -DHAVE_CONFIG_H $includes"
+			;;
+		--libs)
+			echo -n " -L${libdir} -l@prog@ ${dependency_libs}"
+			;;
+		*)
+			echo "${usage}" 1>&2
+			exit 1
+			;;
+	esac
+	shift
+done
+
+exit 0

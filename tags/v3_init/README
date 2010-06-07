@@ -1,0 +1,56 @@
+$Id: README,v 1.10 2010-06-07 11:31:26 oops Exp $
+
+libkrisp - Korea ISP library
+
+작성: 김정균 2010.05.22 http://oops.org
+
+
+자세한 내용은 http://devel.oops.org/ 의 libkrisp section 을 참고하기 바란다.
+
+libkrisp 는 한국의 ip address 에 대한 ISP 정보를 얻기 위한 라이브러리이다. 이
+library 를 사용하기 위해서는 sqlite library 가 필요하며, sqlite2 또는 sqlite3
+이 필요하다. sqlite2 와 sqlite3 이 동시에 설치가 되어 있으면, sqlite3 을 이용
+하며, sqlite3 을 사용하는 것을 권장한다. (sqlite2 는 가끔 오동작을 한다.)
+
+간단한 사용법은 아래와 같다. (자세한 사항은 'man 3 kr_search' 를 참고한다.)
+
+#include <krisp.h>
+
+int main (void) {
+    KR_API * db;
+    KRNET_API isp;
+    //char * ip = "168.126.63.1";
+    char * ip = "kns.kornet.net";
+    int r;
+    char * database = NULL;
+
+    if ( (r = kr_open (&db, database)) > 0 ) {
+        if ( r == 2 )
+            fprintf (stderr, "ERROR: kr_open:: failed memory allocation\n");
+        else
+            fprintf (stderr, "ERROR Connect: %s\n", db->err);
+        return 1;
+    }
+
+	isp.verbose = 0;
+    // defined safecpy_256 in krispapi.h
+    safecpy_256 (isp.ip, addr);
+    if ( kr_search (&isp, db) ) {
+        printf ("ERROR: %s\n", db->err);
+        kr_close (db);
+        return 1;
+    }
+
+    kr_close (db);
+
+    /*
+     * kr_long2ip is returned in a statically allocated buffer, which
+     * subsequent calls will overwrite.
+     */
+    printf ("%-15s %-15s %-20s", ip, isp.ip, isp.icode);
+    printf ("%-15s ", kr_long2ip (isp.start));
+    printf ("%-15s %s", kr_long2ip (isp.end), isp.iname);
+
+    return 0;
+}
+
