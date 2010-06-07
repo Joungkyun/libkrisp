@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 1.22 2010-06-07 13:16:28 oops Exp $
+# $Id: Makefile.in,v 1.23 2010-06-07 13:55:36 oops Exp $
 srcdir          = @srcdir@
 top_srcdir      = @top_srcdir@
 builddir        = @builddir@
@@ -23,7 +23,7 @@ DEFS            = @DEFS@ $(CPPFLAGS)
 
 OBJECT          = krdb.lo krnet.lo krispapi.lo krisp.lo
 UTIL_OBJ        = krisplookup.lo krispmkdb.lo ip2long.lo netcalc.lo krtest.lo
-HEADER_NAME     = krisp-config krispcommon krispapi krisp krdb krversion
+HEADER_NAME     = krisp-config krispcommon krispapi krisp krdb krversion krnet
 
 SONAME_MAJOR    = @SONAME_MAJOR@
 SONAME_MINOR    = @SONAME_MINOR@
