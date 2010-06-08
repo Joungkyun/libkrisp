@@ -7,11 +7,13 @@ valid_ipv4_addr \- (IPv4) ip 주소 또는 도메인 이름의 유효성을 확�
 .SH 사용법
 .BI "#include <krips.h>"
 .br
-.BI "short valid_ipv4_addr (char * " ipaddress ");"
+.BI "short valid_ipv4_addr (char * " address ");"
 
 .SH 설명
 .BI valid_ipv4_addr
 API는 (IPv4) 인터넷 주소(ip address) 또는 도메인 이름이 유효한지에 대한 확인을 한다.
+argument를 도메인 이름으로 주었을 경우, 유효한 도메인일 경우 argument의 값이 IP로
+변경되는 것을 주의 하도록 한다.
 
 .SH 반환값
 .PP
@@ -26,14 +28,18 @@ API는 (IPv4) 인터넷 주소(ip address) 또는 도메인 이름이 유효한�
 #include <krisp.h>
 
 int main (void) {
-    char * addr = "192.168.0.1";
-    //char * addr = "oops.org";
+    //char addr[16] = "192.168.0.1";
+    char addr[16] = "oops.org";
+    char ip[16] = { 0, };
     ulong r;
 
-    if ( valid_ipv4_addr (addr) ) {
+    strcpy (ip, addr);
+    if ( valid_ipv4_addr (ip) ) {
         fprintf (stderr, "%s address is invalid\n", addr);
         return 1;
     }
+
+    printf ("IP address of %s is %s\n", addr, ip);
 
     return 0;
 }
