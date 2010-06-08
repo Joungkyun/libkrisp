@@ -1,5 +1,5 @@
 /*
- * $Id: krispapi.c,v 1.2 2010-06-07 18:03:02 oops Exp $
+ * $Id: krispapi.c,v 1.3 2010-06-08 03:05:09 oops Exp $
  */
 
 #include <stdio.h>
@@ -180,12 +180,15 @@ ulong strtolong (char *s) { // {{{
 	return res;
 } // }}}
 
-void safecpy_256 (char *stor, char *str) { // {{{
-	if ( strlen (str) > 255 ) {
-		strncpy (stor, str, 255);
-		stor[255] = 0;
-	} else
-		strcpy (stor, str);
+void _safecpy (char *stor, char *str, int size) { // {{{
+	size--;
+	if ( strlen (str) > size ) {
+		memcpy (stor, str, size);
+	} else {
+		size = strlen (str);
+		memcpy (stor, str, size);
+	}
+	stor[size] = 0;
 } // }}}
 
 /*

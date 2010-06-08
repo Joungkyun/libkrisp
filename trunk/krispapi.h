@@ -1,5 +1,5 @@
 /*
- * $Id: krispapi.h,v 1.1 2010-06-07 11:31:26 oops Exp $
+ * $Id: krispapi.h,v 1.2 2010-06-08 03:05:09 oops Exp $
  *
  * Notice: if return value of API that has '_f' prefix is not NULL,
  *         it is must free memory!
@@ -51,9 +51,9 @@ int chartoint (char);
 ulong strtolong (char *);
 
 /*
- * Safe copy 256 character
+ * Safe copy character
  */
-void safecpy_256 (char *, char *);
+void _safecpy (char *, char *, int);
 #endif
 
 /*

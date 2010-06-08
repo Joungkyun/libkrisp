@@ -119,8 +119,8 @@ $id: $
 
         KRNET_API isp;
         isp.verbose = 0;
-        // defined safecpy_256 in krispapi.h
-        safecpy_256 (isp.ip, addr);
+        // defined SAFECPY_256 in krisp.h
+        SAFECPY_256 (isp.ip, addr);
         if ( kr_search (&isp, db) ) {
             fprintf (stderr, "ERROR: %s\n", db->err);
             kr_close (db);

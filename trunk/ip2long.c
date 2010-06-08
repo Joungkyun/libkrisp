@@ -1,5 +1,5 @@
 /*
- * $Id: ip2long.c,v 1.1 2010-06-07 11:31:26 oops Exp $
+ * $Id: ip2long.c,v 1.2 2010-06-08 03:05:09 oops Exp $
  */
 
 #include <krisp.h>
@@ -62,7 +62,7 @@ int main (int argc, char **argv) {
 		return 1;
 	}
 
-	safecpy_256 (ip, argv[optind]);
+	SAFECPY_256 (ip, argv[optind]);
 	input = (strchr (ip, '.') != NULL) ? IPv4 : LONGIP;
 
 	if ( valid_address (ip) ) {

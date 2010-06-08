@@ -1,5 +1,5 @@
 /*
- * $Id: netcalc.c,v 1.1 2010-06-07 11:31:27 oops Exp $
+ * $Id: netcalc.c,v 1.2 2010-06-08 03:05:09 oops Exp $
  */
 
 #include <krisp.h>
@@ -131,7 +131,7 @@ int main (int argc, char **argv) {
 		 */
 		char *	mask;
 
-		safecpy_256 (ip, argv[optind]);
+		SAFECPY_256 (ip, argv[optind]);
 		if ( (mask = strchr (ip, '/')) == NULL ) {
 			fprintf (stderr, "ERROR: %s format is IPADDRESS/[NETMASK|PREFIX]\n", argv[1]);
 			usage (PNAME);
@@ -148,7 +148,7 @@ int main (int argc, char **argv) {
 		if ( strchr (mask + 1, '.') ) {
 			char			_mask[256];
 
-			safecpy_256 (_mask, mask + 1);
+			SAFECPY_256 (_mask, mask + 1);
 			if ( valid_address (_mask) ) {
 				fprintf (stderr, "ERROR: %s is not IPv4 nor Long IP address\n", _mask);
 				return 1;
@@ -168,8 +168,8 @@ int main (int argc, char **argv) {
 			r.mask = prefix2long (r.prefix);
 		}
 
-		r.network = network (r.start, r.mask);
-		r.broadcast = r.end = broadcast (r.start, r.mask);
+		r.network = _network (r.start, r.mask);
+		r.broadcast = r.end = _broadcast (r.start, r.mask);
 	} else {
 		/*
 		 * Case given range from start ip to end ip
@@ -186,14 +186,14 @@ int main (int argc, char **argv) {
 			return 1;
 		}
 
-		safecpy_256 (ip, argv[optind]);
+		SAFECPY_256 (ip, argv[optind]);
 		if ( valid_address (ip) ) {
 			fprintf (stderr, "ERROR: %s is not IPv4 nor Long IP address\n", ip);
 			return 1;
 		}
 		r.start = ip2long (ip);
 
-		safecpy_256 (ip, argv[optind + 1]);
+		SAFECPY_256 (ip, argv[optind + 1]);
 		if ( valid_address (ip) ) {
 			fprintf (stderr, "ERROR: %s is not IPv4 nor Long IP address\n", ip);
 			return 1;
@@ -208,8 +208,8 @@ int main (int argc, char **argv) {
 
 		r.prefix = guess_prefix (r.start, r.end);
 		r.mask = prefix2long (r.prefix);
-		r.network = network (r.start, r.mask);
-		r.broadcast= broadcast (r.start, r.mask);
+		r.network = _network (r.start, r.mask);
+		r.broadcast= _broadcast (r.start, r.mask);
 	}
 
 	postfix = optv.shell ? "=" : " : ";
