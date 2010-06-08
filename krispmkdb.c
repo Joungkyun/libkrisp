@@ -1,5 +1,5 @@
 /*
- * $Id: krispmkdb.c,v 1.10 2010-06-07 11:31:26 oops Exp $
+ * $Id: krispmkdb.c,v 1.11 2010-06-08 15:40:13 oops Exp $
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -196,8 +196,10 @@ int main (int argc, char ** argv) {
 	if ( (r = kr_open (&db, database)) > 0 ) {
 		if ( r == 2 )
 			fprintf (stderr, "ERROR: kr_open:: failed memory allocation\n");
-		else
+		else {
 			fprintf (stderr, "ERROR: DB connect failed (%s)\n", db->err);
+			kr_close (db);
+		}
 		return 1;
 	}
 

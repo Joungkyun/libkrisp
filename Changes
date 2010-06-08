@@ -1,8 +1,11 @@
 Changelog
 
-$Id: Changes,v 1.84 2010-06-08 03:06:13 oops Exp $
+$Id: Changes,v 1.85 2010-06-08 15:40:12 oops Exp $
 
 * 3.0.0
+
+Wed, Jun  9 2010 JoungKyun.Kim <http://oops.org>
+	- fixed segfault on kr_open
 
 Tue, Jun  8 2010 JoungKyun.Kim <http://oops.org>
 	- init verbose member of KR_API to 0 on kr_open

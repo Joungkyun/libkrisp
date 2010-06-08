@@ -19,9 +19,15 @@ $id: $
    는 다음과 같이 변경이 되어야 한다.
 
        KR_API *db;
+       int r;
 
-       if ( kr_open (&db, NULL) ) {
-           fprintf (stderr, "ERROR Connect: %s\n", db->err);
+       if ( (r = kr_open (&db, NULL)) ) {
+           if ( r == 2 )
+               fprintf (stderr, "kr_open: memory allocation failed\n");
+           else {
+               fprintf (stderr, "ERROR Connect: %s\n", db->err);
+               kr_close (db);
+           }
            return 1;
        }
 
@@ -58,9 +64,15 @@ $id: $
    는 다음과 같이 변경이 되어야 한다.
 
        KR_API *db;
+       int r;
 
-       if ( kr_open (&db, NULL) ) {
-           fprintf (stderr, "ERROR Connect: %s\n", db->err);
+       if ( (r = kr_open (&db, NULL)) ) {
+           if ( r == 2 )
+               fprintf (stderr, "kr_open: memory allocation failed\n");
+           else {
+               fprintf (stderr, "ERROR Connect: %s\n", db->err);
+               kr_close (db);
+           }
            return 1;
        }
 

@@ -1,4 +1,4 @@
-$Id: README,v 1.11 2010-06-08 03:05:09 oops Exp $
+$Id: README,v 1.12 2010-06-08 15:40:13 oops Exp $
 
 libkrisp - Korea ISP library
 
@@ -27,8 +27,10 @@ int main (void) {
     if ( (r = kr_open (&db, database)) > 0 ) {
         if ( r == 2 )
             fprintf (stderr, "ERROR: kr_open:: failed memory allocation\n");
-        else
+        else {
             fprintf (stderr, "ERROR Connect: %s\n", db->err);
+            kr_close (db);
+        }
         return 1;
     }
 

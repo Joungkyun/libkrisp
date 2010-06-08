@@ -110,8 +110,10 @@ int main (void) {
     if ( (r = kr_open (&db, database)) > 0 ) {
         if ( r == 2 )
             fprintf (stderr, "ERROR: kr_open:: failed memory allocation\\n");
-        else
+        else {
             fprintf (stderr, "ERROR Connect: %s\\n", db->err);
+            kr_close (db);
+        }
         return 1;
     }
 
