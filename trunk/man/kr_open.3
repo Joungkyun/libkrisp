@@ -71,7 +71,8 @@ structure 는 krispcommon.h 에 정의가 되어 있으며, kr_open 을 호출�
 .SH 반환값
 성공시에 0 을 반환하며, 실패시에 1 또는 2를 반환한다. 2를 반환한 경우에는
 memory allocation에 실패한 경우이기 때문에 예제와 같이 예외 처리를 해 주어야
-한다.
+하며, 1을 반환했을 경우에는 memory allocation이 된 상태 이기 때문에 kr_close
+API로 메모리 해제를 해 주어야 한다.
 .SH 예제
 .nf
 #include <krisp.h>
@@ -86,8 +87,10 @@ int main (void) {
     if ( (r = kr_open (&db, database)) > 0 ) {
         if ( r == 2 )
             fprintf (stderr, "ERROR: kr_open:: failed memory allocation\\n");
-        else
+        else {
             fprintf (stderr, "ERROR Connect: %s\\n", db->err);
+            kr_close (db);
+        }
         return 1;
     }
 

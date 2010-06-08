@@ -1,5 +1,5 @@
 /*
- * $Id: krtest.c,v 1.2 2010-06-08 03:05:09 oops Exp $
+ * $Id: krtest.c,v 1.3 2010-06-08 15:40:13 oops Exp $
  */
 
 #include <krisp.h>
@@ -129,8 +129,10 @@ int main (int argc, char **argv) {
 	if ( (r = kr_open (&db, (datafile != NULL) ? datafile : NULL)) > 0 ) {
 		if ( r == 2 )
 			fprintf (stderr, "ERROR: kr_open:: failed memory allocation\n");
-		else
+		else {
 			fprintf (stderr, "ERROR Connect: %s\n", db->err);
+			kr_close (db);
+		}
 		return 1;
 	}
 
