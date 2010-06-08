@@ -30,8 +30,8 @@ int main (void) {
     char * prefix = "24";
     ulong r;
 
-    r = kr_prefix2long (prefix);
-    printf ("LONG IP: %ld\n", r);
+    r = kr_prefix2long ((short) atoi (prefix));
+    printf ("LONG NETMASK: %ld\n", r);
 
     return 0;
 }
