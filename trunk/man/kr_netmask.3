@@ -30,8 +30,7 @@ int main (void) {
     char * end   = "192.168.10.144";
     ulong r;
 
-    r = kr_prefix2long (kr_ip2long (start), kr_ip2long (end));
-    printf ("LONG MASK:   %ld\n", r);
+    r = kr_netmask (kr_ip2long (start), kr_ip2long (end));
     printf ("SUBNET MASK: %s\n", kr_long2ip (r));
 
     return 0;
