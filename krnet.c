@@ -1,5 +1,5 @@
 /*
- * $Id: krnet.c,v 1.5 2010-06-07 11:31:26 oops Exp $
+ * $Id: krnet.c,v 1.6 2010-06-08 03:05:09 oops Exp $
  */
 
 #include <stdio.h>
@@ -128,7 +128,7 @@ short guess_prefix (ulong s, ulong e) { // {{{
 		if ( n > 0 )
 			prefix--;
 
-		n = broadcast (s, prefix2long (prefix));
+		n = _broadcast (s, prefix2long (prefix));
 	}
 
 	return prefix;
@@ -143,22 +143,23 @@ ulong guess_netmask (ulong s, ulong e) { // {{{
 
 /*
  * return netmask with network and broadcast address
- */
-ulong netmask (ulong net, ulong bcast) { // {{{
+ *
+ulong _netmask (ulong net, ulong bcast) { // {{{
 	return net + 0x80000000 - bcast;
 } // }}}
+*/
 
 /*
  * return network
  */
-ulong network (ulong ip, ulong mask) { // {{{
+ulong _network (ulong ip, ulong mask) { // {{{
 	return ip & mask;
 } // }}}
 
 /*
  * return broadcast
  */
-ulong broadcast (ulong ip, ulong mask) { // {{{
+ulong _broadcast (ulong ip, ulong mask) { // {{{
 	return (ip & mask) | ~(mask);
 } // }}}
 

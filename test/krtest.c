@@ -1,5 +1,5 @@
 /*
- * $Id: krtest.c,v 1.1 2010-06-07 11:31:27 oops Exp $
+ * $Id: krtest.c,v 1.2 2010-06-08 03:05:09 oops Exp $
  */
 
 #include <krisp.h>
@@ -149,7 +149,7 @@ int main (int argc, char **argv) {
 	for ( i=0; i<loop; ) {
 		ip = long2ip (prand ());
 
-		safecpy_256 (isp.ip, ip);
+		SAFECPY_256 (isp.ip, ip);
 		if ( kr_search (&isp, db) ) {
 			fprintf (stderr, "ERROR: %s\n", db->err);
 			kr_close (db);

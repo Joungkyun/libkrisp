@@ -1,5 +1,5 @@
 /*
- * $Id: krisp.c,v 1.69 2010-06-07 18:03:02 oops Exp $
+ * $Id: krisp.c,v 1.70 2010-06-08 03:05:09 oops Exp $
  */
 
 #include <stdio.h>
@@ -160,37 +160,6 @@ int kr_search_ex (KRNET_API_EX *raw, KR_API *db) { // {{{
 
 	db->table = "krisp";
 	return 0;
-} // }}}
-
-/*
- * user krisp mapping api
- */
-ulong kr_ip2long (char *ip) { // {{{
-	return ip2long (ip);
-} // }}}
-
-char * kr_long2ip (ulong num) { // {{{
-	return long2ip (num);
-} // }}}
-
-ulong kr_prefix2long (short n) { // {{{
-	return prefix2long (n);
-} // }}}
-
-ulong kr_netmask (ulong s, ulong e) { // {{{
-	return guess_netmask (s, e);
-} // }}}
-
-ulong kr_network (ulong ip, ulong mask) { // {{{
-	return network (ip, mask);
-} // }}}
-
-ulong kr_broadcast (ulong ip, ulong mask) { // {{{
-	return (ip & mask) | ~(mask);
-} // }}}
-
-short kr_prefix (ulong s, ulong e) { // {{{
-	return guess_prefix (s, e);
 } // }}}
 
 /*
