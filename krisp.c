@@ -1,5 +1,5 @@
 /*
- * $Id: krisp.c,v 1.73 2010-06-09 17:32:05 oops Exp $
+ * $Id: krisp.c,v 1.74 2010-06-09 17:36:50 oops Exp $
  */
 
 #include <stdio.h>
@@ -40,13 +40,12 @@ int kr_open (KR_API **db, char *file) { // {{{
 		return 1;
 	}
 
+	(*db)->verbose = 0;
 
 	if ( kr_dbConnect (*db, data) ) {
 		(*db)->c = NULL;
 		return 1;
 	}
-
-	(*db)->verbose = 0;
 
 	return 0;
 } // }}}
