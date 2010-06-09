@@ -1,5 +1,5 @@
 /*
- * $Id: krisplookup.c,v 1.37 2010-06-08 15:40:13 oops Exp $
+ * $Id: krisplookup.c,v 1.38 2010-06-09 17:26:58 oops Exp $
  */
 
 #include <krisp.h>
@@ -91,7 +91,6 @@ void usage (char *prog) { // {{{
 int main (int argc, char **argv) {
 	KR_API *		db;
 	KRNET_API		isp;
-	struct stat		f;
 	char *			ip;
 	int				opt, r;
 	char *			datafile = NULL;
@@ -135,21 +134,8 @@ int main (int argc, char **argv) {
 		return 1;
 	}
 
-	f.st_size = 0;
-	if ( stat ((datafile != NULL) ? datafile : DBPATH, &f) == -1 ) {
-		fprintf (stderr, "ERROR: Can't find data file (%s)\n",
-				(datafile != NULL) ? datafile : DBPATH);
-		return 1;
-	}
-
-	if ( f.st_size < 1 ) {
-		fprintf (stderr, "ERROR: %s size is zero\n",
-				(datafile != NULL) ? datafile : DBPATH);
-		return 1;
-	}
-
 	/* database open */
-	if ( (r = kr_open (&db, (datafile != NULL) ? datafile : NULL)) > 0 ) {
+	if ( (r = kr_open (&db, datafile)) > 0 ) {
 		if ( r == 2 )
 			fprintf (stderr, "ERROR: kr_open:: failed memory allocation\n");
 		else {

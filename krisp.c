@@ -1,10 +1,11 @@
 /*
- * $Id: krisp.c,v 1.71 2010-06-08 15:40:13 oops Exp $
+ * $Id: krisp.c,v 1.72 2010-06-09 17:26:58 oops Exp $
  */
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/stat.h>
 
 #include <krisp.h>
 
@@ -17,12 +18,31 @@ char * krisp_uversion (void) { // {{{
 } // }}}
 
 int kr_open (KR_API **db, char *file) { // {{{
+	struct stat		f;
+	char * data;
+
 	*db = (KR_API *) malloc (sizeof (KR_API));
 	if ( *db == NULL )
 		return 2;
 
-	if ( kr_dbConnect (*db, file) ) {
-		db->c = NULL;
+	data = (file == NULL) ? DBPATH : file;
+
+	f.st_size = 0;
+	if ( stat (data, &f) == -1 ) {
+		sprintf ((*db)->err, "kr_open: Can't find data data (%s)\n", data);
+		(*db)->c = NULL;
+		return 1;
+	}
+
+	if ( f.st_size < 1 ) {
+		sprintf ((*db)->err, "kr_open: %s size is zero\n", data);
+		(*db)->c = NULL;
+		return 1;
+	}
+
+
+	if ( kr_dbConnect (*db, data) ) {
+		(*db)->c = NULL;
 		return 1;
 	}
 
