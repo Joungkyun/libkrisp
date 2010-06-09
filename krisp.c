@@ -1,5 +1,5 @@
 /*
- * $Id: krisp.c,v 1.72 2010-06-09 17:26:58 oops Exp $
+ * $Id: krisp.c,v 1.73 2010-06-09 17:32:05 oops Exp $
  */
 
 #include <stdio.h>
@@ -29,13 +29,13 @@ int kr_open (KR_API **db, char *file) { // {{{
 
 	f.st_size = 0;
 	if ( stat (data, &f) == -1 ) {
-		sprintf ((*db)->err, "kr_open: Can't find data data (%s)\n", data);
+		sprintf ((*db)->err, "kr_open: Can't find data data (%s)", data);
 		(*db)->c = NULL;
 		return 1;
 	}
 
 	if ( f.st_size < 1 ) {
-		sprintf ((*db)->err, "kr_open: %s size is zero\n", data);
+		sprintf ((*db)->err, "kr_open: %s size is zero", data);
 		(*db)->c = NULL;
 		return 1;
 	}
