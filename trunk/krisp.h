@@ -1,5 +1,5 @@
 /*
- * $Id: krisp.h,v 1.17 2010-06-08 03:10:22 oops Exp $
+ * $Id: krisp.h,v 1.18 2010-06-13 19:20:45 oops Exp $
  */
 
 #ifndef KR_ISP_H
@@ -23,6 +23,8 @@ char * krisp_uversion (void);
  * open krisp database
  */
 int kr_open (KR_API **, char *);
+// After kr_open, set db->threadsafe to 1
+int kr_open_safe (KR_API **, char *);
 
 /*
  * close krisp database

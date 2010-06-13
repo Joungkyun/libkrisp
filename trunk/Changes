@@ -1,8 +1,11 @@
 Changelog
 
-$Id: Changes,v 1.86 2010-06-09 17:26:58 oops Exp $
+$Id: Changes,v 1.87 2010-06-13 19:20:45 oops Exp $
 
 * 3.0.0
+
+Mon, Jun 14 2010 JoungKyun.Kim <http://oops.org>
+	- add thread safe
 
 Thu, Jun 10 2010 JoungKyun.Kim <http://oops.org>
 	- add database file check on kr_open

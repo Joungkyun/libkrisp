@@ -1,7 +1,7 @@
 # Process this file with autoconf to produce a configure script.
 # Configure template for krisp library
 #
-# $Id: configure.ac,v 1.26 2010-06-13 16:58:20 oops Exp $
+# $Id: configure.ac,v 1.27 2010-06-13 19:20:45 oops Exp $
 
 #
 AC_PREREQ(2.59)
@@ -127,13 +127,13 @@ if test "x$with_libiconv" != "x"; then
 	[ AC_MSG_ERROR([Can not find libiconv library (-liconv)])])
 fi
 
+AC_CHECK_LIB(pthread, pthread_create,,,)
+
 # Checks for header files.
 AC_HEADER_STDC
 
-#sqlite.h
-#sqlite3.h
 AC_CHECK_HEADERS([arpa/inet.h getopt.h netinet/in.h stdio.h stdlib.h \
-					string.h sys/socket.h sqlite3.h sqlite.h iconv.h])
+					string.h sys/socket.h sqlite3.h sqlite.h iconv.h pthread.h])
 
 # Checks for typedefs, structures, and compiler characteristics.
 AC_C_CONST

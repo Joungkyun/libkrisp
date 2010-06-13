@@ -1,0 +1,49 @@
+$:Id $
+
+libkrisp Thread Safe 문서
+
+작성: 김정균 2010.06.14 http://oops.org
+
+이 문서는 libkrisp로 thread programing을 할 경우를 위한 문서이다. libkrisp의
+backend database가 sqlite2일 경우와 slqite3일 경우를 구분해야 한다.
+
+기본적으로, sqlite가 thread safe를 지원하도록 빌드가 되어져 있다면, libkrisp
+는 thread safe하다고 볼 수 있다. 다만 사용법의 차이에 의하여 thread safe하지
+않을 수 있으므로, 이 문서에서 주의할 사항을 기술 한다.
+
+sqlite3의 경우, 3 가지의 thread mode을 지원한다. 자세한 사항에 대해서는 다음
+의 문서를 참고한다: http://www.sqlite.org/threadsafe.html
+
+    1. Single-thread
+       mutex를 사용하지 않기 때문에 하나 이상의 thread에서 안전성을 보장하지
+       못한다. 이 모델은 sqlite3 빌드 시, thread option을 주지 않았을 경우이
+       다.
+
+    2. Serialized
+       thread option을 주었을 경우 기본모드 이다. mutex lock을 제공하기 때문
+       에 하나의 database connection를 여러 개의 thread가 동시에 접근을 하여
+       도 mutex lock을 이용하여 serialized 하게 작동을 한다.
+
+    3. Multi-thread
+       1개의 database connection에 2개 이상의 thread가 접근하지 않을 경우 안
+       전하지 못하다. 즉, user level에서의 locking이 필요함을 의미한다.
+
+sqlite2의 경우 thread safe를 지원하면 serialized mode를 의미한다.
+
+libkrisp는 sqlite가 thread safe를 지원할 경우, Serialized mode로만 작동을 하
+도록 강제를 하는 것을 유념해야 한다.
+
+libkrsp로 programing을 할 경우 kr_search 또는 kr_search_ex API를 호출할 경우
+만 주의 하면 된다.
+
+kr_search(/kr_search_ex) API의 첫 번째 인자인 KRNET_API 구조체를 모든 thread
+에서 공유할 경우, libkrisp는 thread safe하지 못하다. 그러므로 이 경우에는 자
+체적으로 kr_search(/kr_search_ex) API 호출전후에 KRNET_API 구조체를 보존하기
+위하여 lock을 직접 걸어 주어야 한다.
+
+KRNET_API 구조체를 공유하지 않는다면 - 즉 thread의 local 변수를 사용한다면 -
+db error message를 제외하고는 신경을 쓸 필요가 없다. 만약 error message가 중
+요하다면 kr_open 대신 kr_open_safe API를 이용하면 된다.
+
+각 thread에서 kr_open을 각각 할 경우에는 thread safe에 대한 모든 관심을 하지
+않아도 좋다.
