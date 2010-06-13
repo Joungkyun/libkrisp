@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 1.1 2010-06-13 16:59:23 oops Exp $
+# $Id: Makefile.in,v 1.2 2010-06-13 17:02:11 oops Exp $
 srcdir          = @srcdir@
 top_srcdir      = ..
 builddir        = @builddir@
@@ -21,7 +21,7 @@ LIBS            = @LIBS@
 LDFLAGS         = @LDFLAGS@ $(LIBS)
 DEFS            = @DEFS@ $(CPPFLAGS)
 
-TEST_OBJ        = krtest.lo
+TEST_OBJ        = krtest.lo thread_sample.lo
 REQ_HEADER		= ../krisp.h ../krispapi.h ../krispcommon.h
 
 prefix          = @prefix@
@@ -45,10 +45,14 @@ COMPILE         = $(LIBTOOL) --mode=compile $(CC_OPT) $(DEFS) -prefer-pic
 
 all: $(TEST_OBJ)
 	$(PLINK) -o krtest krtest.lo ../libkrisp.la
+	$(PLINK) -o thread_sample thread_sample.lo ../libkrisp.la
 
 krtest.lo: krtest.c $(REQ_HEADER)
 	$(COMPILE) -o $@ -c $<
 
+thread_sample.lo: thread_sample.c $(REQ_HEADER)
+	$(COMPILE) -o $@ -c $<
+
 clean:
-	-$(RM) -r *.o *.lo* *.la* krtest
+	-$(RM) -r *.o *.lo* *.la* krtest thread_sample
 	-$(RM) -r .libs
