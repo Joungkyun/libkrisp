@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 1.2 2010-06-13 17:02:11 oops Exp $
+# $Id: Makefile.in,v 1.3 2010-06-13 19:20:45 oops Exp $
 srcdir          = @srcdir@
 top_srcdir      = ..
 builddir        = @builddir@
@@ -16,7 +16,7 @@ PROG            = @PACKAGE_NAME@
 VERSION         = @PACKAGE_VERSION@
 CC              = @CC@ -Wall
 CFLAGS          = @CFLAGS@
-CPPFLAGS        = -I. @CPPFLAGS@
+CPPFLAGS        = -I. -I.. @CPPFLAGS@
 LIBS            = @LIBS@
 LDFLAGS         = @LDFLAGS@ $(LIBS)
 DEFS            = @DEFS@ $(CPPFLAGS)

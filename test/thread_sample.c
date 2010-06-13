@@ -1,9 +1,8 @@
 /*
- * $Id: thread_sample.c,v 1.1 2010-06-13 17:02:11 oops Exp $
+ * $Id: thread_sample.c,v 1.2 2010-06-13 19:20:45 oops Exp $
  */
 
 #include <krisp.h>
-#include <pthread.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
@@ -26,7 +25,6 @@ tVar th;
 
 typedef struct {
 	int no;
-	int pid;
 	KR_API * db;
 } tArg;
 
@@ -34,12 +32,12 @@ void * thread_main (void *);
 ulong prand (void);
 
 int main (void) { // {{{
-	int i = 0, rc, status;
+	int i = 0, r;
 	tArg kr;
 
 	/* database open */
-	if ( (rc = kr_open (&kr.db, NULL)) > 0 ) {
-		if ( rc == 2 )
+	if ( (r = kr_open (&kr.db, NULL)) > 0 ) {
+		if ( r == 2 )
 			fprintf (stderr, "ERROR: kr_open:: failed memory allocation\n");
 		else {
 			fprintf (stderr, "ERROR Connect: %s\n", kr.db->err);
@@ -83,7 +81,7 @@ void * thread_main (void *arg) { // {{{
 	ip = long2ip (prand ());
 
 	isp.verbose = 0;
-	((tArg *) arg)->db->verbose= 0;
+	((tArg *) arg)->db->verbose= 1;
 	SAFECPY_256 (isp.ip, ip);
 
 	if ( kr_search (&isp, ((tArg *) arg)->db) ) {

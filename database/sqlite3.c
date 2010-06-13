@@ -1,5 +1,5 @@
 /*
- * $Id: sqlite3.c,v 1.7 2010-06-07 11:31:27 oops Exp $
+ * $Id: sqlite3.c,v 1.8 2010-06-13 19:20:45 oops Exp $
  *
  * libkrisp sqlite3 frontend API
  */
@@ -42,7 +42,17 @@ int kr_dbFree (KR_API *db) {
 int kr_dbConnect (KR_API *db, char *file) {
 	char * errmsg;
 
-	if ( (db->r = sqlite3_open ((file != NULL) ? file : DBPATH, &db->c)) ) {
+	if ( sqlite3_threadsafe () )
+		db->r = sqlite3_open_v2 (
+			(file != NULL) ? file : DBPATH,
+			&db->c,
+			SQLITE_OPEN_READONLY|SQLITE_OPEN_FULLMUTEX,
+			NULL
+		);
+	else
+		db->r = sqlite3_open ((file != NULL) ? file : DBPATH, &db->c);
+
+	if ( db->r ) {
 		kr_dbError (db);
 		return -1;
 	}

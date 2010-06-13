@@ -1,5 +1,5 @@
 /*
- * $Id: krispcommon.h,v 1.26 2010-06-07 18:03:02 oops Exp $
+ * $Id: krispcommon.h,v 1.27 2010-06-13 19:20:45 oops Exp $
  */
 
 #ifndef KR_COMMON_H
@@ -13,6 +13,9 @@
 #include <stdlib.h>
 #include <string.h>
 
+#ifdef HAVE_PTHREAD_H
+#include <pthread.h>
+#endif
 
 #if defined(HAVE_LIBSQLITE3)
 #include <sqlite3.h>
@@ -34,6 +37,9 @@ typedef struct db_argument {
 	sqlite_vm *		vm;		// sqlite vm
 #endif
 	short			verbose;
+#ifdef HAVE_PTHREAD_H
+	short			threadsafe;
+#endif
 	short			r;		// execute result code
 	short			final;  // force finalize
 	int				rows;	// vm rows
