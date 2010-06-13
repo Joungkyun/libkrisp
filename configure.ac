@@ -1,7 +1,7 @@
 # Process this file with autoconf to produce a configure script.
 # Configure template for krisp library
 #
-# $Id: configure.ac,v 1.25 2010-06-07 11:31:26 oops Exp $
+# $Id: configure.ac,v 1.26 2010-06-13 16:58:20 oops Exp $
 
 #
 AC_PREREQ(2.59)
@@ -145,5 +145,5 @@ AC_FUNC_MALLOC
 AC_FUNC_STAT
 AC_CHECK_FUNCS([getopt_long])
 
-AC_CONFIG_FILES([Makefile])
+AC_CONFIG_FILES([Makefile test/Makefile])
 AC_OUTPUT
