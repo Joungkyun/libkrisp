@@ -1,5 +1,5 @@
 /*
- * $Id: thread_sample.c,v 1.3 2010-06-15 17:05:27 oops Exp $
+ * $Id: thread_sample.c,v 1.4 2010-06-15 17:58:55 oops Exp $
  */
 
 #include <krisp.h>
@@ -16,12 +16,7 @@
 
 #define THREAD_SIZE 5
 
-typedef struct {
-	pthread_t threads[THREAD_SIZE];
-	int done[THREAD_SIZE];
-} tVar;
-
-tVar th;
+pthread_t threads[THREAD_SIZE];
 
 typedef struct {
 	int no;
@@ -33,41 +28,33 @@ ulong prand (void);
 
 int main (void) { // {{{
 	int i = 0, r;
+	int status;
 	KR_API * db;
 	tArg * kr;
+	char err[1024];
 
 	/* database open */
-	if ( (r = kr_open_safe (&db, NULL)) > 0 ) {
-		if ( r == 2 )
-			fprintf (stderr, "ERROR: kr_open:: failed memory allocation\n");
-		else {
-			fprintf (stderr, "ERROR Connect: %s\n", db->err);
-			kr_close (db);
-		}
+	if ( (r = kr_open_safe (&db, NULL, err)) > 0 ) {
+		fprintf (stderr, "ERROR Connect: %s\n", err);
+		kr_close (db);
 		return 1;
 	}
 
-	for ( r=0; r<THREAD_SIZE; r++ ) {
-		th.done[r] = 0;
-
+	for ( i=0; i<THREAD_SIZE; i++ ) {
 		kr = (tArg *) malloc (sizeof (tArg));
 		kr->db = db;
-		kr->no = r;
+		kr->no = i;
 
-		pthread_create (&th.threads[r], NULL, &thread_main, (void *) kr);
-		printf ("%d, %ld\n", r, th.threads[r]);
-		//usleep (1);
+		pthread_create (&threads[i], NULL, &thread_main, (void *) kr);
+		printf ("%d, %ld\n", i, threads[i]);
 	}
 
-	for ( ;; ) {
-		int x = 0;
-		for ( i=0; i<THREAD_SIZE; i++ ) {
-			if ( ! th.done[i] )
-				break;
-			x++;
-		}
-		if ( x == THREAD_SIZE )
-		   break;	
+	for ( i=0; i<THREAD_SIZE; i++ ) {
+		r = pthread_join (threads[i], (void **) &status);
+		if ( r == 0 )
+			printf("Completed join with thread %d status= %d\n",i, status);
+		else
+			printf("ERROR; return code from pthread_join() is %d, thread %d\n", r, i);
 	}
 
 	kr_close (db);
@@ -82,8 +69,6 @@ void * thread_main (void *arg) { // {{{
 
 	tno = (int) ((tArg *) arg)->no;
 
-	pthread_detach (pthread_self ());
-
 	ip = long2ip (prand ());
 
 	isp.verbose = 0;
@@ -95,7 +80,6 @@ void * thread_main (void *arg) { // {{{
 	} else
 		printf ("--> Thread %d : %15s => %s\n", tno, isp.ip, isp.icode);
 
-	th.done[tno] = 1;
 	free (arg);
 	pthread_exit ((void *) 0);
 } // }}}

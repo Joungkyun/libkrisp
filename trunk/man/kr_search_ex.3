@@ -106,14 +106,11 @@ int main (void) {
     char * addr[] = {"kns.kornet.net", "ns.dacom.co.kr"};
     int r;
     char * database = NULL;
+    char err[1024];
 
-    if ( (r = kr_open (&db, database)) > 0 ) {
-        if ( r == 2 )
-            fprintf (stderr, "ERROR: kr_open:: failed memory allocation\\n");
-        else {
-            fprintf (stderr, "ERROR Connect: %s\\n", db->err);
-            kr_close (db);
-        }
+    if ( (r = kr_open (&db, database, err)) > 0 ) {
+        fprintf (stderr, "ERROR Connect: %s\\n", err);
+        kr_close (db);
         return 1;
     }
 

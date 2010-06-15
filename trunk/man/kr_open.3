@@ -47,14 +47,16 @@ kr_open - libkrisp 의 database 를 연다.
 .br
 .BI "} " KR_API ";"
 .br
-.BI "int kr_open (KR_API **" db ", char *" path ")"
+.BI "int kr_open (KR_API **" db ", char *" path ", char *" err ")"
 .SH 설명
 .BI kr_open
 API는 libkrisp 를 링크하여 databse 파일을 열기 위해 사용한다.
 .BI kr_open
 API의 argument 는 database 연결에 사용되는
 .BI KR_API
-structure 와 database 파일의 경로를 지정을 한다.
+structure 와 database 파일의 경로를 지정을 한다. 세번째 인자는
+.BI kr_open
+API가 실행에 실패할 경우, 에러 메시지를 담게 된다.
 .PP
 .BI KR_API
 structure 는 krispcommon.h 에 정의가 되어 있으며, kr_open 을 호출하기
@@ -62,7 +64,9 @@ structure 는 krispcommon.h 에 정의가 되어 있으며, kr_open 을 호출�
 .PP
 .BI "KR_API *" db ";"
 .br
-.BI "if ( kr_open (&" db ", NULL) ) {"
+.BI "char *" err[1024] ";"
+.br
+.BI "if ( kr_open (&" db ", NULL, " err ") ) {"
 .br
 .BI "    .."
 .br
@@ -83,14 +87,11 @@ int main (void) {
     char * addr = "kns.kornet.net";
     int r;
     char * database = NULL;
+    char err[1024];
 
-    if ( (r = kr_open (&db, database)) > 0 ) {
-        if ( r == 2 )
-            fprintf (stderr, "ERROR: kr_open:: failed memory allocation\\n");
-        else {
-            fprintf (stderr, "ERROR Connect: %s\\n", db->err);
-            kr_close (db);
-        }
+    if ( (r = kr_open (&db, database, err)) > 0 ) {
+        fprintf (stderr, "ERROR Connect: %s\\n", err);
+        kr_close (db);
         return 1;
     }
 

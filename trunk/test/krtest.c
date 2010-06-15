@@ -1,5 +1,5 @@
 /*
- * $Id: krtest.c,v 1.4 2010-06-09 17:26:58 oops Exp $
+ * $Id: krtest.c,v 1.5 2010-06-15 17:58:55 oops Exp $
  */
 
 #include <krisp.h>
@@ -87,6 +87,7 @@ int main (int argc, char **argv) {
 	int				loop = 0, unlimit =0;
 	int				i;
 	double			t1, t2;
+	char			err[1024];
 
 #ifdef HAVE_GETOPT_LONG
 	while ( (opt = getopt_long (argc, argv, "f:hv", long_options, (int *) 0)) != EOF ) {
@@ -113,13 +114,9 @@ int main (int argc, char **argv) {
 	}
 
 	/* database open */
-	if ( (r = kr_open (&db, datafile)) > 0 ) {
-		if ( r == 2 )
-			fprintf (stderr, "ERROR: kr_open:: failed memory allocation\n");
-		else {
-			fprintf (stderr, "ERROR Connect: %s\n", db->err);
-			kr_close (db);
-		}
+	if ( (r = kr_open (&db, datafile, err)) > 0 ) {
+		fprintf (stderr, "ERROR Connect: %s\n", err);
+		kr_close (db);
 		return 1;
 	}
 
