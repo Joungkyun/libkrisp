@@ -128,7 +128,7 @@ $id: $
         // defined SAFECPY_256 in krisp.h
         SAFECPY_256 (isp.ip, addr);
         if ( kr_search (&isp, db) ) {
-            fprintf (stderr, "ERROR: %s\n", db->err);
+            fprintf (stderr, "ERROR: %s\n", isp.err);
             kr_close (db);
             return 1;
         }

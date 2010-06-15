@@ -1,5 +1,5 @@
 /*
- * $Id: thread_sample.c,v 1.4 2010-06-15 17:58:55 oops Exp $
+ * $Id: thread_sample.c,v 1.5 2010-06-15 18:14:49 oops Exp $
  */
 
 #include <krisp.h>
@@ -76,7 +76,7 @@ void * thread_main (void *arg) { // {{{
 	SAFECPY_256 (isp.ip, ip);
 
 	if ( kr_search (&isp, ((tArg *) arg)->db) ) {
-		fprintf (stderr, "ERROR: %s\n", ((tArg *) arg)->db->err);
+		fprintf (stderr, "ERROR: %s\n", isp.err);
 	} else
 		printf ("--> Thread %d : %15s => %s\n", tno, isp.ip, isp.icode);
 

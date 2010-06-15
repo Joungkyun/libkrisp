@@ -1,5 +1,5 @@
 /*
- * $Id: krisp.c,v 1.77 2010-06-15 17:58:54 oops Exp $
+ * $Id: krisp.c,v 1.78 2010-06-15 18:14:49 oops Exp $
  */
 
 #include <stdio.h>
@@ -107,6 +107,7 @@ int kr_search (KRNET_API *isp, KR_API *db) { // {{{
 
 		// SQL error
 		if ( r == -1 ) {
+			SAFECPY_1024 (isp->err, db->err);
 			krisp_mutex_unlock (db);
 			return 1;
 		}
@@ -171,11 +172,13 @@ goWrongData:
 int kr_search_ex (KRNET_API_EX *raw, KR_API *db) { // {{{
 	int	r;
 
+	krisp_mutex_lock (db);
 	initRawStruct (raw, false);
 
 	if ( valid_address (raw->ip) ) {
 		initRawStruct (raw, false);
 		db->table = "krisp";
+		krisp_mutex_unlock (db);
 		return 0;
 	}
 
@@ -184,7 +187,9 @@ int kr_search_ex (KRNET_API_EX *raw, KR_API *db) { // {{{
 
 		// SQL error
 		if ( r == -1 ) {
+			SAFECPY_1024 (raw->err, db->err);
 			db->table = "krisp";
+			krisp_mutex_unlock (db);
 			return 1;
 		}
 	}
@@ -208,6 +213,7 @@ int kr_search_ex (KRNET_API_EX *raw, KR_API *db) { // {{{
 	}
 
 	db->table = "krisp";
+	krisp_mutex_unlock (db);
 	return 0;
 } // }}}
 
