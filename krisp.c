@@ -1,5 +1,5 @@
 /*
- * $Id: krisp.c,v 1.76 2010-06-15 16:55:30 oops Exp $
+ * $Id: krisp.c,v 1.77 2010-06-15 17:58:54 oops Exp $
  */
 
 #include <stdio.h>
@@ -17,11 +17,11 @@ char * krisp_uversion (void) { // {{{
 	return KRISP_UVERSION;
 } // }}}
 
-int kr_open_safe (KR_API **db, char *file) { // {{{
+int kr_open_safe (KR_API **db, char *file, char *err) { // {{{
 	int r;
+	memset (err, 0, 1);
 
-	r = kr_open (db, file);
-	if ( r > 0 )
+	if ( (r = kr_open (db, file, err)) > 0 )
 		return r;
 
 #ifdef HAVE_PTHREAD_H
@@ -31,25 +31,27 @@ int kr_open_safe (KR_API **db, char *file) { // {{{
 	return 0;
 } // }}}
 
-int kr_open (KR_API **db, char *file) { // {{{
+int kr_open (KR_API **db, char *file, char *err) { // {{{
 	struct stat		f;
 	char * data;
 
 	*db = (KR_API *) malloc (sizeof (KR_API));
-	if ( *db == NULL )
+	if ( *db == NULL ) {
+		SAFECPY_1024 (err, "kr_open:: failed memory allocation");
 		return 2;
+	}
 
 	data = (file == NULL) ? DBPATH : file;
 
 	f.st_size = 0;
 	if ( stat (data, &f) == -1 ) {
-		sprintf ((*db)->err, "kr_open: Can't find data data (%s)", data);
+		sprintf (err, "kr_open:: Can't find data data (%s)", data);
 		(*db)->c = NULL;
 		return 1;
 	}
 
 	if ( f.st_size < 1 ) {
-		sprintf ((*db)->err, "kr_open: %s size is zero", data);
+		sprintf (err, "kr_open:: %s size is zero", data);
 		(*db)->c = NULL;
 		return 1;
 	}
@@ -60,6 +62,7 @@ int kr_open (KR_API **db, char *file) { // {{{
 #endif
 
 	if ( kr_dbConnect (*db, data) ) {
+		SAFECPY_1024 (err, (*db)->err);
 		(*db)->c = NULL;
 		return 1;
 	}
@@ -69,9 +72,12 @@ int kr_open (KR_API **db, char *file) { // {{{
 
 void kr_close (KR_API *db) { // {{{
 	krisp_mutex_destroy (db);
+
+	if ( db == NULL )
+		return;
+
 	kr_dbClose (db);
-	if ( db != NULL )
-		free (db);
+	free (db);
 } // }}}
 
 /*

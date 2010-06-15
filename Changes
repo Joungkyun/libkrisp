@@ -1,8 +1,11 @@
 Changelog
 
-$Id: Changes,v 1.87 2010-06-13 19:20:45 oops Exp $
+$Id: Changes,v 1.88 2010-06-15 17:58:54 oops Exp $
 
 * 3.0.0
+
+Wed, Jun 16 2010 JoungKyun.Kim <http://oops.org>
+	- changed proto type of kr_open
 
 Mon, Jun 14 2010 JoungKyun.Kim <http://oops.org>
 	- add thread safe

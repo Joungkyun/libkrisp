@@ -1,5 +1,5 @@
 /*
- * $Id: krispmkdb.c,v 1.11 2010-06-08 15:40:13 oops Exp $
+ * $Id: krispmkdb.c,v 1.12 2010-06-15 17:58:54 oops Exp $
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -157,6 +157,7 @@ int main (int argc, char ** argv) {
 	char *		database = NULL;
 	char *		table = NULL;
 	char *		csv = NULL;
+	char		err[1024];
 	
 #ifdef HAVE_GETOPT_LONG
 	while ( (opt = getopt_long (argc, argv, "c:t:hy", long_options, (int *) 0)) != EOF ) {
@@ -193,13 +194,9 @@ int main (int argc, char ** argv) {
 	if ( check_csv (csv) )
 		return 1;
 
-	if ( (r = kr_open (&db, database)) > 0 ) {
-		if ( r == 2 )
-			fprintf (stderr, "ERROR: kr_open:: failed memory allocation\n");
-		else {
-			fprintf (stderr, "ERROR: DB connect failed (%s)\n", db->err);
-			kr_close (db);
-		}
+	if ( (r = kr_open (&db, database, err)) > 0 ) {
+		fprintf (stderr, "ERROR: DB connect failed (%s)\n", err);
+		kr_close (db);
 		return 1;
 	}
 
