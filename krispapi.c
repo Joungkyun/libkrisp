@@ -1,5 +1,5 @@
 /*
- * $Id: krispapi.c,v 1.3 2010-06-08 03:05:09 oops Exp $
+ * $Id: krispapi.c,v 1.4 2010-06-15 16:55:31 oops Exp $
  */
 
 #include <stdio.h>
@@ -7,6 +7,10 @@
 #include <string.h>
 
 #include <krispapi.h>
+
+#ifdef HAVE_PTHREAD_H
+pthread_mutex_t krisp_mutex = PTHREAD_MUTEX_INITIALIZER;
+#endif
 
 void initStruct (KRNET_API *n) { // {{{
 	n->netmask = 0;
@@ -190,6 +194,45 @@ void _safecpy (char *stor, char *str, int size) { // {{{
 	}
 	stor[size] = 0;
 } // }}}
+
+void krisp_mutex_lock (KR_API * db) {
+#ifdef HAVE_PTHREAD_H
+	if ( ! db->threadsafe )
+		return;
+
+	if ( db->verbose )
+		fprintf (stderr, "DEBUG: Thread Mutex is locked\n");
+	pthread_mutex_lock (&krisp_mutex);
+#endif
+
+	return;
+}
+
+void krisp_mutex_unlock (KR_API * db) {
+#ifdef HAVE_PTHREAD_H
+	if ( ! db->threadsafe )
+		return;
+
+	pthread_mutex_unlock (&krisp_mutex);
+	if ( db->verbose )
+		fprintf (stderr, "DEBUG: Thread Mutex is unlocked\n");
+#endif
+
+	return;
+}
+
+void krisp_mutex_destroy (KR_API * db) {
+#ifdef HAVE_PTHREAD_H
+	if ( ! db->threadsafe )
+		return;
+
+	pthread_mutex_destroy (&krisp_mutex);
+	if ( db->verbose )
+		fprintf (stderr, "DEBUG: Thread Mutex destory\n");
+#endif
+
+	return;
+}
 
 /*
  * Local variables:

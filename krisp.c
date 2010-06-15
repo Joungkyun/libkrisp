@@ -1,5 +1,5 @@
 /*
- * $Id: krisp.c,v 1.75 2010-06-13 19:20:45 oops Exp $
+ * $Id: krisp.c,v 1.76 2010-06-15 16:55:30 oops Exp $
  */
 
 #include <stdio.h>
@@ -8,10 +8,6 @@
 #include <sys/stat.h>
 
 #include <krisp.h>
-
-#ifdef HAVE_PTHREAD_H
-pthread_mutex_t krisp_mutex = PTHREAD_MUTEX_INITIALIZER;
-#endif
 
 char * krisp_version (void) { // {{{
 	return KRISP_VERSION;
@@ -72,14 +68,7 @@ int kr_open (KR_API **db, char *file) { // {{{
 } // }}}
 
 void kr_close (KR_API *db) { // {{{
-#ifdef HAVE_PTHREAD_H
-	if ( db->threadsafe ) {
-		pthread_mutex_destroy (&krisp_mutex);
-		if ( db->verbose )
-			fprintf (stderr, "DEBUG: Thread Mutex destory\n");
-	}
-#endif
-
+	krisp_mutex_destroy (db);
 	kr_dbClose (db);
 	if ( db != NULL )
 		free (db);
@@ -92,14 +81,7 @@ int kr_search (KRNET_API *isp, KR_API *db) { // {{{
 	RAW_KRNET_API	raw;
 	int				r;
 
-#ifdef HAVE_PTHREAD_H
-	if ( db->threadsafe ) {
-		if ( db->verbose )
-			fprintf (stderr, "DEBUG: Thread Mutex is locked\n");
-		pthread_mutex_lock (&krisp_mutex);
-	}
-#endif
-
+	krisp_mutex_lock (db);
 	db->table = "krisp";
 
 	memset (raw.ip, 0, 1);
@@ -109,6 +91,7 @@ int kr_search (KRNET_API *isp, KR_API *db) { // {{{
 
 	if ( valid_address (isp->ip) ) {
 		initRawStruct (&raw, false);
+		krisp_mutex_unlock (db);
 		return 0;
 	}
 
@@ -117,8 +100,10 @@ int kr_search (KRNET_API *isp, KR_API *db) { // {{{
 		initRawStruct (&raw, true);
 
 		// SQL error
-		if ( r == -1 )
+		if ( r == -1 ) {
+			krisp_mutex_unlock (db);
 			return 1;
+		}
 
 		goto jumpNet;
 	}
@@ -169,13 +154,7 @@ goWrongData:
 	// second argues is set ture, free dummy member
 	initRawStruct (&raw, true);
 
-#ifdef HAVE_PTHREAD_H
-	if ( db->threadsafe ) {
-		pthread_mutex_unlock (&krisp_mutex);
-		if ( db->verbose )
-			fprintf (stderr, "DEBUG: Thread Mutex is unlocked\n");
-	}
-#endif
+	krisp_mutex_unlock (db);
 
 	return 0;
 } // }}}
