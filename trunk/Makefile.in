@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 1.26 2010-06-15 16:16:14 oops Exp $
+# $Id: Makefile.in,v 1.27 2010-06-15 16:54:05 oops Exp $
 srcdir          = @srcdir@
 top_srcdir      = @top_srcdir@
 builddir        = @builddir@
@@ -151,6 +151,9 @@ install-header:
 	for i in $(HEADER_NAME); do \
 		$(D_LIBTOOL) $$i.h $(DESTDIR)$(includedir)/ ; \
 	done
+
+test: all
+	make -C test
 
 clean:
 	-$(RM) -r *.o *.lo* *.la* $(PROG)lookup $(PROG)mkdb ip2long netcalc
