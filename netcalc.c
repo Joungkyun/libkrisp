@@ -1,5 +1,5 @@
 /*
- * $Id: netcalc.c,v 1.2 2010-06-08 03:05:09 oops Exp $
+ * $Id: netcalc.c,v 1.3 2010-06-15 18:55:15 oops Exp $
  */
 
 #include <krisp.h>
@@ -18,21 +18,21 @@
 #ifdef HAVE_GETOPT_LONG
 static struct option long_options [] = { // {{{
 	/* Options without arguments: */
-	{ "broadcast", no_argument, NULL, 'b' },
-	{ "help", no_argument, NULL, 'h' },
-	{ "mask", no_argument, NULL, 'm' },
-	{ "network", no_argument, NULL, 'n' },
-	{ "prefix", no_argument, NULL, 'p' },
-	{ "shell-format", no_argument, NULL, 's' },
-	{ "verbose", no_argument, NULL, 'v' },
+	{ "broadcast",    no_argument,       NULL, 'b' },
+	{ "help",         no_argument,       NULL, 'h' },
+	{ "mask",         no_argument,       NULL, 'm' },
+	{ "network",      no_argument,       NULL, 'n' },
+	{ "prefix",       no_argument,       NULL, 'p' },
+	{ "shell-format", no_argument,       NULL, 's' },
+	{ "verbose",      no_argument,       NULL, 'v' },
 
 	/* Options accepting an argument: */
-	//{ "datafile", required_argument, NULL, 'f' },
+	//{ "datafile",   required_argument, NULL, 'f' },
 	{ 0, 0, 0, 0 }
 }; // }}}
 #endif
 
-void usage (char *prog) { // {{{
+void usage (char * prog) { // {{{
 	fprintf (stderr, "%s v%s: get network informations\n", prog, KRISP_VERSION);
 	fprintf (stderr, "Usage: %s [option] ipaddress/[mask|prefix]\n", prog);
 	fprintf (stderr, "       %s [option] StartIP EndIP\n", prog);
@@ -49,23 +49,23 @@ void usage (char *prog) { // {{{
 } // }}}
 
 typedef struct opt_value {
-	short broadcast;
-	short mask;
-	short network;
-	short prefix;
-	short shell;
+	short	broadcast;
+	short	mask;
+	short	network;
+	short	prefix;
+	short	shell;
 } OPTV;
 
 typedef struct resutls_value {
-	ulong start;
-	ulong end;
-	short prefix;
-	ulong mask;
-	ulong network;
-	ulong broadcast;
+	ulong	start;
+	ulong	end;
+	short	prefix;
+	ulong	mask;
+	ulong	network;
+	ulong	broadcast;
 } RETV;
 
-int main (int argc, char **argv) {
+int main (int argc, char ** argv) {
 	char 	ip[256] = { 0, };
 	char *	postfix;
 	char *	pformat;

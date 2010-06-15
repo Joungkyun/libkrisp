@@ -1,5 +1,5 @@
 /*
- * $Id: krispmkdb.c,v 1.12 2010-06-15 17:58:54 oops Exp $
+ * $Id: krispmkdb.c,v 1.13 2010-06-15 18:55:15 oops Exp $
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -20,12 +20,12 @@
 #ifdef HAVE_GETOPT_LONG
 static struct option long_options [] = { // {{{
 	/* Options without arguments: */
-	{ "help", no_argument, NULL, 'h' },
-	{ "assume-yes", no_argument, NULL, 'y' },
+	{ "help",       no_argument,       NULL, 'h' },
+	{ "assume-yes", no_argument,       NULL, 'y' },
 
 	/* Options accepting an argument: */
 	{ "table-name", required_argument, NULL, 't' },
-	{ "csv-file", required_argument, NULL, 'c' },
+	{ "csv-file",   required_argument, NULL, 'c' },
 	{ 0, 0, 0, 0 }
 }; // }}}
 #endif

@@ -1,5 +1,5 @@
 /*
- * $Id: krispapi.c,v 1.5 2010-06-15 18:14:49 oops Exp $
+ * $Id: krispapi.c,v 1.6 2010-06-15 18:55:15 oops Exp $
  */
 
 #include <stdio.h>
@@ -12,7 +12,7 @@
 pthread_mutex_t krisp_mutex = PTHREAD_MUTEX_INITIALIZER;
 #endif
 
-void initStruct (KRNET_API *n) { // {{{
+void initStruct (KRNET_API * n) { // {{{
 	memset (n->err, 0, 1);
 	n->netmask = 0;
 	n->start   = 0;
@@ -23,7 +23,7 @@ void initStruct (KRNET_API *n) { // {{{
 	strcpy (n->cname, "N/A");
 } // }}}
 
-void initRawStruct (RAW_KRNET_API *n, int mfree) { // {{{
+void initRawStruct (RAW_KRNET_API * n, int mfree) { // {{{
 	memset (n->err, 0, 1);
 	//memset (n->ip, 0, 1);
 	n->start = 0;
@@ -37,14 +37,14 @@ void initRawStruct (RAW_KRNET_API *n, int mfree) { // {{{
 	n->dummy = NULL;
 } // }}}
 
-void kr_noneData (KRNET_API *n) { // {{{
+void kr_noneData (KRNET_API * n) { // {{{
 	strcpy (n->icode, "--");
 	strcpy (n->iname, "N/A");
 	strcpy (n->ccode, "--");
 	strcpy (n->cname, "N/A");
 } // }}}
 
-int getISPinfo (KR_API *db, RAW_KRNET_API *n) { // {{{
+int getISPinfo (KR_API * db, RAW_KRNET_API * n) { // {{{
 	ulong	longip;
 	char	sql[128] = { 0, };
 	int		r;
@@ -103,7 +103,7 @@ int getISPinfo (KR_API *db, RAW_KRNET_API *n) { // {{{
 	return 0;
 } // }}}
 
-int parseDummyData (char ***d, char *s, char delemeter) { // {{{
+int parseDummyData (char *** d, char * s, char delemeter) { // {{{
 	int		len = 0;
 	int		i, rlen;
 	char *	buf;
@@ -156,7 +156,7 @@ int chartoint (char c) { // {{{
 	return -1;
 } // }}}
 
-ulong strtolong (char *s) { // {{{
+ulong strtolong (char * s) { // {{{
 	int		len, i = 0, minus = 0, bufno = 0;
 	ulong	x = 1, res = 0;
 
@@ -186,7 +186,7 @@ ulong strtolong (char *s) { // {{{
 	return res;
 } // }}}
 
-void _safecpy (char *stor, char *str, int size) { // {{{
+void _safecpy (char * stor, char * str, int size) { // {{{
 	size--;
 	if ( strlen (str) > size ) {
 		memcpy (stor, str, size);
@@ -197,7 +197,7 @@ void _safecpy (char *stor, char *str, int size) { // {{{
 	stor[size] = 0;
 } // }}}
 
-void krisp_mutex_lock (KR_API * db) {
+void krisp_mutex_lock (KR_API * db) { // {{{
 #ifdef HAVE_PTHREAD_H
 	if ( ! db->threadsafe )
 		return;
@@ -208,9 +208,9 @@ void krisp_mutex_lock (KR_API * db) {
 #endif
 
 	return;
-}
+} // }}}
 
-void krisp_mutex_unlock (KR_API * db) {
+void krisp_mutex_unlock (KR_API * db) { // {{{
 #ifdef HAVE_PTHREAD_H
 	if ( ! db->threadsafe )
 		return;
@@ -221,9 +221,9 @@ void krisp_mutex_unlock (KR_API * db) {
 #endif
 
 	return;
-}
+} // }}}
 
-void krisp_mutex_destroy (KR_API * db) {
+void krisp_mutex_destroy (KR_API * db) { // {{{
 #ifdef HAVE_PTHREAD_H
 	if ( ! db->threadsafe )
 		return;
@@ -234,7 +234,7 @@ void krisp_mutex_destroy (KR_API * db) {
 #endif
 
 	return;
-}
+} // }}}
 
 /*
  * Local variables:

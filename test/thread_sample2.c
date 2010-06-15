@@ -1,5 +1,5 @@
 /*
- * $Id: thread_sample2.c,v 1.1 2010-06-15 18:39:21 oops Exp $
+ * $Id: thread_sample2.c,v 1.2 2010-06-15 18:55:15 oops Exp $
  */
 
 #include <krisp.h>
@@ -22,8 +22,8 @@ void * thread_main (void *);
 ulong prand (void);
 
 int main (void) { // {{{
-	int i = 0, r;
-	int status;
+	int	i, r;
+	int	status;
 
 	for ( i=0; i<THREAD_SIZE; i++ ) {
 		pthread_create (&threads[i], NULL, &thread_main, (void *) i);
@@ -41,12 +41,12 @@ int main (void) { // {{{
 	return 0;
 } // }}}
 
-void * thread_main (void *arg) { // {{{
-	int tno, r;
-	char * ip;
-	KR_API *db;
-	KRNET_API isp;
-	char err[1024];
+void * thread_main (void * arg) { // {{{
+	int			tno, r;
+	char *		ip;
+	KR_API *	db;
+	KRNET_API	isp;
+	char		err[1024];
 
 	tno = (int) arg;
 

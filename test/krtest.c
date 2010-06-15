@@ -1,5 +1,5 @@
 /*
- * $Id: krtest.c,v 1.7 2010-06-15 18:15:23 oops Exp $
+ * $Id: krtest.c,v 1.8 2010-06-15 18:55:15 oops Exp $
  */
 
 #include <krisp.h>
@@ -19,8 +19,8 @@
 #ifdef HAVE_GETOPT_LONG
 static struct option long_options [] = { // {{{
 	/* Options without arguments: */
-	{ "help", no_argument, NULL, 'h' },
-	{ "verbose", no_argument, NULL, 'v' },
+	{ "help",     no_argument,       NULL, 'h' },
+	{ "verbose",  no_argument,       NULL, 'v' },
 
 	/* Options accepting an argument: */
 	{ "datafile", required_argument, NULL, 'f' },
@@ -43,10 +43,10 @@ void usage (char *prog) { // {{{
  * From olibc http://cvs.oops.org/?cvsroot=OOPS-Project&module=olibc
  */
 double microtime (void) { // {{{
-	struct timeval tp;
-	long sec = 0L;
-	double ret = 0;
-	double msec = 0.0;
+	struct timeval	tp;
+	long			sec = 0L;
+	double			ret = 0;
+	double			msec = 0.0;
 
 	if ( gettimeofday ((struct timeval *) &tp, '\0') == 0) {
 		msec = (double) (tp.tv_usec / 1000000.00);
@@ -76,7 +76,7 @@ retry:
 } // }}}
 
 
-int main (int argc, char **argv) {
+int main (int argc, char ** argv) {
 	KR_API *		db;
 	KRNET_API		isp;
 	char *			ip;
