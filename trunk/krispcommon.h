@@ -1,5 +1,5 @@
 /*
- * $Id: krispcommon.h,v 1.28 2010-06-15 18:14:49 oops Exp $
+ * $Id: krispcommon.h,v 1.29 2010-06-15 18:55:15 oops Exp $
  */
 
 #ifndef KR_COMMON_H
@@ -48,14 +48,14 @@ typedef struct db_argument {
 	char *			dberr;	// vm error message
 #endif
 	char 			err[1024];
-	char *          table;
+	char *			table;
 	char *			old_table;
 	const char **	rowdata;
 	const char **	colname;
 } KR_API;
 
 typedef struct raw_netinfos {
-	short           verbose;
+	short			verbose;
 	char			ip[16];
 	ulong			start;
 	ulong			end;

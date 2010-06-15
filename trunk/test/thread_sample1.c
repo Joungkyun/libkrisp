@@ -1,5 +1,5 @@
 /*
- * $Id: thread_sample1.c,v 1.1 2010-06-15 18:39:21 oops Exp $
+ * $Id: thread_sample1.c,v 1.2 2010-06-15 18:55:15 oops Exp $
  */
 
 #include <krisp.h>
@@ -19,19 +19,19 @@
 pthread_t threads[THREAD_SIZE];
 
 typedef struct {
-	int no;
-	KR_API * db;
+	int			no;
+	KR_API *	db;
 } tArg;
 
 void * thread_main (void *);
 ulong prand (void);
 
 int main (void) { // {{{
-	int i = 0, r;
-	int status;
-	KR_API * db[THREAD_SIZE];
-	tArg * kr;
-	char err[1024];
+	int			i, r;
+	int			status;
+	KR_API *	db[THREAD_SIZE];
+	tArg *		kr;
+	char		err[1024];
 
 	/* database open */
 	for ( i=0; i<THREAD_SIZE; i++ ) {
@@ -64,7 +64,7 @@ int main (void) { // {{{
 	return 0;
 } // }}}
 
-void * thread_main (void *arg) { // {{{
+void * thread_main (void * arg) { // {{{
 	int tno = 0;
 	char * ip;
 	KRNET_API isp;

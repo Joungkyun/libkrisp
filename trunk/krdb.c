@@ -1,5 +1,5 @@
 /*
- * $Id: krdb.c,v 1.14 2010-06-07 11:31:26 oops Exp $
+ * $Id: krdb.c,v 1.15 2010-06-15 18:55:15 oops Exp $
  */
 
 #include <krispcommon.h>
@@ -18,7 +18,7 @@
 #include <database/sqlite.c>
 #endif
 
-char * kr_dbQuote_f (char *v) { // {{{
+char * kr_dbQuote_f (char * v) { // {{{
 	int		no = 0;
 	size_t	t, l, start;
 	size_t	len;

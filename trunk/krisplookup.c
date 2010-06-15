@@ -1,5 +1,5 @@
 /*
- * $Id: krisplookup.c,v 1.40 2010-06-15 18:14:49 oops Exp $
+ * $Id: krisplookup.c,v 1.41 2010-06-15 18:55:15 oops Exp $
  */
 
 #include <krisp.h>
@@ -26,13 +26,13 @@
 #ifdef HAVE_GETOPT_LONG
 static struct option long_options [] = { // {{{
 	/* Options without arguments: */
-	{ "help", no_argument, NULL, 'h' },
-	{ "verbose", no_argument, NULL, 'v' },
-	{ "onlyisp", no_argument, NULL, 'i' },
-	{ "onlynation", no_argument, NULL, 'n' },
+	{ "help",       no_argument,       NULL, 'h' },
+	{ "verbose",    no_argument,       NULL, 'v' },
+	{ "onlyisp",    no_argument,       NULL, 'i' },
+	{ "onlynation", no_argument,       NULL, 'n' },
 
 	/* Options accepting an argument: */
-	{ "datafile", required_argument, NULL, 'f' },
+	{ "datafile",   required_argument, NULL, 'f' },
 	{ 0, 0, 0, 0 }
 }; // }}}
 #endif
@@ -88,7 +88,7 @@ void usage (char *prog) { // {{{
 	exit (1);
 } // }}}
 
-int main (int argc, char **argv) {
+int main (int argc, char ** argv) {
 	KR_API *		db;
 	KRNET_API		isp;
 	char *			ip;

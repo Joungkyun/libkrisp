@@ -1,5 +1,5 @@
 /*
- * $Id: ip2long.c,v 1.2 2010-06-08 03:05:09 oops Exp $
+ * $Id: ip2long.c,v 1.3 2010-06-15 18:55:15 oops Exp $
  */
 
 #include <krisp.h>
@@ -18,8 +18,8 @@
 #ifdef HAVE_GETOPT_LONG
 static struct option long_options [] = { // {{{
 	/* Options without arguments: */
-	{ "help", no_argument, NULL, 'h' },
-	{ "verbose", no_argument, NULL, 'v' },
+	{ "help",       no_argument,       NULL, 'h' },
+	{ "verbose",    no_argument,       NULL, 'v' },
 
 	/* Options accepting an argument: */
 	//{ "datafile", required_argument, NULL, 'f' },
@@ -27,7 +27,7 @@ static struct option long_options [] = { // {{{
 }; // }}}
 #endif
 
-void usage (char *prog) { // {{{
+void usage (char * prog) { // {{{
 	fprintf (stderr, "%s v%s: Convert between IPv4 address and Long IP\n", prog, KRISP_VERSION);
 	fprintf (stderr, "Usage: %s [option] ip-address|LongIP\n", prog);
 	fprintf (stderr, "Options:\n");
@@ -37,7 +37,7 @@ void usage (char *prog) { // {{{
 	exit (1);
 } // }}}
 
-int main (int argc, char **argv) {
+int main (int argc, char ** argv) {
 	char 			ip[256] = { 0, };
 	int				opt;
 	short			verbose = 0;

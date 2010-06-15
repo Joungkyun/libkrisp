@@ -1,5 +1,5 @@
 /*
- * $Id: krnet.c,v 1.6 2010-06-08 03:05:09 oops Exp $
+ * $Id: krnet.c,v 1.7 2010-06-15 18:55:15 oops Exp $
  */
 
 #include <stdio.h>
@@ -33,7 +33,7 @@ short valid_address (char * addr) { // {{{
  * Converts a string containing an (IPv4) Internet Protocol
  * dotted address into a proper address
  */
-ulong ip2long (char *ip) { // {{{
+ulong ip2long (char * ip) { // {{{
 	struct in_addr s;
 
 	if ( ! strlen (ip) || ! inet_aton (ip, &s) )
@@ -64,8 +64,8 @@ char * long2ip (ulong num) { // {{{
  * from ipcalc from initscripts on redhat
  */
 short long2prefix (ulong mask) { // {{{
-	int i;
-	int count = IPBITS;
+	int	i;
+	int	count = IPBITS;
 
 	for (i = 0; i < IPBITS; i++) {
 		if (!(mask & ((2 << i) - 1)))
