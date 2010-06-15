@@ -1,5 +1,5 @@
 /*
- * $Id: krtest.c,v 1.6 2010-06-15 18:14:49 oops Exp $
+ * $Id: krtest.c,v 1.7 2010-06-15 18:15:23 oops Exp $
  */
 
 #include <krisp.h>
@@ -79,7 +79,6 @@ retry:
 int main (int argc, char **argv) {
 	KR_API *		db;
 	KRNET_API		isp;
-	struct stat		f;
 	char *			ip;
 	int				opt, r;
 	char *			datafile = NULL;
