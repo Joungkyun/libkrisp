@@ -27,6 +27,8 @@ kr_search - libkrisp database 에서 IP 에 대한 정보를 검색하여 반환
 .br
 .BI "    char            " cname[64] "; // NATION full name"
 .br
+.BI "    char            " err[1024] "; // get error messages"
+.br
 .BI "} " KRNET_API ";"
 .br
 .BI "int kr_search (KRNET_API *" isp ", KR_API *" db ");"
@@ -80,7 +82,7 @@ int main (void) {
     // defined safecpy_256 in krispapi.h
     safecpy_256 (isp.ip, addr);
     if ( kr_search (&isp, db) ) {
-        printf ("ERROR: %s\\n", db->err);
+        printf ("ERROR: %s\\n", isp.err);
         kr_close (db);
         return 1;
     }

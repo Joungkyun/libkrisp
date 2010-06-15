@@ -1,5 +1,5 @@
 /*
- * $Id: krispapi.c,v 1.4 2010-06-15 16:55:31 oops Exp $
+ * $Id: krispapi.c,v 1.5 2010-06-15 18:14:49 oops Exp $
  */
 
 #include <stdio.h>
@@ -13,6 +13,7 @@ pthread_mutex_t krisp_mutex = PTHREAD_MUTEX_INITIALIZER;
 #endif
 
 void initStruct (KRNET_API *n) { // {{{
+	memset (n->err, 0, 1);
 	n->netmask = 0;
 	n->start   = 0;
 	n->end     = 0;
@@ -23,6 +24,7 @@ void initStruct (KRNET_API *n) { // {{{
 } // }}}
 
 void initRawStruct (RAW_KRNET_API *n, int mfree) { // {{{
+	memset (n->err, 0, 1);
 	//memset (n->ip, 0, 1);
 	n->start = 0;
 	n->end   = 0;

@@ -1,5 +1,5 @@
 /*
- * $Id: krispcommon.h,v 1.27 2010-06-13 19:20:45 oops Exp $
+ * $Id: krispcommon.h,v 1.28 2010-06-15 18:14:49 oops Exp $
  */
 
 #ifndef KR_COMMON_H
@@ -60,6 +60,7 @@ typedef struct raw_netinfos {
 	ulong			start;
 	ulong			end;
 	short			size;
+	char			err[1024];
 	char **			dummy;
 	char *			dummydata;
 } RAW_KRNET_API;
@@ -76,6 +77,7 @@ typedef struct netinfos {
 	char			iname[64];
 	char			ccode[4];
 	char			cname[64];
+	char			err[1024];
 } KRNET_API;
 
 struct cinfo {

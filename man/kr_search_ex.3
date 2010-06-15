@@ -19,6 +19,8 @@ kr_search_ex - libkrisp database의 사용자 table을 제어 한다.
 .br
 .BI "    short   "  size ";      // size of dummy member
 .br
+.BI "    char    "  err[1024] "; // get error meassages"
+.br
 .BI "    char ** "  dummy ";     // array of 3th field with pipe seperator of table"
 .br
 .BI "    char *  "  dummydata "; // 3th field strings with pipe seperator of table"
@@ -121,7 +123,7 @@ int main (void) {
         // defined safecpy_256 in krispapi.h
         safecpy_256 (isp.ip, addr);
         if ( kr_search_ex (&u_isp, db) ) {
-            printf ("ERROR: %s\\n", db->err);
+            printf ("ERROR: %s\\n", u_isp.err);
             initStruct_ex (&u_isp, true);
             kr_close (db);
             return 1;
