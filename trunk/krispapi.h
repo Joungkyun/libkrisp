@@ -1,5 +1,5 @@
 /*
- * $Id: krispapi.h,v 1.2 2010-06-08 03:05:09 oops Exp $
+ * $Id: krispapi.h,v 1.3 2010-06-15 16:55:31 oops Exp $
  *
  * Notice: if return value of API that has '_f' prefix is not NULL,
  *         it is must free memory!
@@ -55,6 +55,13 @@ ulong strtolong (char *);
  */
 void _safecpy (char *, char *, int);
 #endif
+
+/*
+ * for thread safe
+ */
+void krisp_mutex_lock (KR_API *);
+void krisp_mutex_unlock (KR_API *);
+void krisp_mutex_destroy (KR_API *);
 
 /*
  * Local variables:
