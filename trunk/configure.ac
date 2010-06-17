@@ -1,7 +1,7 @@
 # Process this file with autoconf to produce a configure script.
 # Configure template for krisp library
 #
-# $Id: configure.ac,v 1.27 2010-06-13 19:20:45 oops Exp $
+# $Id: configure.ac,v 1.28 2010-06-17 16:48:56 oops Exp $
 
 #
 AC_PREREQ(2.59)
@@ -133,7 +133,8 @@ AC_CHECK_LIB(pthread, pthread_create,,,)
 AC_HEADER_STDC
 
 AC_CHECK_HEADERS([arpa/inet.h getopt.h netinet/in.h stdio.h stdlib.h \
-					string.h sys/socket.h sqlite3.h sqlite.h iconv.h pthread.h])
+					string.h sys/socket.h sqlite3.h sqlite.h iconv.h \
+					stdbool.h pthread.h])
 
 # Checks for typedefs, structures, and compiler characteristics.
 AC_C_CONST

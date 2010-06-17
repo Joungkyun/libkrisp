@@ -1,8 +1,11 @@
 Changelog
 
-$Id: Changes,v 1.89 2010-06-15 18:14:49 oops Exp $
+$Id: Changes,v 1.90 2010-06-17 16:48:56 oops Exp $
 
 * 3.0.0
+
+Fri, Jun 17 2010 JoungKyun.Kim <http://oops.org>
+	- fixed sqlite3_open_v2 compatibility problems under sqlite 3.5.0
 
 Wed, Jun 16 2010 JoungKyun.Kim <http://oops.org>
 	- changed proto type of kr_open

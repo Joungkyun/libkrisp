@@ -1,5 +1,5 @@
 /*
- * $Id: krispcommon.h,v 1.29 2010-06-15 18:55:15 oops Exp $
+ * $Id: krispcommon.h,v 1.30 2010-06-17 16:48:56 oops Exp $
  */
 
 #ifndef KR_COMMON_H
@@ -23,9 +23,16 @@
 #include <sqlite.h>
 #endif
 
-#ifndef true
-#define true 1
-#define false 0
+#ifdef HAVE_STDBOOL_H
+#include <stdbool.h>
+#else
+typedef enum {
+	false = 0,
+	true  = 1
+} bool;
+
+#define false false
+#define true true
 #endif
 
 typedef struct db_argument {
