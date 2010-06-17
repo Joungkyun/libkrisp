@@ -1,5 +1,5 @@
 /*
- * $Id: krispapi.c,v 1.8 2010-06-17 17:36:37 oops Exp $
+ * $Id: krispapi.c,v 1.9 2010-06-17 19:45:22 oops Exp $
  */
 
 #include <stdio.h>
@@ -57,7 +57,7 @@ int getISPinfo (KR_API * db, RAW_KRNET_API * n) { // {{{
 		db->table,
 		longip
 	);
-	if ( n->verbose == true )
+	if ( n->verbose )
 		fprintf (stderr, "DEBUG: %s\n", sql);
 
 	if  ( kr_dbQuery (db, sql) )
@@ -199,10 +199,10 @@ void _safecpy (char * stor, char * str, int size) { // {{{
 
 void krisp_mutex_lock (KR_API * db) { // {{{
 #ifdef HAVE_PTHREAD_H
-	if ( db->threadsafe == false )
+	if ( ! db->threadsafe )
 		return;
 
-	if ( db->verbose == true )
+	if ( db->verbose )
 		fprintf (stderr, "DEBUG: Thread Mutex is locked\n");
 	pthread_mutex_lock (&krisp_mutex);
 #endif
@@ -212,11 +212,11 @@ void krisp_mutex_lock (KR_API * db) { // {{{
 
 void krisp_mutex_unlock (KR_API * db) { // {{{
 #ifdef HAVE_PTHREAD_H
-	if ( db->threadsafe == false )
+	if ( ! db->threadsafe )
 		return;
 
 	pthread_mutex_unlock (&krisp_mutex);
-	if ( db->verbose == true )
+	if ( db->verbose )
 		fprintf (stderr, "DEBUG: Thread Mutex is unlocked\n");
 #endif
 
@@ -225,11 +225,11 @@ void krisp_mutex_unlock (KR_API * db) { // {{{
 
 void krisp_mutex_destroy (KR_API * db) { // {{{
 #ifdef HAVE_PTHREAD_H
-	if ( db->threadsafe == false )
+	if ( ! db->threadsafe )
 		return;
 
 	pthread_mutex_destroy (&krisp_mutex);
-	if ( db->verbose == true )
+	if ( db->verbose )
 		fprintf (stderr, "DEBUG: Thread Mutex destory\n");
 #endif
 

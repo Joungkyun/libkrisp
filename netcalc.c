@@ -1,5 +1,5 @@
 /*
- * $Id: netcalc.c,v 1.5 2010-06-17 17:36:37 oops Exp $
+ * $Id: netcalc.c,v 1.6 2010-06-17 19:45:22 oops Exp $
  */
 
 #include <krisp.h>
@@ -215,34 +215,34 @@ int main (int argc, char ** argv) {
 	postfix = optv.shell ? "=" : " : ";
 	pformat = optv.shell ? "%s%s" : "%-11s%s";
 
-	if ( verbose == true ) {
+	if ( verbose ) {
 		printf ("%-11s : %s - ", "GIVEN RANGE", long2ip (r.start));
 		printf ("%s\n", long2ip (r.end));
 	}
 
 	if ( optv.network ) {
-		if ( verbose == true || optv.shell )
+		if ( verbose || optv.shell )
 			printf (pformat, "NETWORK", postfix);
 
 		printf ("%s\n", long2ip (r.network));
 	}
 
 	if ( optv.broadcast ) {
-		if ( verbose == true || optv.shell )
+		if ( verbose || optv.shell )
 			printf (pformat, "BROADCAST", postfix);
 
 		printf ("%s\n", long2ip (r.broadcast));
 	}
 
 	if ( optv.mask ) {
-		if ( verbose == true || optv.shell )
+		if ( verbose || optv.shell )
 			printf (pformat, "NETMASK", postfix);
 
 		printf ("%s\n", long2ip (r.mask));
 	}
 
 	if ( optv.prefix ) {
-		if ( verbose == true || optv.shell )
+		if ( verbose || optv.shell )
 			printf (pformat, "PREFIX", postfix);
 
 		printf ("%d\n", r.prefix);

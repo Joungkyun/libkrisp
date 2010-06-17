@@ -1,5 +1,5 @@
 /*
- * $Id: krispcommon.h,v 1.31 2010-06-17 17:16:49 oops Exp $
+ * $Id: krispcommon.h,v 1.32 2010-06-17 19:45:22 oops Exp $
  */
 
 #ifndef KR_COMMON_H
@@ -47,9 +47,9 @@ typedef struct db_argument {
 	sqlite *		c;		// db resource
 	sqlite_vm *		vm;		// sqlite vm
 #endif
-	bool			verbose;
+	short			verbose;
 #ifdef HAVE_PTHREAD_H
-	bool			threadsafe;
+	short			threadsafe;
 #endif
 	short			r;		// execute result code
 	short			final;  // force finalize
@@ -66,7 +66,7 @@ typedef struct db_argument {
 } KR_API;
 
 typedef struct raw_netinfos {
-	bool			verbose;
+	short			verbose;
 	char			ip[16];
 	ulong			start;
 	ulong			end;
@@ -79,7 +79,7 @@ typedef struct raw_netinfos {
 #define KRNET_API_EX RAW_KRNET_API
 
 typedef struct netinfos {
-	bool			verbose;
+	short			verbose;
 	char			ip[256];
 	ulong			netmask;
 	ulong			start;

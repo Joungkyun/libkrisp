@@ -1,5 +1,5 @@
 /*
- * $Id: krisp.c,v 1.82 2010-06-17 17:41:31 oops Exp $
+ * $Id: krisp.c,v 1.83 2010-06-17 19:45:22 oops Exp $
  */
 
 #include <stdio.h>
@@ -115,7 +115,7 @@ int kr_search (KRNET_API *isp, KR_API *db) { // {{{
 	isp->end   = raw.end;
 	isp->netmask = guess_netmask (raw.start, raw.end);
 
-	if ( isp->verbose == true ) {
+	if ( isp->verbose ) {
 		fprintf (stderr, "DEBUG: IP    => %-15s (%lu)\n", isp->ip, ip2long (isp->ip));
 		fprintf (stderr, "DEBUG: START => %-15s (%lu)\n", long2ip (isp->start), isp->start);
 		fprintf (stderr, "DEBUG: END   => %-15s (%lu)\n", long2ip (isp->end), isp->end);
@@ -147,7 +147,7 @@ jumpNet:
 
 goWrongData:
 
-	if ( isp->verbose == true ) {
+	if ( isp->verbose ) {
 		fprintf (stderr, "DEBUG: TABLE  => %s\n", db->table);
 		fprintf (stderr, "DEBUG: DATA   => %s\n", raw.dummydata);
 		fprintf (stderr, "DEBUG: ISP    => %s (%s)\n", isp->iname, isp->icode);
@@ -190,7 +190,7 @@ int kr_search_ex (KRNET_API_EX *raw, KR_API *db) { // {{{
 		}
 	}
 
-	if ( raw->verbose == true ) {
+	if ( raw->verbose ) {
 		ulong netmask = guess_netmask (raw->start, raw->end);
 		fprintf (stderr, "DEBUG: IP    => %-15s (%lu)\n", raw->ip, ip2long (raw->ip));
 		fprintf (stderr, "DEBUG: START => %-15s (%lu)\n", long2ip (raw->start), raw->start);
@@ -203,7 +203,7 @@ int kr_search_ex (KRNET_API_EX *raw, KR_API *db) { // {{{
 	 */
 	raw->size = parseDummyData (&(raw->dummy), raw->dummydata, 0);
 
-	if ( raw->verbose == true ) {
+	if ( raw->verbose ) {
 		fprintf (stderr, "DEBUG: TABLE  => %s\n", db->table);
 		fprintf (stderr, "DEBUG: DATA   => %s\n", raw->dummydata);
 	}
