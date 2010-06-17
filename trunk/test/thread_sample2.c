@@ -1,5 +1,5 @@
 /*
- * $Id: thread_sample2.c,v 1.4 2010-06-17 17:16:49 oops Exp $
+ * $Id: thread_sample2.c,v 1.5 2010-06-17 17:19:41 oops Exp $
  */
 
 #include <krisp.h>
@@ -42,7 +42,7 @@ int main (void) { // {{{
 } // }}}
 
 void * thread_main (void * arg) { // {{{
-	int			tno, r;
+	int			tno;
 	char *		ip;
 	KR_API *	db;
 	KRNET_API	isp;

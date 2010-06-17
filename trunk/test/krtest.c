@@ -1,5 +1,5 @@
 /*
- * $Id: krtest.c,v 1.9 2010-06-17 17:16:49 oops Exp $
+ * $Id: krtest.c,v 1.10 2010-06-17 17:19:41 oops Exp $
  */
 
 #include <krisp.h>
@@ -80,7 +80,7 @@ int main (int argc, char ** argv) {
 	KR_API *		db;
 	KRNET_API		isp;
 	char *			ip;
-	int				opt, r;
+	int				opt;
 	char *			datafile = NULL;
 	short			verbose = 0, dverbose = 0;
 	int				loop = 0, unlimit =0;
