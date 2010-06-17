@@ -1,5 +1,5 @@
 /* krisp-config.h.in.  Generated from configure.ac by autoheader.  */
-/* $Id: krisp-config.h.in,v 1.14 2010-06-13 19:20:45 oops Exp $ */
+/* $Id: krisp-config.h.in,v 1.15 2010-06-17 16:48:56 oops Exp $ */
 #ifndef KRISP_CONFIG_H
 #define KRISP_CONFIG_H
 
@@ -60,6 +60,9 @@
 /* Define to 1 if `stat' has the bug that it succeeds when given the
    zero-length file name argument. */
 #undef HAVE_STAT_EMPTY_STRING_BUG
+
+/* Define to 1 if you have the <stdbool.h> header file. */
+#undef HAVE_STDBOOL_H
 
 /* Define to 1 if you have the <stdint.h> header file. */
 #undef HAVE_STDINT_H

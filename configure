@@ -8486,8 +8486,10 @@ fi
 
 
 
+
 for ac_header in arpa/inet.h getopt.h netinet/in.h stdio.h stdlib.h \
-					string.h sys/socket.h sqlite3.h sqlite.h iconv.h pthread.h
+					string.h sys/socket.h sqlite3.h sqlite.h iconv.h \
+					stdbool.h pthread.h
 do
 as_ac_Header=`echo "ac_cv_header_$ac_header" | $as_tr_sh`
 if eval "test \"\${$as_ac_Header+set}\" = set"; then

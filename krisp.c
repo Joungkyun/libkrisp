@@ -1,5 +1,5 @@
 /*
- * $Id: krisp.c,v 1.78 2010-06-15 18:14:49 oops Exp $
+ * $Id: krisp.c,v 1.79 2010-06-17 16:48:56 oops Exp $
  */
 
 #include <stdio.h>
@@ -17,23 +17,9 @@ char * krisp_uversion (void) { // {{{
 	return KRISP_UVERSION;
 } // }}}
 
-int kr_open_safe (KR_API **db, char *file, char *err) { // {{{
-	int r;
-	memset (err, 0, 1);
-
-	if ( (r = kr_open (db, file, err)) > 0 )
-		return r;
-
-#ifdef HAVE_PTHREAD_H
-	(*db)->threadsafe = 1;
-#endif
-
-	return 0;
-} // }}}
-
-int kr_open (KR_API **db, char *file, char *err) { // {{{
+int _kr_open (KR_API **db, char *file, char *err, bool safe) { // {{{
 	struct stat		f;
-	char * data;
+	char *			data;
 
 	*db = (KR_API *) malloc (sizeof (KR_API));
 	if ( *db == NULL ) {
@@ -56,10 +42,10 @@ int kr_open (KR_API **db, char *file, char *err) { // {{{
 		return 1;
 	}
 
-	(*db)->verbose = 0;
 #ifdef HAVE_PTHREAD_H
-	(*db)->threadsafe = 0;
+	(*db)->threadsafe = safe ? 1 : 0;
 #endif
+	(*db)->verbose = 0;
 
 	if ( kr_dbConnect (*db, data) ) {
 		SAFECPY_1024 (err, (*db)->err);
@@ -68,6 +54,14 @@ int kr_open (KR_API **db, char *file, char *err) { // {{{
 	}
 
 	return 0;
+} // }}}
+
+int kr_open_safe (KR_API **db, char *file, char *err) { // {{{
+	return _kr_open (db, file, err, true);
+} // }}}
+
+int kr_open (KR_API **db, char *file, char *err) { // {{{
+	return _kr_open (db, file, err, false);
 } // }}}
 
 void kr_close (KR_API *db) { // {{{
