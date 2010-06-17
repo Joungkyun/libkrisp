@@ -1,5 +1,5 @@
 /*
- * $Id: krisplookup.c,v 1.42 2010-06-17 17:16:49 oops Exp $
+ * $Id: krisplookup.c,v 1.43 2010-06-17 17:36:37 oops Exp $
  */
 
 #include <krisp.h>
@@ -153,7 +153,7 @@ int main (int argc, char ** argv) {
 		return 1;
 	}
 
-	if ( verbose )
+	if ( verbose == true )
 		fprintf (stderr, "\n");
 
 	if ( onlyisp ) {
