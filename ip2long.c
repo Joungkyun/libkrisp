@@ -1,5 +1,5 @@
 /*
- * $Id: ip2long.c,v 1.4 2010-06-17 17:16:49 oops Exp $
+ * $Id: ip2long.c,v 1.5 2010-06-17 17:36:37 oops Exp $
  */
 
 #include <krisp.h>
@@ -70,14 +70,14 @@ int main (int argc, char ** argv) {
 		return 1;
 	}
 
-	if ( verbose )
+	if ( verbose == true )
 		printf ("IPv4   : ");
-	if ( verbose || input == LONGIP )
+	if ( verbose == true || input == LONGIP )
 		printf ("%s\n", ip);
 
-	if ( verbose )
+	if ( verbose == true )
 		printf ("LONGIP : ");
-	if ( verbose || input == IPv4 )
+	if ( verbose == true || input == IPv4 )
 		printf ("%lu\n", ip2long (ip));
 
 	return 0;

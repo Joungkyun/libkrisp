@@ -1,5 +1,5 @@
 /*
- * $Id: sqlite3.c,v 1.10 2010-06-17 17:16:49 oops Exp $
+ * $Id: sqlite3.c,v 1.11 2010-06-17 17:36:37 oops Exp $
  *
  * libkrisp sqlite3 frontend API
  */
@@ -25,7 +25,7 @@ void kr_dbErrorClear (KR_API *db) {
 int kr_dbFree (KR_API *db) {
 	int i;
 
-	if ( db->verbose )
+	if ( db->verbose == true )
 		fprintf (stderr, "DEBUG: **** db colname/rowdata free\n");
 
 	for ( i=0; i<db->cols; i++ ) {
@@ -77,14 +77,14 @@ int kr_dbQuery (KR_API *db, char * sql) {
 	db->rows  = 0;
 	db->cols  = 0;
 
-	if ( db->verbose )
+	if ( db->verbose == true )
 		fprintf (stderr, "DEBUG: **** db prepare\n");
 
 	db->r = sqlite3_prepare (db->c, sql, L (sql), &db->vm, NULL);
 
 	if ( db->r != SQLITE_OK ) {
 		kr_dbError (db);
-		if ( db->verbose )
+		if ( db->verbose == true )
 			fprintf (stderr, "DEBUG: **** db prepare result (%d) : %s\n", db->r, db->err);
 		kr_dbFinalize (db);
 		return 1;
@@ -98,7 +98,7 @@ int kr_dbFetch (KR_API *db) {
 	char *colname;
 	char *rowdata;
 
-	if ( db->verbose )
+	if ( db->verbose == true )
 		fprintf (stderr, "DEBUG: **** db fetch\n");
 
 	if ( db->final ) {
@@ -133,7 +133,7 @@ int kr_dbFetch (KR_API *db) {
 		case SQLITE_DONE:   // 101 - sqlite3_step() has finished executing
 		default:
 finalize:
-			if ( db->verbose )
+			if ( db->verbose == true )
 				fprintf (stderr, "DEBUG: **** db fetch step result : %d\n", db->r);
 
 			kr_dbFinalize (db);
@@ -162,10 +162,10 @@ int kr_dbExecute (KR_API *db, char *sql) {
 }
 
 void kr_dbFinalize (KR_API *db) {
-	if ( db->verbose )
+	if ( db->verbose == true )
 		fprintf (stderr, "DEBUG: **** db finalize\n");
 	if ( db->vm ) {
-		if ( db->verbose )
+		if ( db->verbose == true )
 			fprintf (stderr, "DEBUG: **** db finalize act\n");
 		db->r = sqlite3_finalize (db->vm);
 	}
@@ -174,7 +174,7 @@ void kr_dbFinalize (KR_API *db) {
 }
 
 void kr_dbClose (KR_API *db) {
-	if ( db->verbose )
+	if ( db->verbose == true )
 		fprintf (stderr, "DEBUG: **** db close\n");
 
 	if ( db->c != NULL )

@@ -1,5 +1,5 @@
 /*
- * $Id: krispapi.c,v 1.7 2010-06-17 17:16:49 oops Exp $
+ * $Id: krispapi.c,v 1.8 2010-06-17 17:36:37 oops Exp $
  */
 
 #include <stdio.h>
@@ -57,7 +57,7 @@ int getISPinfo (KR_API * db, RAW_KRNET_API * n) { // {{{
 		db->table,
 		longip
 	);
-	if ( n->verbose )
+	if ( n->verbose == true )
 		fprintf (stderr, "DEBUG: %s\n", sql);
 
 	if  ( kr_dbQuery (db, sql) )
@@ -202,7 +202,7 @@ void krisp_mutex_lock (KR_API * db) { // {{{
 	if ( db->threadsafe == false )
 		return;
 
-	if ( db->verbose )
+	if ( db->verbose == true )
 		fprintf (stderr, "DEBUG: Thread Mutex is locked\n");
 	pthread_mutex_lock (&krisp_mutex);
 #endif
@@ -216,7 +216,7 @@ void krisp_mutex_unlock (KR_API * db) { // {{{
 		return;
 
 	pthread_mutex_unlock (&krisp_mutex);
-	if ( db->verbose )
+	if ( db->verbose == true )
 		fprintf (stderr, "DEBUG: Thread Mutex is unlocked\n");
 #endif
 
@@ -229,7 +229,7 @@ void krisp_mutex_destroy (KR_API * db) { // {{{
 		return;
 
 	pthread_mutex_destroy (&krisp_mutex);
-	if ( db->verbose )
+	if ( db->verbose == true )
 		fprintf (stderr, "DEBUG: Thread Mutex destory\n");
 #endif
 
