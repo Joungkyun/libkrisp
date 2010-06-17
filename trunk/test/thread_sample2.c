@@ -1,5 +1,5 @@
 /*
- * $Id: thread_sample2.c,v 1.2 2010-06-15 18:55:15 oops Exp $
+ * $Id: thread_sample2.c,v 1.3 2010-06-17 16:20:23 oops Exp $
  */
 
 #include <krisp.h>
@@ -56,7 +56,7 @@ void * thread_main (void * arg) { // {{{
 	if ( (r = kr_open (&db, NULL, err)) > 0 ) {
 		fprintf (stderr, "ERROR Connect: %s\n", err);
 		kr_close (db);
-		return 1;
+		pthread_exit ((void *) 0);
 	}
 
 	isp.verbose = 0;
