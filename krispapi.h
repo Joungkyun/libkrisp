@@ -1,5 +1,5 @@
 /*
- * $Id: krispapi.h,v 1.3 2010-06-15 16:55:31 oops Exp $
+ * $Id: krispapi.h,v 1.4 2010-06-17 17:16:49 oops Exp $
  *
  * Notice: if return value of API that has '_f' prefix is not NULL,
  *         it is must free memory!
@@ -21,7 +21,7 @@ void initStruct (KRNET_API *);
 /*
  * Init raw database data structure
  */
-void initRawStruct (RAW_KRNET_API *, int);
+void initRawStruct (RAW_KRNET_API *, bool);
 #define initStruct_ex initRawStruct
 
 /*

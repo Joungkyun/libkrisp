@@ -1,5 +1,5 @@
 /*
- * $Id: krisplookup.c,v 1.41 2010-06-15 18:55:15 oops Exp $
+ * $Id: krisplookup.c,v 1.42 2010-06-17 17:16:49 oops Exp $
  */
 
 #include <krisp.h>
@@ -92,11 +92,11 @@ int main (int argc, char ** argv) {
 	KR_API *		db;
 	KRNET_API		isp;
 	char *			ip;
-	int				opt, r;
+	int				opt;
 	char *			datafile = NULL;
 	short			onlyisp = 0;
 	short			onlynation = 0;
-	short			verbose = 0;
+	bool			verbose = false;
 	char			err[1024];
 
 #ifdef HAVE_GETOPT_LONG
@@ -123,7 +123,7 @@ int main (int argc, char ** argv) {
 				onlynation++;
 				break;
 			case 'v' :
-				verbose++;
+				set_true (verbose);
 				break;
 			default:
 				usage (PNAME);
@@ -136,7 +136,7 @@ int main (int argc, char ** argv) {
 	}
 
 	/* database open */
-	if ( (r = kr_open (&db, datafile, err)) > 0 ) {
+	if ( kr_open (&db, datafile, err) == false ) {
 		fprintf (stderr, "ERROR Connect: %s\n", err);
 		kr_close (db);
 		return 1;

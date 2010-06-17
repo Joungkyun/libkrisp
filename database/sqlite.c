@@ -1,5 +1,5 @@
 /*
- * $Id: sqlite.c,v 1.6 2010-06-07 11:31:27 oops Exp $
+ * $Id: sqlite.c,v 1.7 2010-06-17 17:16:49 oops Exp $
  *
  * libkrisp sqlite2 frontend API
  */
@@ -24,15 +24,15 @@ int kr_dbFree (KR_API *db) {
 	return 0;
 }
 
-int kr_dbConnect (KR_API *db, char *file) {
+bool kr_dbConnect (KR_API *db, char *file) {
 	db->c = sqlite_open ((file != NULL) ? file : DBPATH, 0644, &db->dberr);
 
 	if ( db->c == NULL ) {
 		kr_dbError (db);
-		return -1;
+		return false;
 	}
 
-	return 0;
+	return true;
 }
 
 int kr_dbQuery (KR_API *db, char * sql) {

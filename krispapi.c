@@ -1,5 +1,5 @@
 /*
- * $Id: krispapi.c,v 1.6 2010-06-15 18:55:15 oops Exp $
+ * $Id: krispapi.c,v 1.7 2010-06-17 17:16:49 oops Exp $
  */
 
 #include <stdio.h>
@@ -23,7 +23,7 @@ void initStruct (KRNET_API * n) { // {{{
 	strcpy (n->cname, "N/A");
 } // }}}
 
-void initRawStruct (RAW_KRNET_API * n, int mfree) { // {{{
+void initRawStruct (RAW_KRNET_API * n, bool mfree) { // {{{
 	memset (n->err, 0, 1);
 	//memset (n->ip, 0, 1);
 	n->start = 0;
@@ -199,7 +199,7 @@ void _safecpy (char * stor, char * str, int size) { // {{{
 
 void krisp_mutex_lock (KR_API * db) { // {{{
 #ifdef HAVE_PTHREAD_H
-	if ( ! db->threadsafe )
+	if ( db->threadsafe == false )
 		return;
 
 	if ( db->verbose )
@@ -212,7 +212,7 @@ void krisp_mutex_lock (KR_API * db) { // {{{
 
 void krisp_mutex_unlock (KR_API * db) { // {{{
 #ifdef HAVE_PTHREAD_H
-	if ( ! db->threadsafe )
+	if ( db->threadsafe == false )
 		return;
 
 	pthread_mutex_unlock (&krisp_mutex);
@@ -225,7 +225,7 @@ void krisp_mutex_unlock (KR_API * db) { // {{{
 
 void krisp_mutex_destroy (KR_API * db) { // {{{
 #ifdef HAVE_PTHREAD_H
-	if ( ! db->threadsafe )
+	if ( db->threadsafe == false )
 		return;
 
 	pthread_mutex_destroy (&krisp_mutex);

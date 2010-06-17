@@ -20,9 +20,8 @@ $id: $
 
        KR_API *db;
        char err[1024];
-       int r;
 
-       if ( (r = kr_open (&db, NULL, err)) ) {
+       if ( kr_open (&db, NULL, err) == false ) {
            fprintf (stderr, "ERROR Connect: %s\n", err);
            kr_close (db);
            return 1;
@@ -62,9 +61,8 @@ $id: $
 
        KR_API *db;
        char err[1024];
-       int r;
 
-       if ( (r = kr_open (&db, NULL, err)) ) {
+       if ( kr_open (&db, NULL, err) == false ) {
            fprintf (stderr, "ERROR Connect: %s\n", err);
            kr_close (db);
            return 1;

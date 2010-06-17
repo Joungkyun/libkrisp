@@ -1,5 +1,5 @@
 /*
- * $Id: sqlite3.c,v 1.9 2010-06-17 16:48:56 oops Exp $
+ * $Id: sqlite3.c,v 1.10 2010-06-17 17:16:49 oops Exp $
  *
  * libkrisp sqlite3 frontend API
  */
@@ -39,7 +39,7 @@ int kr_dbFree (KR_API *db) {
 	return 0;
 }
 
-int kr_dbConnect (KR_API *db, char *file) {
+bool kr_dbConnect (KR_API *db, char *file) {
 	char * errmsg;
 
 #if SQLITE_VERSION_NUMBER >= 3005000
@@ -58,7 +58,7 @@ int kr_dbConnect (KR_API *db, char *file) {
 
 	if ( db->r ) {
 		kr_dbError (db);
-		return -1;
+		return false;
 	}
 
 	sqlite3_busy_timeout (db->c, 500);
@@ -69,7 +69,7 @@ int kr_dbConnect (KR_API *db, char *file) {
 	);
 	sqlite3_free (errmsg);
 
-	return 0;
+	return true;
 }
 
 int kr_dbQuery (KR_API *db, char * sql) {

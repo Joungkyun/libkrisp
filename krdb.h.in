@@ -1,5 +1,5 @@
 /*
- * $Id: krdb.h.in,v 1.8 2010-06-15 18:55:15 oops Exp $
+ * $Id: krdb.h.in,v 1.9 2010-06-17 17:16:49 oops Exp $
  */
 
 #ifndef KRDB_H
@@ -11,7 +11,7 @@
 void	kr_dbError (KR_API *);
 void	kr_dbErrorClear (KR_API *);
 int		kr_dbFree (KR_API *);
-int		kr_dbConnect (KR_API *, char *);
+bool	kr_dbConnect (KR_API *, char *);
 int		kr_dbQuery (KR_API *, char *);
 int		kr_dbFetch (KR_API *);
 int		kr_dbExecute (KR_API *, char *);
