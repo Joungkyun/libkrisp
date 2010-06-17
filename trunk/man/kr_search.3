@@ -68,11 +68,10 @@ int main (void) {
     KR_API * db;
     KRNET_API isp;
     char * addr = "kns.kornet.net";
-    int r;
     char * database = NULL;
     char err[1024];
 
-    if ( (r = kr_open (&db, database, err)) > 0 ) {
+    if ( kr_open (&db, database, err) == false ) {
         fprintf (stderr, "ERROR Connect: %s\\n", err);
         kr_close (db);
         return 1;

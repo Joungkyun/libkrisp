@@ -1,5 +1,5 @@
 /*
- * $Id: thread_sample2.c,v 1.3 2010-06-17 16:20:23 oops Exp $
+ * $Id: thread_sample2.c,v 1.4 2010-06-17 17:16:49 oops Exp $
  */
 
 #include <krisp.h>
@@ -53,7 +53,7 @@ void * thread_main (void * arg) { // {{{
 	ip = long2ip (prand ());
 
 	/* database open */
-	if ( (r = kr_open (&db, NULL, err)) > 0 ) {
+	if ( kr_open (&db, NULL, err) == false ) {
 		fprintf (stderr, "ERROR Connect: %s\n", err);
 		kr_close (db);
 		pthread_exit ((void *) 0);

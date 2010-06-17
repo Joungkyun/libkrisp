@@ -1,5 +1,5 @@
 /*
- * $Id: ip2long.c,v 1.3 2010-06-15 18:55:15 oops Exp $
+ * $Id: ip2long.c,v 1.4 2010-06-17 17:16:49 oops Exp $
  */
 
 #include <krisp.h>
@@ -40,7 +40,7 @@ void usage (char * prog) { // {{{
 int main (int argc, char ** argv) {
 	char 			ip[256] = { 0, };
 	int				opt;
-	short			verbose = 0;
+	bool			verbose = false;
 	short			input;
 
 #ifdef HAVE_GETOPT_LONG
@@ -50,7 +50,7 @@ int main (int argc, char ** argv) {
 #endif
 		switch (opt) {
 			case 'v' :
-				verbose++;
+				set_true (verbose);
 				break;
 			default:
 				usage (PNAME);

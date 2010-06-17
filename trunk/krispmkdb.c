@@ -1,5 +1,5 @@
 /*
- * $Id: krispmkdb.c,v 1.13 2010-06-15 18:55:15 oops Exp $
+ * $Id: krispmkdb.c,v 1.14 2010-06-17 17:16:49 oops Exp $
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -194,7 +194,7 @@ int main (int argc, char ** argv) {
 	if ( check_csv (csv) )
 		return 1;
 
-	if ( (r = kr_open (&db, database, err)) > 0 ) {
+	if ( kr_open (&db, database, err) == false ) {
 		fprintf (stderr, "ERROR: DB connect failed (%s)\n", err);
 		kr_close (db);
 		return 1;

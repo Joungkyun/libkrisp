@@ -1,5 +1,5 @@
 /*
- * $Id: netcalc.c,v 1.3 2010-06-15 18:55:15 oops Exp $
+ * $Id: netcalc.c,v 1.4 2010-06-17 17:16:49 oops Exp $
  */
 
 #include <krisp.h>
@@ -71,7 +71,7 @@ int main (int argc, char ** argv) {
 	char *	pformat;
 	int		opt;
 	short	optno;
-	short	verbose = 0;
+	bool	verbose = false;
 	OPTV	optv;
 	RETV	r;
 
@@ -88,7 +88,7 @@ int main (int argc, char ** argv) {
 #endif
 		switch (opt) {
 			case 'v' :
-				verbose++;
+				set_true (verbose);
 				break;
 			case 'a' :
 				optv.broadcast++;
@@ -117,7 +117,7 @@ int main (int argc, char ** argv) {
 	}
 
 	if ( optv.shell )
-		verbose = 0;
+		verbose = false;
 
 	optno = argc - optind;
 	if ( optno < 1 || optno > 2 ) {

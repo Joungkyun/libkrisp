@@ -1,5 +1,5 @@
 /*
- * $Id: thread_sample1.c,v 1.2 2010-06-15 18:55:15 oops Exp $
+ * $Id: thread_sample1.c,v 1.3 2010-06-17 17:16:49 oops Exp $
  */
 
 #include <krisp.h>
@@ -35,7 +35,7 @@ int main (void) { // {{{
 
 	/* database open */
 	for ( i=0; i<THREAD_SIZE; i++ ) {
-		if ( (r = kr_open (&db[i], NULL, err)) > 0 ) {
+		if ( kr_open (&db[i], NULL, err) == false ) {
 			fprintf (stderr, "ERROR Connect: %s\n", err);
 
 			for ( r=0; r<=i; r++ )
