@@ -23,7 +23,6 @@ $id: $
 
        if ( kr_open (&db, NULL, err) == false ) {
            fprintf (stderr, "ERROR Connect: %s\n", err);
-           kr_close (db);
            return 1;
        }
 
@@ -64,7 +63,6 @@ $id: $
 
        if ( kr_open (&db, NULL, err) == false ) {
            fprintf (stderr, "ERROR Connect: %s\n", err);
-           kr_close (db);
            return 1;
        }
 

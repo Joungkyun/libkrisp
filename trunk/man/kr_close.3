@@ -29,7 +29,6 @@ int main (void) {
 
     if ( kr_open (&db, database, err) == false ) {
         fprintf (stderr, "ERROR Connect: %s\\n", err);
-        kr_close (db);
         return 1;
     }
 

@@ -1,5 +1,5 @@
 /*
- * $Id: krisp.c,v 1.83 2010-06-17 19:45:22 oops Exp $
+ * $Id: krisp.c,v 1.84 2010-06-18 13:53:21 oops Exp $
  */
 
 #include <stdio.h>
@@ -34,13 +34,13 @@ bool _kr_open (KR_API **db, char *file, char *err, bool safe) { // {{{
 	f.st_size = 0;
 	if ( stat (data, &f) == -1 ) {
 		sprintf (err, "kr_open:: Can't find database (%s)", data);
-		(*db)->c = NULL;
+		free (*db);
 		return false;
 	}
 
 	if ( f.st_size < 1 ) {
 		sprintf (err, "kr_open:: %s size is zero", data);
-		(*db)->c = NULL;
+		free (*db);
 		return false;
 	}
 
@@ -51,7 +51,7 @@ bool _kr_open (KR_API **db, char *file, char *err, bool safe) { // {{{
 
 	if ( kr_dbConnect (*db, data) == false ) {
 		SAFECPY_1024 (err, (*db)->err);
-		(*db)->c = NULL;
+		free (*db);
 		return false;
 	}
 
