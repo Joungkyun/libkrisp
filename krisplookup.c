@@ -1,5 +1,5 @@
 /*
- * $Id: krisplookup.c,v 1.44 2010-06-17 19:45:22 oops Exp $
+ * $Id: krisplookup.c,v 1.45 2010-06-18 13:53:21 oops Exp $
  */
 
 #include <krisp.h>
@@ -138,7 +138,6 @@ int main (int argc, char ** argv) {
 	/* database open */
 	if ( kr_open (&db, datafile, err) == false ) {
 		fprintf (stderr, "ERROR Connect: %s\n", err);
-		kr_close (db);
 		return 1;
 	}
 
