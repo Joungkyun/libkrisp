@@ -1,5 +1,5 @@
 /*
- * $Id: krispapi.h,v 1.4 2010-06-17 17:16:49 oops Exp $
+ * $Id: krispapi.h,v 1.5 2010-06-24 17:24:34 oops Exp $
  *
  * Notice: if return value of API that has '_f' prefix is not NULL,
  *         it is must free memory!
@@ -27,28 +27,28 @@ void initRawStruct (RAW_KRNET_API *, bool);
 /*
  * Fill none isp data
  */
-void kr_noneData (KRNET_API *);
+KR_LOCAL_API void kr_noneData (KRNET_API *);
 
 /*
  * Get ISP information of each network from db
  */
-int getISPinfo (KR_API *, RAW_KRNET_API *);
+KR_LOCAL_API int getISPinfo (KR_API *, RAW_KRNET_API *);
 
 /*
  * Seperate pipe data that has isp information
  *
  */
-int parseDummyData (char ***, char *, char delemeter);
+KR_LOCAL_API int parseDummyData (char ***, char *, char delemeter);
 
 /*
  * Convert character numeric to int numeric
  */
-int chartoint (char);
+KR_LOCAL_API int chartoint (char);
 
 /*
  * Convert numeric strings to long numeric
  */
-ulong strtolong (char *);
+KR_LOCAL_API ulong strtolong (char *);
 
 /*
  * Safe copy character
@@ -59,9 +59,9 @@ void _safecpy (char *, char *, int);
 /*
  * for thread safe
  */
-void krisp_mutex_lock (KR_API *);
-void krisp_mutex_unlock (KR_API *);
-void krisp_mutex_destroy (KR_API *);
+KR_LOCAL_API void krisp_mutex_lock (KR_API *);
+KR_LOCAL_API void krisp_mutex_unlock (KR_API *);
+KR_LOCAL_API void krisp_mutex_destroy (KR_API *);
 
 /*
  * Local variables:

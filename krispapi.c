@@ -1,5 +1,5 @@
 /*
- * $Id: krispapi.c,v 1.10 2010-06-24 16:52:38 oops Exp $
+ * $Id: krispapi.c,v 1.11 2010-06-24 17:24:34 oops Exp $
  */
 
 #include <stdio.h>
@@ -37,14 +37,14 @@ void initRawStruct (RAW_KRNET_API * n, bool mfree) { // {{{
 	n->dummy = NULL;
 } // }}}
 
-void kr_noneData (KRNET_API * n) { // {{{
+KR_LOCAL_API void kr_noneData (KRNET_API * n) { // {{{
 	strcpy (n->icode, "--");
 	strcpy (n->iname, "N/A");
 	strcpy (n->ccode, "--");
 	strcpy (n->cname, "N/A");
 } // }}}
 
-int getISPinfo (KR_API * db, RAW_KRNET_API * n) { // {{{
+KR_LOCAL_API int getISPinfo (KR_API * db, RAW_KRNET_API * n) { // {{{
 	ulong	longip;
 	char	sql[128] = { 0, };
 	int		r;
@@ -103,7 +103,7 @@ int getISPinfo (KR_API * db, RAW_KRNET_API * n) { // {{{
 	return 0;
 } // }}}
 
-int parseDummyData (char *** d, char * s, char delemeter) { // {{{
+KR_LOCAL_API int parseDummyData (char *** d, char * s, char delemeter) { // {{{
 	int		len = 0;
 	int		i, rlen;
 	char *	buf;
@@ -149,14 +149,14 @@ int parseDummyData (char *** d, char * s, char delemeter) { // {{{
 	return rlen;
 } // }}}
 
-int chartoint (char c) { // {{{
+KR_LOCAL_API int chartoint (char c) { // {{{
 	if (c > 47 && c < 58)
 		return c - 48;
 
 	return -1;
 } // }}}
 
-ulong strtolong (char * s) { // {{{
+KR_LOCAL_API ulong strtolong (char * s) { // {{{
 	int		len, i = 0, minus = 0, bufno = 0;
 	ulong	x = 1, res = 0;
 
@@ -197,7 +197,7 @@ void _safecpy (char * stor, char * str, int size) { // {{{
 	stor[size] = 0;
 } // }}}
 
-void krisp_mutex_lock (KR_API * db) { // {{{
+KR_LOCAL_API void krisp_mutex_lock (KR_API * db) { // {{{
 #ifdef HAVE_PTHREAD_H
 	if ( ! db->threadsafe )
 		return;
@@ -210,7 +210,7 @@ void krisp_mutex_lock (KR_API * db) { // {{{
 	return;
 } // }}}
 
-void krisp_mutex_unlock (KR_API * db) { // {{{
+KR_LOCAL_API void krisp_mutex_unlock (KR_API * db) { // {{{
 #ifdef HAVE_PTHREAD_H
 	if ( ! db->threadsafe )
 		return;
@@ -223,7 +223,7 @@ void krisp_mutex_unlock (KR_API * db) { // {{{
 	return;
 } // }}}
 
-void krisp_mutex_destroy (KR_API * db) { // {{{
+KR_LOCAL_API void krisp_mutex_destroy (KR_API * db) { // {{{
 #ifdef HAVE_PTHREAD_H
 	if ( ! db->threadsafe )
 		return;

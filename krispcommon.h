@@ -1,5 +1,5 @@
 /*
- * $Id: krispcommon.h,v 1.34 2010-06-18 13:07:14 oops Exp $
+ * $Id: krispcommon.h,v 1.35 2010-06-24 17:24:34 oops Exp $
  */
 
 #ifndef KR_COMMON_H
@@ -7,6 +7,16 @@
 
 #ifdef HAVE_CONFIG_H
 #include <krisp-config.h>
+#endif
+
+#if defined _WIN32 || defined __CYGWIN__
+	#define KR_LOCAL_API
+#else
+	#if defined(__GNUC__) && __GNUC__ >= 4
+		#define KR_LOCAL_API  __attribute__ ((visibility("hidden")))
+	#else
+		#define KR_LOCAL_API
+	#endif
 #endif
 
 #include <stdio.h>
