@@ -1,11 +1,12 @@
 Changelog
 
-$Id: Changes,v 1.94 2010-06-24 16:52:37 oops Exp $
+$Id: Changes,v 1.95 2010-06-24 17:24:34 oops Exp $
 
 * 3.0.0
 
 Fri, Jun 25 2010 JoungKyun.Kim <http://oops.org>
 	- rename internal api name
+	- make local symbol
 
 Thu, Jun 24 2010 JoungKyun.Kim <http://oops.org>
 	- support multiple build (make -j4)
