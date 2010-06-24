@@ -1,5 +1,5 @@
 /*
- * $Id: krisp.c,v 1.85 2010-06-24 16:52:37 oops Exp $
+ * $Id: krisp.c,v 1.86 2010-06-24 17:52:31 oops Exp $
  */
 
 #include <stdio.h>
@@ -17,7 +17,7 @@ char * krisp_uversion (void) { // {{{
 	return KRISP_UVERSION;
 } // }}}
 
-bool _kr_open (KR_API **db, char *file, char *err, bool safe) { // {{{
+KR_LOCAL_API bool _kr_open (KR_API **db, char *file, char *err, bool safe) { // {{{
 	struct stat		f;
 	char *			data;
 
