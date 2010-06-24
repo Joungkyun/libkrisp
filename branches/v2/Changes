@@ -1,6 +1,11 @@
 Changelog
 
-$Id: Changes,v 1.80.2.6 2010-06-06 18:35:07 oops Exp $
+$Id: Changes,v 1.80.2.7 2010-06-24 18:11:51 oops Exp $
+
+* 2.1.6
+Fri, Jun 25 2010 JoungKyun.Kim <http://oops.org>
+	- support multiple build (make -j4)
+
 
 * 2.1.5
 
