@@ -1,5 +1,5 @@
 /*
- * $Id: krispapi.c,v 1.9 2010-06-17 19:45:22 oops Exp $
+ * $Id: krispapi.c,v 1.10 2010-06-24 16:52:38 oops Exp $
  */
 
 #include <stdio.h>
@@ -49,7 +49,7 @@ int getISPinfo (KR_API * db, RAW_KRNET_API * n) { // {{{
 	char	sql[128] = { 0, };
 	int		r;
 
-	longip = ip2long (n->ip);
+	longip = _kr_ip2long (n->ip);
 
 	sprintf (
 		sql,

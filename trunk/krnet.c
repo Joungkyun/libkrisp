@@ -1,5 +1,5 @@
 /*
- * $Id: krnet.c,v 1.7 2010-06-15 18:55:15 oops Exp $
+ * $Id: krnet.c,v 1.8 2010-06-24 16:52:38 oops Exp $
  */
 
 #include <stdio.h>
@@ -12,7 +12,7 @@
 /*
  * check valid ip
  */
-short valid_address (char * addr) { // {{{
+short _kr_valid_ip_address (char * addr) { // {{{
 	struct hostent *	hp;
 	struct in_addr		s;
 
@@ -33,7 +33,7 @@ short valid_address (char * addr) { // {{{
  * Converts a string containing an (IPv4) Internet Protocol
  * dotted address into a proper address
  */
-ulong ip2long (char * ip) { // {{{
+ulong _kr_ip2long (char * ip) { // {{{
 	struct in_addr s;
 
 	if ( ! strlen (ip) || ! inet_aton (ip, &s) )
@@ -47,7 +47,7 @@ ulong ip2long (char * ip) { // {{{
  * The string is returned in a statically allocated buffer, which subsequent
  * calls will overwrite.
  */
-char * long2ip (ulong num) { // {{{
+char * _kr_long2ip (ulong num) { // {{{
 	struct in_addr	addr;
 
 	/*
@@ -63,7 +63,7 @@ char * long2ip (ulong num) { // {{{
  * convert long netmask to decimical prefix
  * from ipcalc from initscripts on redhat
  */
-short long2prefix (ulong mask) { // {{{
+short _kr_long2prefix (ulong mask) { // {{{
 	int	i;
 	int	count = IPBITS;
 
@@ -79,7 +79,7 @@ short long2prefix (ulong mask) { // {{{
  * convert network prefix to long mask
  * from ipcalc from initscripts on redhat
  */
-ulong prefix2long (short n) { // {{{
+ulong _kr_prefix2long (short n) { // {{{
 	short	l = 32;
 	short   shift = 30;
 	ulong	v = 0;
@@ -102,7 +102,7 @@ ulong prefix2long (short n) { // {{{
 /*
  * return netmask prefix with start ip and end ip
  */
-short guess_prefix (ulong s, ulong e) { // {{{
+short _kr_guess_prefix (ulong s, ulong e) { // {{{
 	ulong	n;
 	short	prefix = 0;
 
@@ -128,7 +128,7 @@ short guess_prefix (ulong s, ulong e) { // {{{
 		if ( n > 0 )
 			prefix--;
 
-		n = _broadcast (s, prefix2long (prefix));
+		n = _kr_broadcast (s, _kr_prefix2long (prefix));
 	}
 
 	return prefix;
@@ -137,14 +137,14 @@ short guess_prefix (ulong s, ulong e) { // {{{
 /*
  * return netmask with start ip and end ip
  */
-ulong guess_netmask (ulong s, ulong e) { // {{{
-	return prefix2long (guess_prefix (s, e));
+ulong _kr_guess_netmask (ulong s, ulong e) { // {{{
+	return _kr_prefix2long (_kr_guess_prefix (s, e));
 } // }}}
 
 /*
  * return netmask with network and broadcast address
  *
-ulong _netmask (ulong net, ulong bcast) { // {{{
+ulong _kr_netmask (ulong net, ulong bcast) { // {{{
 	return net + 0x80000000 - bcast;
 } // }}}
 */
@@ -152,14 +152,14 @@ ulong _netmask (ulong net, ulong bcast) { // {{{
 /*
  * return network
  */
-ulong _network (ulong ip, ulong mask) { // {{{
+ulong _kr_network (ulong ip, ulong mask) { // {{{
 	return ip & mask;
 } // }}}
 
 /*
  * return broadcast
  */
-ulong _broadcast (ulong ip, ulong mask) { // {{{
+ulong _kr_broadcast (ulong ip, ulong mask) { // {{{
 	return (ip & mask) | ~(mask);
 } // }}}
 

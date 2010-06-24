@@ -1,5 +1,5 @@
 /*
- * $Id: ip2long.c,v 1.6 2010-06-17 19:45:22 oops Exp $
+ * $Id: ip2long.c,v 1.7 2010-06-24 16:52:37 oops Exp $
  */
 
 #include <krisp.h>
@@ -65,7 +65,7 @@ int main (int argc, char ** argv) {
 	SAFECPY_256 (ip, argv[optind]);
 	input = (strchr (ip, '.') != NULL) ? IPv4 : LONGIP;
 
-	if ( valid_address (ip) ) {
+	if ( valid_ipv4_addr (ip) ) {
 		fprintf (stderr, "ERROR: %s is not IPv4 nor Long IP address\n", ip);
 		return 1;
 	}
@@ -78,7 +78,7 @@ int main (int argc, char ** argv) {
 	if ( verbose )
 		printf ("LONGIP : ");
 	if ( verbose || input == IPv4 )
-		printf ("%lu\n", ip2long (ip));
+		printf ("%lu\n", kr_ip2long (ip));
 
 	return 0;
 }
