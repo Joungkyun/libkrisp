@@ -1,5 +1,5 @@
 /*
- * $Id: netcalc.c,v 1.7 2010-06-24 16:52:38 oops Exp $
+ * $Id: netcalc.c,v 1.8 2010-06-24 18:41:38 oops Exp $
  */
 
 #include <krisp.h>
@@ -130,6 +130,7 @@ int main (int argc, char ** argv) {
 		 * Case IP/Prefix or IP/Netmask
 		 */
 		char *	mask;
+		char	_mask[256] = { 0, };
 
 		SAFECPY_256 (ip, argv[optind]);
 		if ( (mask = strchr (ip, '/')) == NULL ) {
@@ -137,6 +138,7 @@ int main (int argc, char ** argv) {
 			usage (PNAME);
 			return 1;
 		}
+		SAFECPY_256 (_mask, mask + 1);
 		*mask = 0;
 
 		if ( valid_ipv4_addr (ip) ) {
@@ -145,10 +147,7 @@ int main (int argc, char ** argv) {
 		}
 		r.start = kr_ip2long (ip);
 
-		if ( strchr (mask + 1, '.') ) {
-			char			_mask[256];
-
-			SAFECPY_256 (_mask, mask + 1);
+		if ( strchr (_mask, '.') ) {
 			if ( valid_ipv4_addr (_mask) ) {
 				fprintf (stderr, "ERROR: %s is not IPv4 nor Long IP address\n", _mask);
 				return 1;
@@ -157,11 +156,11 @@ int main (int argc, char ** argv) {
 			r.mask = kr_ip2long (_mask);
 			r.prefix = kr_long2prefix (r.mask);
 		} else {
-			r.prefix = atoi (mask + 1);
+			r.prefix = atoi (_mask);
 			if ( r.prefix > 32 || r.prefix < 0 ) {
 				fprintf (stderr,
 						"ERROR: %s is overflow or underflow on prefix range.\n",
-						mask + 1
+						_mask
 				);
 				return 1;
 			}
