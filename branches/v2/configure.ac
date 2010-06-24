@@ -1,7 +1,7 @@
 # Process this file with autoconf to produce a configure script.
 # Configure template for krisp library
 #
-# $Id: configure.ac,v 1.24.2.2 2010-06-06 18:40:57 oops Exp $
+# $Id: configure.ac,v 1.24.2.3 2010-06-24 18:14:38 oops Exp $
 
 #
 AC_PREREQ(2.59)
@@ -70,6 +70,8 @@ AC_PATH_PROG(MV, mv)
 if test ! -f "$ac_cv_path_MV"; then
 	AC_MSG_ERROR(Can't not found mv)
 fi
+
+AC_CHECK_LIB(dl, dlopen,,)
 
 if test "x$with_sqlite" != "x"; then
 	SEARCHPATH="$dbpath /usr /usr/local /opt"
