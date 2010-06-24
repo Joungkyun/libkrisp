@@ -1,5 +1,5 @@
 /*
- * $Id: netcalc.c,v 1.6 2010-06-17 19:45:22 oops Exp $
+ * $Id: netcalc.c,v 1.7 2010-06-24 16:52:38 oops Exp $
  */
 
 #include <krisp.h>
@@ -139,23 +139,23 @@ int main (int argc, char ** argv) {
 		}
 		*mask = 0;
 
-		if ( valid_address (ip) ) {
+		if ( valid_ipv4_addr (ip) ) {
 			fprintf (stderr, "ERROR: %s is not IPv4 nor Long IP address\n", ip);
 			return 1;
 		}
-		r.start = ip2long (ip);
+		r.start = kr_ip2long (ip);
 
 		if ( strchr (mask + 1, '.') ) {
 			char			_mask[256];
 
 			SAFECPY_256 (_mask, mask + 1);
-			if ( valid_address (_mask) ) {
+			if ( valid_ipv4_addr (_mask) ) {
 				fprintf (stderr, "ERROR: %s is not IPv4 nor Long IP address\n", _mask);
 				return 1;
 			}
 
-			r.mask = ip2long (_mask);
-			r.prefix = long2prefix (r.mask);
+			r.mask = kr_ip2long (_mask);
+			r.prefix = kr_long2prefix (r.mask);
 		} else {
 			r.prefix = atoi (mask + 1);
 			if ( r.prefix > 32 || r.prefix < 0 ) {
@@ -165,11 +165,11 @@ int main (int argc, char ** argv) {
 				);
 				return 1;
 			}
-			r.mask = prefix2long (r.prefix);
+			r.mask = kr_prefix2long (r.prefix);
 		}
 
-		r.network = _network (r.start, r.mask);
-		r.broadcast = r.end = _broadcast (r.start, r.mask);
+		r.network = kr_network (r.start, r.mask);
+		r.broadcast = r.end = kr_broadcast (r.start, r.mask);
 	} else {
 		/*
 		 * Case given range from start ip to end ip
@@ -187,18 +187,18 @@ int main (int argc, char ** argv) {
 		}
 
 		SAFECPY_256 (ip, argv[optind]);
-		if ( valid_address (ip) ) {
+		if ( valid_ipv4_addr (ip) ) {
 			fprintf (stderr, "ERROR: %s is not IPv4 nor Long IP address\n", ip);
 			return 1;
 		}
-		r.start = ip2long (ip);
+		r.start = kr_ip2long (ip);
 
 		SAFECPY_256 (ip, argv[optind + 1]);
-		if ( valid_address (ip) ) {
+		if ( valid_ipv4_addr (ip) ) {
 			fprintf (stderr, "ERROR: %s is not IPv4 nor Long IP address\n", ip);
 			return 1;
 		}
-		r.end = ip2long (ip);
+		r.end = kr_ip2long (ip);
 
 		if ( r.end < r.start ) {
 			r.mask = r.start;
@@ -206,39 +206,39 @@ int main (int argc, char ** argv) {
 			r.end = r.mask;
 		}
 
-		r.prefix = guess_prefix (r.start, r.end);
-		r.mask = prefix2long (r.prefix);
-		r.network = _network (r.start, r.mask);
-		r.broadcast= _broadcast (r.start, r.mask);
+		r.prefix = kr_prefix (r.start, r.end);
+		r.mask = kr_prefix2long (r.prefix);
+		r.network = kr_network (r.start, r.mask);
+		r.broadcast= kr_broadcast (r.start, r.mask);
 	}
 
 	postfix = optv.shell ? "=" : " : ";
 	pformat = optv.shell ? "%s%s" : "%-11s%s";
 
 	if ( verbose ) {
-		printf ("%-11s : %s - ", "GIVEN RANGE", long2ip (r.start));
-		printf ("%s\n", long2ip (r.end));
+		printf ("%-11s : %s - ", "GIVEN RANGE", kr_long2ip (r.start));
+		printf ("%s\n", kr_long2ip (r.end));
 	}
 
 	if ( optv.network ) {
 		if ( verbose || optv.shell )
 			printf (pformat, "NETWORK", postfix);
 
-		printf ("%s\n", long2ip (r.network));
+		printf ("%s\n", kr_long2ip (r.network));
 	}
 
 	if ( optv.broadcast ) {
 		if ( verbose || optv.shell )
 			printf (pformat, "BROADCAST", postfix);
 
-		printf ("%s\n", long2ip (r.broadcast));
+		printf ("%s\n", kr_long2ip (r.broadcast));
 	}
 
 	if ( optv.mask ) {
 		if ( verbose || optv.shell )
 			printf (pformat, "NETMASK", postfix);
 
-		printf ("%s\n", long2ip (r.mask));
+		printf ("%s\n", kr_long2ip (r.mask));
 	}
 
 	if ( optv.prefix ) {
