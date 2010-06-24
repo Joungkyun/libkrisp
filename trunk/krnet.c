@@ -1,8 +1,9 @@
 /*
- * $Id: krnet.c,v 1.8 2010-06-24 16:52:38 oops Exp $
+ * $Id: krnet.c,v 1.9 2010-06-24 17:06:20 oops Exp $
  */
 
 #include <stdio.h>
+#include <string.h>
 #include <netinet/in.h>
 #include <sys/socket.h>
 #include <arpa/inet.h>

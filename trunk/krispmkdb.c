@@ -1,5 +1,5 @@
 /*
- * $Id: krispmkdb.c,v 1.15 2010-06-18 13:53:21 oops Exp $
+ * $Id: krispmkdb.c,v 1.16 2010-06-24 17:06:20 oops Exp $
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -85,7 +85,7 @@ short put_data (KR_API * db, char * csv) { // {{{
 	char	sql[2048];
 	char	tmp[FILEBUF + 1];
 	char **	buf;
-	size_t	r, i;
+	int		r, i;
 	char *	quote_string;
 
 	if ( (fp = fopen (csv, "rb")) == NULL ) {
