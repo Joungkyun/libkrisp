@@ -1,8 +1,12 @@
 Changelog
 
-$Id: Changes,v 1.92 2010-06-18 13:53:21 oops Exp $
+$Id: Changes,v 1.93 2010-06-24 14:50:27 oops Exp $
 
 * 3.0.0
+
+Thu, Jun 24 2010 JoungKyun.Kim <http://oops.org>
+	- support multiple build (make -j4)
+	- fixed dl link error
 
 Fri, Jun 18 2010 JoungKyun.Kim <http://oops.org>
 	- fixed sqlite3_open_v2 compatibility problems under sqlite 3.5.0
