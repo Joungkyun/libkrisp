@@ -97,9 +97,8 @@ $id: $
             char            cname[64];
         } KRNET_API;
 
-    3.x 부터 verbose member가 추가 되었다. KRNET_API를 선언한 후, 사용 전에 꼭
-    verbose member를 0 또는 1로 초기화 해 주어야 한다. verbose member가 1로 설
-    정이 되면, debugging message가 출력이 된다.
+    3.x 부터 verbose member가 추가 되었다. KRNET_API를 선언한 후, verbose 멤버
+    를 1로 설정을 하면 debug message가 출력이 된다.
 
     또한, netmask의 type이 string에서 unsigned long type으로 변경이 되었으며,
     network, broadcast member가 제거되고 start, end member가 추가 되었다. 그러
