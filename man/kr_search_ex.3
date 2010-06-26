@@ -9,7 +9,7 @@ kr_search_ex - libkrisp database의 사용자 table을 제어 한다.
 .sp
 .BI "typedef struct raw_netinfos {"
 .br
-.BI "    short   "  verbose ";   // verbose option. need initialize"
+.BI "    bool    "  verbose ";   // verbose option. need initialize"
 .br
 .BI "    char    "  ip[16] ";    // given address"
 .br
@@ -63,7 +63,7 @@ API를 사용하기 위해서는 호출 전에
 .BI KR_API
 struct의 table member와
 .BI KRNET_API_EX
-struct의 verbose, ip member를 초기화 해 주어야 한다.
+struct의 ip member를 초기화 해 주어야 한다.
 
 .PP
 .BI kr_search_ex
@@ -80,8 +80,6 @@ API를 제공한다. loop에서
 를 호출해 주어야 한다.
 
 .PP
-.BI ""u_isp.verbose " = 0;"
-.br
 .BI "strcpy (" u_isp.ip ", " ipaddress ");"
 .br
 .BI ""db->table " = " user_define_table ";"
@@ -114,7 +112,7 @@ int main (void) {
         return 1;
     }
 
-    u_isp.verbose = 0;
+    u_isp.verbose = false;
     db->table = "geocipy";
 
     for ( r=0; r<2; r++ ) {

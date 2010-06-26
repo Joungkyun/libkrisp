@@ -1,5 +1,5 @@
 /*
- * $Id: krtest.c,v 1.10 2010-06-17 17:19:41 oops Exp $
+ * $Id: krtest.c,v 1.11 2010-06-26 18:11:00 oops Exp $
  */
 
 #include <krisp.h>
@@ -82,7 +82,7 @@ int main (int argc, char ** argv) {
 	char *			ip;
 	int				opt;
 	char *			datafile = NULL;
-	short			verbose = 0, dverbose = 0;
+	bool			verbose = false, dverbose = false;
 	int				loop = 0, unlimit =0;
 	int				i;
 	double			t1, t2;
@@ -98,14 +98,14 @@ int main (int argc, char ** argv) {
 				datafile = optarg;
 				break;
 			case 'v' :
-				verbose++;
+				verbose = true
 				break;
 			default:
 				usage (PNAME);
 		}
 	}
 
-	dverbose = (verbose > 1) ? 1 : 0;
+	dverbose = (verbose == true) ? true : false;
 
 	if ( argc - optind < 1 || argc == 1 ) {
 		usage (PNAME);

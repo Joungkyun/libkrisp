@@ -90,7 +90,7 @@ int main (void) {
         return 1;
     }
 
-    isp.verbose = 0;
+    isp.verbose = false;
     safecpy_256 (isp.ip, addr);
     if ( kr_search (&isp, db) ) {
         printf ("ERROR: %s\\n", isp.err);
