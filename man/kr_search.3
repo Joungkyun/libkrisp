@@ -9,15 +9,9 @@ kr_search - libkrisp database 에서 IP 에 대한 정보를 검색하여 반환
 .br
 .BI "typedef struct " netinfos " {"
 .br
-.BI "    bool            " verbose ";   // verbose option"
+.BI "    char            " err[1024] "; // get error messages"
 .br
 .BI "    char            " ip[256] ";   // given address"
-.br
-.BI "    ulong           " netmask ";   // network mask of range"
-.br
-.BI "    ulong           " start ";     // start of range"
-.br
-.BI "    ulong           " end ";       // end of range"
 .br
 .BI "    char            " icode[64] "; // ISP code"
 .br
@@ -27,7 +21,13 @@ kr_search - libkrisp database 에서 IP 에 대한 정보를 검색하여 반환
 .br
 .BI "    char            " cname[64] "; // NATION full name"
 .br
-.BI "    char            " err[1024] "; // get error messages"
+.BI "    ulong           " netmask ";   // network mask of range"
+.br
+.BI "    ulong           " start ";     // start of range"
+.br
+.BI "    ulong           " end ";       // end of range"
+.br
+.BI "    bool            " verbose ";   // verbose option"
 .br
 .BI "} " KRNET_API ";"
 .br
