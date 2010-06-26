@@ -1,5 +1,5 @@
 /*
- * $Id: krisp.h,v 1.22 2010-06-24 16:52:38 oops Exp $
+ * $Id: krisp.h,v 1.23 2010-06-26 07:14:42 oops Exp $
  */
 
 #ifndef KR_ISP_H
@@ -23,7 +23,7 @@ char * krisp_uversion (void);
  * open krisp database
  * int kr_open (KR_API **db, char *database, char *err);
  */
-bool _kr_open (KR_API **db, char *file, char *err, bool safe);
+KR_LOCAL_API bool _kr_open (KR_API **db, char *file, char *err, bool safe);
 bool kr_open (KR_API **, char *, char *);
 bool kr_open_safe (KR_API **, char *, char *);
 
