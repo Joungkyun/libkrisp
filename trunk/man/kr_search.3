@@ -9,7 +9,7 @@ kr_search - libkrisp database 에서 IP 에 대한 정보를 검색하여 반환
 .br
 .BI "typedef struct " netinfos " {"
 .br
-.BI "    short           " verbose ";   // verbose option"
+.BI "    bool            " verbose ";   // verbose option"
 .br
 .BI "    char            " ip[256] ";   // given address"
 .br
@@ -47,10 +47,8 @@ API를 제공한다. `man 3 kr_search_ex`를 참고하라.
 .BI kr_search
 API를 호출하기 전에
 .BI KRNET_API
-struct의 verbose member와 ip member를 꼭 초기화 해 주어야 한다.
+struct의 ip member를 꼭 초기화 해 주어야 한다.
 .PP
-.BI ""isp.verbose " = 0;"
-.br
 .BI "strcpy (" isp.ip ", " ipaddress ");"
 .br
 .BI "kr_search (&" isp ", " db ");"
@@ -76,7 +74,7 @@ int main (void) {
         return 1;
     }
 
-    isp.verbose = 0;
+    isp.verbose = false;
     // defined safecpy_256 in krispapi.h
     safecpy_256 (isp.ip, addr);
     if ( kr_search (&isp, db) ) {

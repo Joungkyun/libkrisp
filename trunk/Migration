@@ -98,7 +98,8 @@ $id: $
         } KRNET_API;
 
     3.x 부터 verbose member가 추가 되었다. KRNET_API를 선언한 후, verbose 멤버
-    를 1로 설정을 하면 debug message가 출력이 된다.
+    를 true로 설정을 하면 debug message가 출력이 된다. verbose member의 기본값
+    은 false 이다.
 
     또한, netmask의 type이 string에서 unsigned long type으로 변경이 되었으며,
     network, broadcast member가 제거되고 start, end member가 추가 되었다. 그러
@@ -119,7 +120,7 @@ $id: $
     는 다음과 같이 변경이 되어야 한다.
 
         KRNET_API isp;
-        isp.verbose = 0;
+        isp.verbose = false;
         // defined SAFECPY_256 in krisp.h
         SAFECPY_256 (isp.ip, addr);
         if ( kr_search (&isp, db) ) {

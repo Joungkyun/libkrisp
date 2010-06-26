@@ -32,7 +32,7 @@ int main (void) {
         return 1;
     }
 
-    isp.verbose = 0;
+    isp.verbose = false;
     // defined safecpy_256 in krispapi.h
     safecpy_256 (isp.ip, addr);
     if ( kr_search (&isp, db) ) {
