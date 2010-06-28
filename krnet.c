@@ -1,5 +1,5 @@
 /*
- * $Id: krnet.c,v 1.10 2010-06-28 17:00:15 oops Exp $
+ * $Id: krnet.c,v 1.11 2010-06-28 17:05:15 oops Exp $
  */
 
 #include <stdio.h>
@@ -16,8 +16,8 @@
 short _kr_valid_ip_address (char * addr, char * err) { // {{{
 	struct addrinfo hints, * r, * rp;
 	struct sockaddr_in *sin;
-	struct sockaddr_in6 *sin6;
-	int stat, br;
+	//struct sockaddr_in6 *sin6;
+	int stat;
 	char buf[256] = { 0, };
 
 	memset (err, 0, 1);
