@@ -7,7 +7,7 @@ valid_ipv4_addr \- (IPv4) ip 주소 또는 도메인 이름의 유효성을 확�
 .SH 사용법
 .BI "#include <krips.h>"
 .br
-.BI "short valid_ipv4_addr (char * " address ");"
+.BI "short valid_ipv4_addr (char * " address ", char * " err ");"
 
 .SH 설명
 .BI valid_ipv4_addr
@@ -30,12 +30,13 @@ argument를 도메인 이름으로 주었을 경우, 유효한 도메인일 경�
 int main (void) {
     //char addr[16] = "192.168.0.1";
     char addr[16] = "oops.org";
+	char err[1024];
     char ip[16] = { 0, };
     ulong r;
 
     strcpy (ip, addr);
-    if ( valid_ipv4_addr (ip) ) {
-        fprintf (stderr, "%s address is invalid\n", addr);
+    if ( valid_ipv4_addr (ip, err) ) {
+        fprintf (stderr, "%s -> %s\n", addr, err);
         return 1;
     }
 
