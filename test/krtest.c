@@ -1,5 +1,5 @@
 /*
- * $Id: krtest.c,v 1.11 2010-06-26 18:11:00 oops Exp $
+ * $Id: krtest.c,v 1.12 2010-06-28 18:52:23 oops Exp $
  */
 
 #include <krisp.h>
@@ -98,7 +98,7 @@ int main (int argc, char ** argv) {
 				datafile = optarg;
 				break;
 			case 'v' :
-				verbose = true
+				verbose = true;
 				break;
 			default:
 				usage (PNAME);
