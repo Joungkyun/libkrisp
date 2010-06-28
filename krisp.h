@@ -1,5 +1,5 @@
 /*
- * $Id: krisp.h,v 1.23 2010-06-26 07:14:42 oops Exp $
+ * $Id: krisp.h,v 1.24 2010-06-28 17:00:15 oops Exp $
  */
 
 #ifndef KR_ISP_H
@@ -44,7 +44,7 @@ int kr_search_ex (KRNET_API_EX *, KR_API *);
 
 /*
  * Valid IPv4 address
- * short valid_ipv4_addr (char *ip)
+ * short valid_ipv4_addr (char * ip, char * err)
  */
 #define valid_ipv4_addr _kr_valid_ip_address
 

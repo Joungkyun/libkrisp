@@ -1,8 +1,11 @@
 Changelog
 
-$Id: Changes,v 1.97 2010-06-26 18:04:37 oops Exp $
+$Id: Changes,v 1.98 2010-06-28 17:00:15 oops Exp $
 
 * 3.0.0
+
+Tue, Jun 29 2010 JoungKyun.Kim <http://oops.org>
+	- rewrite _kr_valid_ip_address and change proto type
 
 Sun, Jun 27 2010 JoungKyun.Kim <http://oops.org>
 	- initialize verbose member of KRNET_API(_ex) on kr_search(_ex) API
