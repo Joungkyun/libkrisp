@@ -1,5 +1,5 @@
 /*
- * $Id: thread_sample.c,v 1.8 2010-06-26 18:11:00 oops Exp $
+ * $Id: thread_sample.c,v 1.9 2010-06-28 18:54:45 oops Exp $
  */
 
 #include <krisp.h>
@@ -69,7 +69,7 @@ void * thread_main (void * arg) { // {{{
 
 	tno = (int) ((tArg *) arg)->no;
 
-	ip = long2ip (prand ());
+	ip = kr_long2ip (prand ());
 
 	isp.verbose = false;
 	((tArg *) arg)->db->verbose= false;

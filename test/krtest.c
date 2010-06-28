@@ -1,5 +1,5 @@
 /*
- * $Id: krtest.c,v 1.12 2010-06-28 18:52:23 oops Exp $
+ * $Id: krtest.c,v 1.13 2010-06-28 18:54:45 oops Exp $
  */
 
 #include <krisp.h>
@@ -132,7 +132,7 @@ int main (int argc, char ** argv) {
 	t1 = microtime ();
 
 	for ( i=0; i<loop; ) {
-		ip = long2ip (prand ());
+		ip = kr_long2ip (prand ());
 
 		SAFECPY_256 (isp.ip, ip);
 		if ( kr_search (&isp, db) ) {
