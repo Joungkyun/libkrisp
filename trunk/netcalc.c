@@ -1,5 +1,5 @@
 /*
- * $Id: netcalc.c,v 1.8 2010-06-24 18:41:38 oops Exp $
+ * $Id: netcalc.c,v 1.9 2010-06-28 17:00:16 oops Exp $
  */
 
 #include <krisp.h>
@@ -67,6 +67,7 @@ typedef struct resutls_value {
 
 int main (int argc, char ** argv) {
 	char 	ip[256] = { 0, };
+	char	err[1024];
 	char *	postfix;
 	char *	pformat;
 	int		opt;
@@ -141,15 +142,15 @@ int main (int argc, char ** argv) {
 		SAFECPY_256 (_mask, mask + 1);
 		*mask = 0;
 
-		if ( valid_ipv4_addr (ip) ) {
-			fprintf (stderr, "ERROR: %s is not IPv4 nor Long IP address\n", ip);
+		if ( valid_ipv4_addr (ip, err) ) {
+			fprintf (stderr, "ERROR: %s -> %s\n", ip, err);
 			return 1;
 		}
 		r.start = kr_ip2long (ip);
 
 		if ( strchr (_mask, '.') ) {
-			if ( valid_ipv4_addr (_mask) ) {
-				fprintf (stderr, "ERROR: %s is not IPv4 nor Long IP address\n", _mask);
+			if ( valid_ipv4_addr (_mask, err) ) {
+				fprintf (stderr, "ERROR: %s ->\n", _mask, err);
 				return 1;
 			}
 
@@ -186,15 +187,15 @@ int main (int argc, char ** argv) {
 		}
 
 		SAFECPY_256 (ip, argv[optind]);
-		if ( valid_ipv4_addr (ip) ) {
-			fprintf (stderr, "ERROR: %s is not IPv4 nor Long IP address\n", ip);
+		if ( valid_ipv4_addr (ip, err) ) {
+			fprintf (stderr, "ERROR: %s -> %s\n", ip, err);
 			return 1;
 		}
 		r.start = kr_ip2long (ip);
 
 		SAFECPY_256 (ip, argv[optind + 1]);
-		if ( valid_ipv4_addr (ip) ) {
-			fprintf (stderr, "ERROR: %s is not IPv4 nor Long IP address\n", ip);
+		if ( valid_ipv4_addr (ip, err) ) {
+			fprintf (stderr, "ERROR: %s -> %s\n", ip, err);
 			return 1;
 		}
 		r.end = kr_ip2long (ip);

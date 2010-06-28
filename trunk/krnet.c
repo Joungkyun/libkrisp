@@ -1,5 +1,5 @@
 /*
- * $Id: krnet.c,v 1.9 2010-06-24 17:06:20 oops Exp $
+ * $Id: krnet.c,v 1.10 2010-06-28 17:00:15 oops Exp $
  */
 
 #include <stdio.h>
@@ -13,21 +13,49 @@
 /*
  * check valid ip
  */
-short _kr_valid_ip_address (char * addr) { // {{{
-	struct hostent *	hp;
-	struct in_addr		s;
+short _kr_valid_ip_address (char * addr, char * err) { // {{{
+	struct addrinfo hints, * r, * rp;
+	struct sockaddr_in *sin;
+	struct sockaddr_in6 *sin6;
+	int stat, br;
+	char buf[256] = { 0, };
 
-	hp = gethostbyname (addr);
+	memset (err, 0, 1);
+	memset (&hints, 0, sizeof (hints));
+	hints.ai_family = AF_UNSPEC;
 
-	if ( hp && *(hp->h_addr_list) ) {
-		memcpy(&s.s_addr, *(hp->h_addr_list), sizeof(s.s_addr));
-		strcpy (addr, inet_ntoa (s));
+	if ( (stat = getaddrinfo (addr, NULL, &hints, &r)) != 0 ) {
+		strcpy (err, gai_strerror (stat));
+		memset (addr, 0, strlen (addr));
+		return 1;
 	}
 
-	if ( inet_addr (addr) == -1 )
-		return 1;
+	memset (addr, 0, strlen (addr));
+	for ( rp = r; rp != NULL; rp = rp->ai_next ) {
+		switch ( rp->ai_family ) {
+			case AF_INET :
+				sin = (void *) rp->ai_addr;
+				inet_ntop (rp->ai_family, &sin->sin_addr, buf, sizeof (buf));
+				strcpy (addr, buf);
+				freeaddrinfo (r);
+				return 0;
+				break;
+			case AF_INET6 :
+				/*
+				sin6 = (void *) rp->ai_addr;
+				inet_ntop (rp->ai_family, &sin6->sin6_addr, buf, sizeof (buf));
+				strcpy (addr, buf);
+				*/
+				strcpy (err, "This is IPv6 address");
+				freeaddrinfo (r);
+				return 1;
+				break;
+		}
+	}
 
-	return 0;
+	freeaddrinfo (r);
+
+	return 1;
 } // }}}
 
 /*
