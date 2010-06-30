@@ -1,5 +1,5 @@
 /*
- * $Id: krisp.c,v 1.90 2010-06-30 14:38:54 oops Exp $
+ * $Id: krisp.c,v 1.91 2010-06-30 15:12:06 oops Exp $
  */
 
 #include <stdio.h>
@@ -95,7 +95,7 @@ int kr_search (KRNET_API *isp, KR_API *db) { // {{{
 		isp->verbose = 0;
 
 	if ( valid_ipv4_addr (isp->ip, err) ) {
-		initRawStruct (&raw, false);
+		SAFECPY_1024 (isp->err, err);
 		krisp_mutex_unlock (db);
 		return 0;
 	}
@@ -104,8 +104,6 @@ int kr_search (KRNET_API *isp, KR_API *db) { // {{{
 	db->verbose = isp->verbose;
 	strcpy (raw.ip, isp->ip);
 	if ( (r = getISPinfo (db, &raw)) != 0 ) {
-		initRawStruct (&raw, true);
-
 		// SQL error
 		if ( r == -1 ) {
 			SAFECPY_1024 (isp->err, db->err);
@@ -179,7 +177,7 @@ int kr_search_ex (KRNET_API_EX *raw, KR_API *db) { // {{{
 	initRawStruct (raw, false);
 
 	if ( valid_ipv4_addr (raw->ip, err) ) {
-		initRawStruct (raw, false);
+		SAFECPY_1024 (raw->err, err);
 		db->table = "krisp";
 		krisp_mutex_unlock (db);
 		return 0;
@@ -190,8 +188,6 @@ int kr_search_ex (KRNET_API_EX *raw, KR_API *db) { // {{{
 	db->verbose = raw->verbose;
 
 	if ( (r = getISPinfo (db, raw)) != 0 ) {
-		initRawStruct (raw, true);
-
 		// SQL error
 		if ( r == -1 ) {
 			SAFECPY_1024 (raw->err, db->err);
