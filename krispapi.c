@@ -1,5 +1,5 @@
 /*
- * $Id: krispapi.c,v 1.12 2010-06-30 14:37:21 oops Exp $
+ * $Id: krispapi.c,v 1.13 2010-06-30 15:23:29 oops Exp $
  */
 
 #include <stdio.h>
@@ -7,10 +7,6 @@
 #include <string.h>
 
 #include <krispapi.h>
-
-#ifdef HAVE_PTHREAD_H
-pthread_mutex_t krisp_mutex = PTHREAD_MUTEX_INITIALIZER;
-#endif
 
 void initStruct (KRNET_API * n) { // {{{
 	memset (n->err, 0, 1);
@@ -204,7 +200,7 @@ KR_LOCAL_API void krisp_mutex_lock (KR_API * db) { // {{{
 
 	if ( db->verbose )
 		fprintf (stderr, "DEBUG: Thread Mutex is locked\n");
-	pthread_mutex_lock (&krisp_mutex);
+	pthread_mutex_lock (&(db->mutex));
 #endif
 
 	return;
@@ -215,7 +211,7 @@ KR_LOCAL_API void krisp_mutex_unlock (KR_API * db) { // {{{
 	if ( ! db->threadsafe )
 		return;
 
-	pthread_mutex_unlock (&krisp_mutex);
+	pthread_mutex_unlock (&(db->mutex));
 	if ( db->verbose )
 		fprintf (stderr, "DEBUG: Thread Mutex is unlocked\n");
 #endif
@@ -228,7 +224,7 @@ KR_LOCAL_API void krisp_mutex_destroy (KR_API * db) { // {{{
 	if ( ! db->threadsafe )
 		return;
 
-	pthread_mutex_destroy (&krisp_mutex);
+	pthread_mutex_destroy (&(db->mutex));
 	if ( db->verbose )
 		fprintf (stderr, "DEBUG: Thread Mutex destory\n");
 #endif
