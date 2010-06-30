@@ -1,5 +1,5 @@
 /*
- * $Id: krispapi.c,v 1.11 2010-06-24 17:24:34 oops Exp $
+ * $Id: krispapi.c,v 1.12 2010-06-30 14:37:21 oops Exp $
  */
 
 #include <stdio.h>
@@ -29,12 +29,12 @@ void initRawStruct (RAW_KRNET_API * n, bool mfree) { // {{{
 	n->start = 0;
 	n->end   = 0;
 	n->size  = 0;
-	if ( mfree && n->dummydata != NULL )
-		free (n->dummydata);
-	n->dummydata = NULL;
 	if ( mfree && n->dummy != NULL )
 		free (n->dummy);
 	n->dummy = NULL;
+	if ( mfree && n->dummydata != NULL )
+		free (n->dummydata);
+	n->dummydata = NULL;
 } // }}}
 
 KR_LOCAL_API void kr_noneData (KRNET_API * n) { // {{{
