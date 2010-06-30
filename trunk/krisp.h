@@ -1,5 +1,5 @@
 /*
- * $Id: krisp.h,v 1.24 2010-06-28 17:00:15 oops Exp $
+ * $Id: krisp.h,v 1.25 2010-06-30 14:38:54 oops Exp $
  */
 
 #ifndef KR_ISP_H
@@ -59,9 +59,11 @@ int kr_search_ex (KRNET_API_EX *, KR_API *);
  * Converts IPv4 address into a string in Internet standard dotted format
  * The string is returned in a statically allocated buffer, which subsequent
  * calls will overwrite.
- * char * kr_long2ip (ulong ip)
+ * char * kr_long2ip (ulong long_ip)
+ * void kr_long2ip_r (ulong src_ip, char * dest_ip)
  */
 #define kr_long2ip _kr_long2ip
+#define kr_long2ip_r _kr_long2ip_r
 
 /*
  * convert prefix to long

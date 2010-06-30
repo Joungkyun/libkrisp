@@ -1,5 +1,5 @@
 /*
- * $Id: krnet.h,v 1.7 2010-06-28 17:00:16 oops Exp $
+ * $Id: krnet.h,v 1.8 2010-06-30 14:38:54 oops Exp $
  */
 
 #ifndef KRNET_H
@@ -8,6 +8,7 @@
 short	_kr_valid_ip_address (char *, char *);
 ulong	_kr_ip2long (char *);
 char *	_kr_long2ip (ulong);
+char *	_kr_long2ip_r (ulong, char *);
 
 short	_kr_long2prefix (ulong);
 ulong	_kr_prefix2long (short);
