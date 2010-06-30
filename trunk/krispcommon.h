@@ -1,5 +1,5 @@
 /*
- * $Id: krispcommon.h,v 1.38 2010-06-30 18:40:34 oops Exp $
+ * $Id: krispcommon.h,v 1.39 2010-06-30 19:05:42 oops Exp $
  */
 
 #ifndef KR_COMMON_H
@@ -70,9 +70,9 @@ typedef struct db_argument {
 #endif
 	int				rows;	// vm rows
 	int				cols;	// number of columns
-	bool			verbose;
+	short			verbose;
 #ifdef HAVE_PTHREAD_H
-	bool			threadsafe;
+	short			threadsafe;
 #endif
 	short			r;		// execute result code
 	short			final;  // force finalize
@@ -85,7 +85,7 @@ typedef struct raw_netinfos {
 	char *			dummydata;
 	ulong			start;
 	ulong			end;
-	bool			verbose;
+	short			verbose;
 	short			size;
 } RAW_KRNET_API;
 
@@ -101,7 +101,7 @@ typedef struct netinfos {
 	ulong			netmask;
 	ulong			start;
 	ulong			end;
-	bool			verbose;
+	short			verbose;
 } KRNET_API;
 
 struct cinfo {
