@@ -1,5 +1,5 @@
 #!/bin/sh
-# $Id: krisp-config.in,v 1.2 2006-06-09 04:35:08 oops Exp $
+# $Id: krisp-config.in,v 1.3 2010-06-30 19:46:04 oops Exp $
 
 prefix="@prefix@"
 exec_prefix="@exec_prefix@"
@@ -51,7 +51,7 @@ while test $# -gt 0; do
 			if test "${includedir}" != "/usr/include" ; then
 				includes="-I${includedir}"
 			fi
-			echo -n " -DHAVE_CONFIG_H $includes"
+			echo -n " @KR_DEFS@ $includes"
 			;;
 		--libs)
 			echo -n " -L${libdir} -l@prog@ ${dependency_libs}"
