@@ -1,11 +1,8 @@
 Changelog
 
-$Id: Changes,v 1.101 2010-06-30 18:28:01 oops Exp $
+$Id: Changes,v 1.102 2010-06-30 18:40:34 oops Exp $
 
 * 3.0.0
-
-Thu, Jul  1 2010 JoungKyun.Kim <http://oops.org>
-	- fixed thread/sqlite3 segfault
 
 Wed, Jun 30 2020 JoungKyun.Kim <http://oops.org>
 	- add kr_long2ip_r api for thread safe
