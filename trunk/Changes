@@ -1,11 +1,12 @@
 Changelog
 
-$Id: Changes,v 1.99 2010-06-30 14:38:54 oops Exp $
+$Id: Changes,v 1.100 2010-06-30 15:23:29 oops Exp $
 
 * 3.0.0
 
 Wed, Jun 30 2020 JoungKyun.Kim <http://oops.org>
 	- add kr_long2ip_r api for thread safe
+	- changed mutex lock per db constructor
 
 Tue, Jun 29 2010 JoungKyun.Kim <http://oops.org>
 	- rewrite _kr_valid_ip_address and change proto type

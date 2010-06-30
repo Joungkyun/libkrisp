@@ -1,5 +1,5 @@
 /*
- * $Id: krisp.c,v 1.91 2010-06-30 15:12:06 oops Exp $
+ * $Id: krisp.c,v 1.92 2010-06-30 15:23:29 oops Exp $
  */
 
 #include <stdio.h>
@@ -46,6 +46,7 @@ KR_LOCAL_API bool _kr_open (KR_API **db, char *file, char *err, bool safe) { // 
 
 #ifdef HAVE_PTHREAD_H
 	(*db)->threadsafe = safe;
+	pthread_mutex_init (&((*db)->mutex), NULL);
 #endif
 	(*db)->verbose = false;
 

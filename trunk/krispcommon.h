@@ -1,5 +1,5 @@
 /*
- * $Id: krispcommon.h,v 1.35 2010-06-24 17:24:34 oops Exp $
+ * $Id: krispcommon.h,v 1.36 2010-06-30 15:23:29 oops Exp $
  */
 
 #ifndef KR_COMMON_H
@@ -51,6 +51,9 @@ typedef enum {
 
 typedef struct db_argument {
 	char 			err[1024];
+#ifdef HAVE_PTHREAD_H
+	pthread_mutex_t	mutex;
+#endif
 #if defined(HAVE_LIBSQLITE3)
 	sqlite3	*		c;		// db resource
 	sqlite3_stmt *	vm;		// sqlite vm
