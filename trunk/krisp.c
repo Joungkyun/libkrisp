@@ -1,5 +1,5 @@
 /*
- * $Id: krisp.c,v 1.92 2010-06-30 15:23:29 oops Exp $
+ * $Id: krisp.c,v 1.93 2010-06-30 18:30:11 oops Exp $
  */
 
 #include <stdio.h>
@@ -46,7 +46,8 @@ KR_LOCAL_API bool _kr_open (KR_API **db, char *file, char *err, bool safe) { // 
 
 #ifdef HAVE_PTHREAD_H
 	(*db)->threadsafe = safe;
-	pthread_mutex_init (&((*db)->mutex), NULL);
+	if ( (*db)->threadsafe == true )
+		pthread_mutex_init (&((*db)->mutex), NULL);
 #endif
 	(*db)->verbose = false;
 
@@ -174,6 +175,10 @@ int kr_search_ex (KRNET_API_EX *raw, KR_API *db) { // {{{
 	int		r;
 	char	err[1024];
 
+	if ( raw->verbose != 0 && raw->verbose != 1 )
+		raw->verbose = 0;
+	db->verbose = raw->verbose;
+
 	krisp_mutex_lock (db);
 	initRawStruct (raw, false);
 
@@ -183,10 +188,6 @@ int kr_search_ex (KRNET_API_EX *raw, KR_API *db) { // {{{
 		krisp_mutex_unlock (db);
 		return 0;
 	}
-
-	if ( raw->verbose != 0 && raw->verbose != 1 )
-		raw->verbose = 0;
-	db->verbose = raw->verbose;
 
 	if ( (r = getISPinfo (db, raw)) != 0 ) {
 		// SQL error
