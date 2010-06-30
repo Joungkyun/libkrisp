@@ -1,7 +1,7 @@
 # Process this file with autoconf to produce a configure script.
 # Configure template for krisp library
 #
-# $Id: configure.ac,v 1.29 2010-06-24 14:50:27 oops Exp $
+# $Id: configure.ac,v 1.30 2010-06-30 19:46:04 oops Exp $
 
 #
 AC_PREREQ(2.59)
@@ -112,8 +112,14 @@ fi
 
 AC_CHECK_LIB(sqlite3, sqlite3_open,,)
 
-if test "$ac_cv_lib_sqlite3_sqlite3_open" != "yes"; then
-	AC_CHECK_LIB(sqlite, sqlite_open,,[AC_MSG_ERROR([Can't not found sqlte library (-lsqlite)])])
+if test "$ac_cv_lib_sqlite3_sqlite3_open" = "yes"; then
+	KR_DEFS="$KR_DEFS -DHAVE_LIBSQLITE3"
+else
+	AC_CHECK_LIB(
+		sqlite, sqlite_open, ,
+		[AC_MSG_ERROR([Can't not found sqlte library (-lsqlite)])]
+	)
+	KR_DEFS="$KR_DEFS -DHAVE_LIBSQLITE"
 fi
 
 if test "x$with_libiconv" != "x"; then
@@ -125,11 +131,18 @@ if test "x$with_libiconv" != "x"; then
 		export CPPFLAGS="$CPPFLAGS -I$with_libiconv/include"
 	fi
 
-	AC_CHECK_LIB(iconv, libiconv_open,,
-	[ AC_MSG_ERROR([Can not find libiconv library (-liconv)])])
+	AC_CHECK_LIB(
+		iconv, libiconv_open,,
+		[ AC_MSG_ERROR([Can not find libiconv library (-liconv)])]
+	)
 fi
 
 AC_CHECK_LIB(pthread, pthread_create,,,)
+if test "x$ac_cv_lib_pthread_pthread_create" != "x"; then
+	KR_DEFS="$KR_DEFS -DHAVE_PTHREAD_H"
+fi
+
+AC_SUBST(KR_DEFS)
 
 # Checks for header files.
 AC_HEADER_STDC
