@@ -1,5 +1,5 @@
 /*
- * $Id: krisp.c,v 1.93 2010-06-30 18:30:11 oops Exp $
+ * $Id: krisp.c,v 1.94 2010-06-30 18:59:34 oops Exp $
  */
 
 #include <stdio.h>
@@ -86,15 +86,15 @@ int kr_search (KRNET_API *isp, KR_API *db) { // {{{
 	int				r;
 	char			err[1024];
 
+	if ( isp->verbose != 0 && isp->verbose != 1 )
+		isp->verbose = 0;
+
 	krisp_mutex_lock (db);
 	db->table = "krisp";
 
 	memset (raw.ip, 0, 1);
 	initRawStruct (&raw, false);
 	initStruct (isp);
-
-	if ( isp->verbose != 0 && isp->verbose != 1 )
-		isp->verbose = 0;
 
 	if ( valid_ipv4_addr (isp->ip, err) ) {
 		SAFECPY_1024 (isp->err, err);
