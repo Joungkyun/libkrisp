@@ -1,13 +1,13 @@
 /*
- * $Id: krispcommon.h,v 1.37 2010-06-30 18:27:32 oops Exp $
+ * $Id: krispcommon.h,v 1.38 2010-06-30 18:40:34 oops Exp $
  */
 
 #ifndef KR_COMMON_H
 #define KR_COMMON_H
 
-//#ifdef HAVE_CONFIG_H
+#ifdef HAVE_CONFIG_H
 #include <krisp-config.h>
-//#endif
+#endif
 
 #if defined _WIN32 || defined __CYGWIN__
 	#define KR_LOCAL_API
