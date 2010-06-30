@@ -1,5 +1,5 @@
 /*
- * $Id: krisp.c,v 1.89 2010-06-28 17:00:15 oops Exp $
+ * $Id: krisp.c,v 1.90 2010-06-30 14:38:54 oops Exp $
  */
 
 #include <stdio.h>
@@ -121,10 +121,11 @@ int kr_search (KRNET_API *isp, KR_API *db) { // {{{
 	isp->netmask = kr_netmask (raw.start, raw.end);
 
 	if ( isp->verbose ) {
+		char sip[16] = { 0, };
 		fprintf (stderr, "DEBUG: IP    => %-15s (%lu)\n", isp->ip, kr_ip2long (isp->ip));
-		fprintf (stderr, "DEBUG: START => %-15s (%lu)\n", kr_long2ip (isp->start), isp->start);
-		fprintf (stderr, "DEBUG: END   => %-15s (%lu)\n", kr_long2ip (isp->end), isp->end);
-		fprintf (stderr, "DEBUG: MASK  => %-15s (%lu)\n", kr_long2ip (isp->netmask), isp->netmask);
+		fprintf (stderr, "DEBUG: START => %-15s (%lu)\n", kr_long2ip_r (isp->start, sip), isp->start);
+		fprintf (stderr, "DEBUG: END   => %-15s (%lu)\n", kr_long2ip_r (isp->end, sip), isp->end);
+		fprintf (stderr, "DEBUG: MASK  => %-15s (%lu)\n", kr_long2ip_r (isp->netmask, sip), isp->netmask);
 	}
 
 jumpNet:
@@ -202,10 +203,11 @@ int kr_search_ex (KRNET_API_EX *raw, KR_API *db) { // {{{
 
 	if ( raw->verbose ) {
 		ulong netmask = kr_netmask (raw->start, raw->end);
+		char sip[16] = { 0, };
 		fprintf (stderr, "DEBUG: IP    => %-15s (%lu)\n", raw->ip, kr_ip2long (raw->ip));
-		fprintf (stderr, "DEBUG: START => %-15s (%lu)\n", kr_long2ip (raw->start), raw->start);
-		fprintf (stderr, "DEBUG: END   => %-15s (%lu)\n", kr_long2ip (raw->end), raw->end);
-		fprintf (stderr, "DEBUG: MASK  => %-15s (%lu)\n", kr_long2ip (netmask), netmask);
+		fprintf (stderr, "DEBUG: START => %-15s (%lu)\n", kr_long2ip_r (raw->start, sip), raw->start);
+		fprintf (stderr, "DEBUG: END   => %-15s (%lu)\n", kr_long2ip_r (raw->end, sip), raw->end);
+		fprintf (stderr, "DEBUG: MASK  => %-15s (%lu)\n", kr_long2ip_r (netmask, sip), netmask);
 	}
 
 	/*

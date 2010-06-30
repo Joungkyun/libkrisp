@@ -1,5 +1,5 @@
 /*
- * $Id: krnet.c,v 1.11 2010-06-28 17:05:15 oops Exp $
+ * $Id: krnet.c,v 1.12 2010-06-30 14:38:54 oops Exp $
  */
 
 #include <stdio.h>
@@ -85,6 +85,25 @@ char * _kr_long2ip (ulong num) { // {{{
 	*/
 	addr.s_addr = htonl (num);
 	return inet_ntoa (addr);
+} // }}}
+
+/*
+ * Converts IPv4 address into a string in Internet standard dotted format.
+ * This is thread safe. dest size is bigger than 16.
+ */
+char * _kr_long2ip_r (ulong num, char * dest) { // {{{
+	short ip[4] = { 0, 0, 0, 0 };
+	short i;
+
+	memset (dest, 0, 16);
+
+	for ( i=3; i>=0; i--) {
+		ip[i] = num % 256;
+		num /= 256;
+	}
+
+	sprintf (dest, "%d.%d.%d.%d", ip[0], ip[1], ip[2], ip[3]);
+	return dest;
 } // }}}
 
 #define IPBITS (sizeof(u_int32_t) * 8)
