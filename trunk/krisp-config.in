@@ -1,11 +1,11 @@
 #!/bin/sh
-# $Id: krisp-config.in,v 1.3 2010-06-30 19:46:04 oops Exp $
+# $Id: krisp-config.in,v 1.4 2010-07-01 17:11:12 oops Exp $
 
 prefix="@prefix@"
 exec_prefix="@exec_prefix@"
 exec_prefix_set=no
 includedir="@includedir@"
-la_file="@libdir@/lib@prog@.la"
+la_file="@libdir@/lib@PROG@.la"
 
 usage="\
 Usage: krisp-config [--prefix] [--exec-prefix] [--version] [--libs] [--defs] [--cflags]"
@@ -41,7 +41,7 @@ while test $# -gt 0; do
 			echo -n " $exec_prefix"
 			;;
 		--version)
-			echo "@VERSION@"
+			echo "@PACKAGE_VERSION@"
 			exit 0
 			;;
 		--cflags)
@@ -54,7 +54,7 @@ while test $# -gt 0; do
 			echo -n " @KR_DEFS@ $includes"
 			;;
 		--libs)
-			echo -n " -L${libdir} -l@prog@ ${dependency_libs}"
+			echo -n " -L${libdir} -l@PROG@ ${dependency_libs}"
 			;;
 		*)
 			echo "${usage}" 1>&2

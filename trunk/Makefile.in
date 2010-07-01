@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 1.31 2010-06-30 19:46:04 oops Exp $
+# $Id: Makefile.in,v 1.32 2010-07-01 17:11:11 oops Exp $
 srcdir          = @srcdir@
 top_srcdir      = @top_srcdir@
 builddir        = @builddir@
@@ -64,43 +64,35 @@ MAN1            = krisplookup krispmkdb ip2long netcalc
 MAN3            = krisp_version kr_open kr_close kr_search kr_search_ex kr_ip2long kr_long2ip kr_prefix2long kr_netmask
 
 
-all: $(OBJECT) $(UTIL_OBJ) $(PROG)-config $(PROG)-spec
+all: $(OBJECT) $(UTIL_OBJ)
 	$(MAKE) libs
 	$(PLINK) -o $(PROG)lookup $(PROG)lookup.lo libkrisp.la
 	$(PLINK) -o $(PROG)mkdb $(PROG)mkdb.lo $(OBJECT) $(LDFLAGS)
 	$(PLINK) -o ip2long ip2long.lo libkrisp.la
 	$(PLINK) -o netcalc netcalc.lo libkrisp.la
 
-krdb.lo: krdb.c database/sqlite.c database/sqlite3.c krdb.h.in krispcommon.h
-	$(INSTALL) -m644 krdb.h.in krdb.h
-	$(PERL) -pi -e 's!\@dbpath\@!$(datadir)/krisp!g' krdb.h
+krdb.lo: krdb.c database/sqlite.c database/sqlite3.c krdb.h krispcommon.h
 	$(COMPILE) -o $@ -c $<
 
-krispapi.lo: krispapi.c krdb.h.in krispapi.h krispcommon.h
-	@while test ! -f krdb.h; do sleep 1; done
+krispapi.lo: krispapi.c krdb.h krispapi.h krispcommon.h
 	$(COMPILE) -o $@ -c $<
 
-krisp.lo: krisp.c krdb.h.in krisp.h krispapi.h krispcommon.h
-	@while test ! -f krdb.h; do sleep 1; done
+krisp.lo: krisp.c krdb.h krisp.h krispapi.h krispcommon.h
 	$(COMPILE) -o $@ -c $<
 
 krnet.lo: krnet.c krnet.h
 	$(COMPILE) -o $@ -c $<
 
-krisplookup.lo: krisplookup.c krisp.h krdb.h.in krispapi.h krispcommon.h
-	@while test ! -f krdb.h; do sleep 1; done
+krisplookup.lo: krisplookup.c krisp.h krdb.h krispapi.h krispcommon.h
 	$(COMPILE) -o $@ -c $<
 
-krispmkdb.lo: krispmkdb.c krispcommon.h krisp.h krdb.h.in krispapi.h
-	@while test ! -f krdb.h; do sleep 1; done
+krispmkdb.lo: krispmkdb.c krispcommon.h krisp.h krdb.h krispapi.h
 	$(COMPILE) -o $@ -c $<
 
-ip2long.lo: ip2long.c krnet.h krdb.h.in krispapi.h
-	@while test ! -f krdb.h; do sleep 1; done
+ip2long.lo: ip2long.c krnet.h krdb.h krispapi.h
 	$(COMPILE) -o $@ -c $<
 
 netcalc.lo: netcalc.c krnet.h krispapi.h
-	@while test ! -f krdb.h; do sleep 1; done
 	$(COMPILE) -o $@ -c $<
 
 libs:
@@ -111,22 +103,6 @@ libs:
 
 data:
 	./krispmkdb -c db/krisp.csv -t krisp -y db/krisp.dat
-
-krisp-config:
-	$(INSTALL) -m755 $(PROG)-config.in $(PROG)-config ; \
-	$(PERL) -pi -e "s!\@prefix\@!$(prefix)!g" $(PROG)-config ; \
-	$(PERL) -pi -e "s!\@exec_prefix\@!$(exec_prefix)!g" $(PROG)-config ; \
-	$(PERL) -pi -e "s!\@VERSION\@!$(VERSION)!g" $(PROG)-config ; \
-	$(PERL) -pi -e "s!\@includedir\@!$(includedir)!g" $(PROG)-config ; \
-	$(PERL) -pi -e "s!\@libdir\@!$(libdir)!g" $(PROG)-config ; \
-	$(PERL) -pi -e "s!\@CFLAGS\@!$(CFLAGS)!g" $(PROG)-config ; \
-	$(PERL) -pi -e "s!\@KR_DEFS\@!$(KR_DEFS)!g" $(PROG)-config ; \
-	$(PERL) -pi -e "s!\@prog\@!$(PROG)!g" $(PROG)-config ; \
-
-krisp-spec:
-	$(INSTALL) -m644 lib$(PROG).spec.in lib$(PROG).spec
-	$(PERL) -pi -e "s!\@date\@!`LANG= date +"%a %b %d %Y"`!g" lib$(PROG).spec
-	$(PERL) -pi -e "s!\@version\@!$(VERSION)!g" lib$(PROG).spec
 
 install: install-header install-data install-man
 	$(MKDIR) $(DESTDIR)$(bindir)
@@ -166,9 +142,15 @@ test: all
 
 clean:
 	-$(RM) -r *.o *.lo* *.la* $(PROG)lookup $(PROG)mkdb ip2long netcalc
-	-$(RM) -r .libs $(PROG)-config krdb.h lib$(PROG).spec db/$(PROG).dat
+	-$(RM) -r .libs db/$(PROG).dat
 	make -C test clean
 
 distclean: clean
-	-$(RM) -r libtool config.log config.status Makefile
+	for i in `ls *.in`; \
+	do \
+		rmfiles=`echo $$i | sed 's/\.in$$//g'`; \
+		$(RM) -r $$rmfiles; \
+	done
+	-$(RM) -r krispcommon.h krdb.h $(PROG)-config
+	-$(RM) -r libtool config.log config.status
 	-$(RM) -r $(PROG)-config.h *~ test/Makefile

@@ -1,11 +1,11 @@
 /*
- * $Id: krdb.h.in,v 1.9 2010-06-17 17:16:49 oops Exp $
+ * $Id: krdb.h.in,v 1.10 2010-07-01 17:11:12 oops Exp $
  */
 
 #ifndef KRDB_H
 #define KRDB_H
 
-#define DBROOT "@dbpath@"
+#define DBROOT "@DBPATH@"
 #define DBPATH DBROOT "/krisp.dat"
 
 void	kr_dbError (KR_API *);

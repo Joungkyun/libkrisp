@@ -1,13 +1,13 @@
 # Process this file with autoconf to produce a configure script.
 # Configure template for krisp library
 #
-# $Id: configure.ac,v 1.30 2010-06-30 19:46:04 oops Exp $
+# $Id: configure.ac,v 1.31 2010-07-01 17:11:11 oops Exp $
 
 #
 AC_PREREQ(2.59)
 AC_INIT([krisp], [3.0.0], [http://oops.org])
 AC_CONFIG_SRCDIR([krisp.h])
-AC_CONFIG_HEADER([krisp-config.h])
+AC_CONFIG_HEADER([krisp-config.h krispcommon.h])
 AC_PREFIX_DEFAULT([/usr/local])
 
 AC_SUBST(SONAME_INFO)
@@ -142,7 +142,8 @@ if test "x$ac_cv_lib_pthread_pthread_create" != "x"; then
 	KR_DEFS="$KR_DEFS -DHAVE_PTHREAD_H"
 fi
 
-AC_SUBST(KR_DEFS)
+DBPATH=$(eval echo ${datadir}/krisp)
+AC_SUBST(DBPATH)
 
 # Checks for header files.
 AC_HEADER_STDC
@@ -150,6 +151,9 @@ AC_HEADER_STDC
 AC_CHECK_HEADERS([arpa/inet.h getopt.h netinet/in.h stdio.h stdlib.h \
 					string.h sys/socket.h sqlite3.h sqlite.h iconv.h \
 					stdbool.h pthread.h])
+AC_CHECK_HEADER([stdbool.h], [KR_DEFS="$KR_DEFS -DHAVE_STDBOOL_H"])
+
+AC_SUBST(KR_DEFS)
 
 # Checks for typedefs, structures, and compiler characteristics.
 AC_C_CONST
@@ -161,5 +165,5 @@ AC_FUNC_MALLOC
 AC_FUNC_STAT
 AC_CHECK_FUNCS([getopt_long])
 
-AC_CONFIG_FILES([Makefile test/Makefile])
+AC_CONFIG_FILES([Makefile test/Makefile krisp-config krdb.h libkrisp.spec])
 AC_OUTPUT
