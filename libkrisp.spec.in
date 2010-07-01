@@ -4,7 +4,7 @@
 Summary: Korean ISP library
 Summary(ko): 한국 ISP 라이브러리
 Name: libkrisp
-Version: @version@
+Version: @PACKAGE_VERSION@
 Release: 1
 Epoch: 1
 License: LGPL
@@ -43,8 +43,14 @@ rm -rf %{buildroot}
 
 %{__make} %{?_smp_mflags}
 
+#
 # create database
-%{__make} data
+#
+#{__make} data
+pushd db
+[ -f krisp.dat ] && %{__rm} -f krisp.dat
+sqlite3 krisp.dat < table
+popd
 
 %install
 %{__make} DESTDIR=%{buildroot} install
@@ -64,7 +70,7 @@ rm -rf %{buildroot}
 %{_bindir}/krispmkdb
 %{_libdir}/libkrisp.so.*
 %attr (0644, root, root) %{_datadir}/krisp/*.dat
-%{_mandir}/ko/man1/*.1*
+%attr (0644, root, root) %{_mandir}/ko/man1/*.1*
 
 %files devel
 %defattr(0644,root,root,0755)
@@ -76,6 +82,6 @@ rm -rf %{buildroot}
 %{_mandir}/ko/man3/*.3*
 
 %changelog
-* @date@ JoungKyun.Kim <http://oops.org> - @version@
-- release @version@
+* Fri Jul  2 2010 JoungKyun.Kim <http://oops.org> - @PACKAGE_VERSION@-1
+- release @PACKAGE_VERSION@
 

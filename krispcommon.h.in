@@ -1,12 +1,25 @@
 /*
- * $Id: krispcommon.h,v 1.39 2010-06-30 19:05:42 oops Exp $
+ * $Id: krispcommon.h.in,v 1.1 2010-07-01 17:12:01 oops Exp $
  */
 
 #ifndef KR_COMMON_H
 #define KR_COMMON_H
 
 #ifdef HAVE_CONFIG_H
-#include <krisp-config.h>
+	#include <krisp-config.h>
+#else
+	#ifndef HAVE_LIBSQLITE3
+		#undef HAVE_LIBSQLITE3
+	#endif
+	#ifndef HAVE_LIBSQLITE
+		#undef HAVE_LIBSQLITE
+	#endif
+	#ifndef HAVE_PTHREAD_H
+		#undef HAVE_PTHREAD_H
+	#endif
+	#ifndef HAVE_STDBOOL_H
+		#undef HAVE_STDBOOL_H
+	#endif
 #endif
 
 #if defined _WIN32 || defined __CYGWIN__
@@ -24,25 +37,36 @@
 #include <string.h>
 
 #ifdef HAVE_PTHREAD_H
-#include <pthread.h>
+	#include <pthread.h>
 #endif
 
 #if defined(HAVE_LIBSQLITE3)
-#include <sqlite3.h>
+	#include <sqlite3.h>
 #else
-#include <sqlite.h>
+	#include <sqlite.h>
 #endif
 
 #ifdef HAVE_STDBOOL_H
-#include <stdbool.h>
+	#include <stdbool.h>
 #else
-typedef enum {
-	false = 0,
-	true  = 1
-} bool;
+	#ifndef __cplusplus
 
-#define false false
-#define true true
+		#define bool    _Bool
+		#define true    1
+		#define false   0
+
+	#else /* __cplusplus */
+
+		/* Supporting <stdbool.h> in C++ is a GCC extension.  */
+		#define _Bool   bool
+		#define bool    bool
+		#define false   false
+		#define true    true
+
+	#endif /* __cplusplus */
+
+	/* Signal that all the definitions are present.  */
+	#define __bool_true_false_are_defined   1
 #endif
 
 #define set_true(x) (x = true)
