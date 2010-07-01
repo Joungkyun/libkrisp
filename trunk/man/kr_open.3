@@ -46,8 +46,11 @@ kr_open - libkrisp 의 database 를 연다.
 .BI "    const char **   " colname ";"
 .br
 .BI "} " KR_API ";"
-.br
+.PP
 .BI "bool kr_open (KR_API **" db ", char *" path ", char *" err ")"
+.br
+.BI "bool kr_open_safe (KR_API **" db ", char *" path ", char *" err ")"
+.PP
 .SH 설명
 .BI kr_open
 API는 libkrisp 를 링크하여 databse 파일을 열기 위해 사용한다.
@@ -71,6 +74,14 @@ structure 는 krispcommon.h 에 정의가 되어 있으며, kr_open 을 호출�
 .BI "    .."
 .br
 .BI "}"
+.PP
+.BI kr_open
+api 대신
+.BI kr_open_safe
+api를 호출하면
+.BI kr_search
+api가 실행을 할 때 thread lock을 걸게 된다. 이와 관련해서는 libkrisp의 thread
+문서를 참조 하도록 한다.
 .PP
 .SH 반환값
 성공시에 true를 반환하며, 실패시에 false를 반환한다.

@@ -8,14 +8,26 @@ kr_long2ip \- Long IP를 (IPv4) ip 주소로 변환
 .BI "#include <krips.h>"
 .br
 .BI "char * kr_long2ip (ulong " longip ");"
-
+.br
+.BI "char * kr_long2ip_r (ulong " longip ", char * " dest ");"
+.PP
 .SH 설명
 .BI kr_long2ip
 API는 Long IP(unsigned long type)을 (IPv4) 인터넷 주소(ip address)로 변환을 한다.
 .PP
 .BI kr_long2ip
 API는 정적으로 할당된 버퍼를 반환하기 때문에, 다음에 호출될 때 이 버퍼를
-덮어씌우게 되는 것을 주의 하십시오.
+덮어씌우게 되는 것을 주의해야 한다.
+.PP
+.BI kr_long2ip
+API가 정적 버퍼를 사용하기 때문에 thread safe 문제가 발생할 수 있다. 이를 위하여
+.BI kr_long2_ip_r
+API를 제공한다.
+.BI kr_long2ip_r
+API의 사용법은
+.BI kr_long2ip
+와 동일하지만, 2번째 인자로 buffer를 직접 제공한다는 점에서 차이가 있다. 아래의
+예제를 참조 하도록 한다.
 
 .SH 반환값
 .PP
@@ -24,6 +36,9 @@ API는 정적으로 할당된 버퍼를 반환하기 때문에, 다음에 호출
 값을 반환하며, 실패시에
 .BI "0.0.0.0"
 을 반환한다.
+.br
+.BI kr_long2ip_r
+의 반환값은 2번째 인자에 할당되는 값과 동일하다.
 
 .SH 예제
 .nf
@@ -32,9 +47,14 @@ API는 정적으로 할당된 버퍼를 반환하기 때문에, 다음에 호출
 int main (void) {
     ulong addr = 3232235521;
     char * ip;
+    char buf[16];
 
     ip = kr_long2ip (addr);
-    printf ("IPv4 addr: %s\n", ip);
+    printf ("%s IPv4 addr: %s\\n", addr, ip);
+
+    kr_long2ip_r (addr, buf);
+    printf ("%s IPv4 addr: %s\\n, addr, buf);
+    printf ("%s IPv4 addr: %s\\n", addr, kr_long2ip_r (addr));
 
     return 0;
 }
