@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 1.5 2010-07-01 17:11:12 oops Exp $
+# $Id: Makefile.in,v 1.6 2010-07-01 17:31:14 oops Exp $
 srcdir          = @srcdir@
 top_srcdir      = ..
 builddir        = @builddir@
@@ -44,13 +44,13 @@ PLINK           = $(LIBTOOL) --mode=link $(CC_OPT) -rpath $(libdir)
 COMPILE         = $(LIBTOOL) --mode=compile $(CC_OPT) $(DEFS) -prefer-pic
 
 all: $(TEST_OBJ)
-	$(PLINK) -o krtest krispexlookup.lo ../libkrisp.la
+	$(PLINK) -o krispexlookup krispexlookup.lo ../libkrisp.la
 	$(PLINK) -o krtest krtest.lo ../libkrisp.la
 	$(PLINK) -o thread_sample thread_sample.lo ../libkrisp.la
 	$(PLINK) -o thread_sample1 thread_sample1.lo ../libkrisp.la
 	$(PLINK) -o thread_sample2 thread_sample2.lo ../libkrisp.la
 
-krispexlookup.lo: krtest.c $(REQ_HEADER)
+krispexlookup.lo: krispexlookup.c $(REQ_HEADER)
 	$(COMPILE) -o $@ -c $<
 
 krtest.lo: krtest.c $(REQ_HEADER)
