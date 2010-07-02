@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 1.6 2010-07-01 17:31:14 oops Exp $
+# $Id: Makefile.in,v 1.7 2010-07-02 18:16:45 oops Exp $
 srcdir          = @srcdir@
 top_srcdir      = ..
 builddir        = @builddir@
@@ -67,5 +67,5 @@ thread_sample2.lo: thread_sample2.c $(REQ_HEADER)
 
 clean:
 	-$(RM) -r *.o *.lo* *.la* krtest thread_sample
-	-$(RM) -r thread_sample1 thread_sample2
+	-$(RM) -r thread_sample1 thread_sample2 krispexlookup
 	-$(RM) -r .libs
