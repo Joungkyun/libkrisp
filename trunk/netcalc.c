@@ -1,5 +1,5 @@
 /*
- * $Id: netcalc.c,v 1.9 2010-06-28 17:00:16 oops Exp $
+ * $Id: netcalc.c,v 1.10 2010-07-16 11:45:29 oops Exp $
  */
 
 #include <krisp.h>
@@ -150,7 +150,7 @@ int main (int argc, char ** argv) {
 
 		if ( strchr (_mask, '.') ) {
 			if ( valid_ipv4_addr (_mask, err) ) {
-				fprintf (stderr, "ERROR: %s ->\n", _mask, err);
+				fprintf (stderr, "ERROR: %s -> %s\n", _mask, err);
 				return 1;
 			}
 
