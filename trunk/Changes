@@ -1,10 +1,11 @@
 Changelog
 
-$Id: Changes,v 1.104 2010-07-16 09:58:07 oops Exp $
+$Id: Changes,v 1.105 2010-07-16 09:58:45 oops Exp $
 
 * 3.0.0
 
 Fri, Jul 16 2010 JoungKyun.Kim <http://oops.org>
+	- release 3.0.0
 	- update database on july
 
 Fri, Jul  2 2010 JoungKyun.Kim <http://oops.org>
