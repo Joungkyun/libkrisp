@@ -1,7 +1,7 @@
 #!/usr/bin/php
 <?php
 #
-# $Id: krisp-data.php,v 1.1 2010-06-07 11:31:27 oops Exp $
+# $Id: krisp-data.php,v 1.2 2010-07-16 09:38:42 oops Exp $
 #
 # get Korea ISP information to text format and make krisp database sql
 #
@@ -48,6 +48,7 @@ Class KRNIC_KRISP // {{{
 			return 2;
 
 		foreach ( $raw_r as $raw_e ) {
+			$raw_e = iconv ('cp949', 'utf8', $raw_e);
 			$e = explode ("\t", trim ($raw_e));
 			$key = self::inet_aton ($e[3]);
 			$raw[$key] = array (self::inet_aton ($e[4]), $e[2], $e[1], $e[0]);
