@@ -1,10 +1,12 @@
 Changelog
 
-$Id: Changes,v 1.106 2010-08-02 17:36:41 oops Exp $
+$Id: Changes,v 1.107 2010-08-02 17:38:32 oops Exp $
 
 * 3.0.1
+
 Tue, Aug  3 2010 JoungKyun.Kim <http://oops.org>
 	- moved header files to %includedir/krisp
+
 
 * 3.0.0
 
@@ -58,7 +60,6 @@ Tue, Jun  8 2010 JoungKyun.Kim <http://oops.org>
 	- changed frontend api from function to define
 
 Sat, May 22 2010 JoungKyun.Kim <http://oops.org>
-	- release 3.0.0
 	- changed query algoritm
 	- changed database structure
 	- support internal geoip/geoipisp database
