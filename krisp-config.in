@@ -1,5 +1,5 @@
 #!/bin/sh
-# $Id: krisp-config.in,v 1.8 2010-08-02 17:51:01 oops Exp $
+# $Id: krisp-config.in,v 1.9 2010-08-02 17:56:53 oops Exp $
 
 prefix="@prefix@"
 exec_prefix="@exec_prefix@"
@@ -8,7 +8,7 @@ includedir="@includedir@"
 la_file="@libdir@/lib@PACKAGE_NAME@.la"
 
 usage="\
-Usage: krisp-config [--prefix] [--exec-prefix] [--version] [--libs] [--link] [--deps] [--cflags]"
+Usage: krisp-config [--prefix] [--exec-prefix] [--version] [--libs] [--link] [--defs] [--cflags]"
 
 if test $# -eq 0; then
 	echo "${usage}" 1>&2
@@ -47,7 +47,7 @@ while test $# -gt 0; do
 		--cflags)
 			echo -n " @CFLAGS@"
 			;;
-		--deps)
+		--defs)
 			includes="-I${includedir}/krisp"
 			echo -n " @KR_DEFS@ $includes"
 			;;
