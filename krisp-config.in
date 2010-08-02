@@ -1,5 +1,5 @@
 #!/bin/sh
-# $Id: krisp-config.in,v 1.5 2010-07-01 18:11:30 oops Exp $
+# $Id: krisp-config.in,v 1.6 2010-08-02 17:36:41 oops Exp $
 
 prefix="@prefix@"
 exec_prefix="@exec_prefix@"
@@ -48,9 +48,7 @@ while test $# -gt 0; do
 			echo -n " @CFLAGS@"
 			;;
 		--defs)
-			if test "${includedir}" != "/usr/include" ; then
-				includes="-I${includedir}"
-			fi
+			includes="-I${includedir}/krisp"
 			echo -n " @KR_DEFS@ $includes"
 			;;
 		--libs)

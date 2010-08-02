@@ -1,6 +1,10 @@
 Changelog
 
-$Id: Changes,v 1.105 2010-07-16 09:58:45 oops Exp $
+$Id: Changes,v 1.106 2010-08-02 17:36:41 oops Exp $
+
+* 3.0.1
+Tue, Aug  3 2010 JoungKyun.Kim <http://oops.org>
+	- moved header files to %includedir/krisp
 
 * 3.0.0
 
