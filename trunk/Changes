@@ -1,12 +1,14 @@
 Changelog
 
-$Id: Changes,v 1.108 2010-08-02 17:49:59 oops Exp $
+$Id: Changes,v 1.109 2010-08-02 17:51:01 oops Exp $
 
 * 3.0.1
 
 Tue, Aug  3 2010 JoungKyun.Kim <http://oops.org>
 	- moved header files to %includedir/krisp
-	- removed dependency library on --libs and, add --link for dependency library
+	- removed dependency library on --libs and, add --link for dependency
+	  library on krisp-config
+	- typo fixed defs to deps on krisp-config
 
 
 * 3.0.0
