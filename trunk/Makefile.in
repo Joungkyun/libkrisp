@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 1.32 2010-07-01 17:11:11 oops Exp $
+# $Id: Makefile.in,v 1.33 2010-08-02 17:36:41 oops Exp $
 srcdir          = @srcdir@
 top_srcdir      = @top_srcdir@
 builddir        = @builddir@
@@ -132,9 +132,9 @@ install-man:
 	done
 
 install-header:
-	$(MKDIR) $(DESTDIR)$(includedir)
+	$(MKDIR) $(DESTDIR)$(includedir)/krisp
 	for i in $(HEADER_NAME); do \
-		$(D_LIBTOOL) $$i.h $(DESTDIR)$(includedir)/ ; \
+		$(D_LIBTOOL) $$i.h $(DESTDIR)$(includedir)/krisp/ ; \
 	done
 
 test: all
