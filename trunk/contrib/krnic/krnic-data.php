@@ -2,7 +2,7 @@
 <?php
 /*
  *
- * $Id: krnic-data.php,v 1.2 2010-07-16 12:24:37 oops Exp $
+ * $Id: krnic-data.php,v 1.3 2010-08-04 03:38:32 oops Exp $
  *
  * get KRNIC's Korea IP and ISP information
  *
@@ -51,7 +51,8 @@ class nDom {
 		$f = self::$MODE ? KRISP_DATA : KRIP_DATA;
 
 		#$context = file_get_contents ($f);
-		$context = KRNIC_data::get ($f);
+		#$context = KRNIC_data::get ($f);
+		$context = KRNIC_data::getPage ($f);
 		if ( $context === FALSE ) {
 			error_log ("ERROR: URL open failed ($f)", 0);
 			exit (1);
