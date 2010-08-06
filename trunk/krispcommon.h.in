@@ -1,5 +1,5 @@
 /*
- * $Id: krispcommon.h.in,v 1.1 2010-07-01 17:12:01 oops Exp $
+ * $Id: krispcommon.h.in,v 1.2 2010-08-06 19:24:48 oops Exp $
  */
 
 #ifndef KR_COMMON_H
@@ -49,24 +49,27 @@
 #ifdef HAVE_STDBOOL_H
 	#include <stdbool.h>
 #else
-	#ifndef __cplusplus
+	#ifndef _STDBOOL_H
+		#define _STDBOOL_H
+		#ifndef __cplusplus
 
-		#define bool    _Bool
-		#define true    1
-		#define false   0
+			#define bool    _Bool
+			#define true    1
+			#define false   0
 
-	#else /* __cplusplus */
+		#else /* __cplusplus */
 
-		/* Supporting <stdbool.h> in C++ is a GCC extension.  */
-		#define _Bool   bool
-		#define bool    bool
-		#define false   false
-		#define true    true
+			/* Supporting <stdbool.h> in C++ is a GCC extension.  */
+			#define _Bool   bool
+			#define bool    bool
+			#define false   false
+			#define true    true
 
-	#endif /* __cplusplus */
+		#endif /* __cplusplus */
 
-	/* Signal that all the definitions are present.  */
-	#define __bool_true_false_are_defined   1
+		/* Signal that all the definitions are present.  */
+		#define __bool_true_false_are_defined   1
+	#endif
 #endif
 
 #define set_true(x) (x = true)
