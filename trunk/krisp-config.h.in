@@ -1,5 +1,5 @@
 /* krisp-config.h.in.  Generated from configure.ac by autoheader.  */
-/* $Id: krisp-config.h.in,v 1.20 2010-07-01 17:11:12 oops Exp $ */
+/* $Id: krisp-config.h.in,v 1.21 2010-08-07 17:21:22 oops Exp $ */
 #ifndef KRISP_CONFIG_H
 #define KRISP_CONFIG_H
 
@@ -51,6 +51,9 @@
 
 /* Define to 1 if you have the `iconv' library (-liconv). */
 #undef HAVE_LIBICONV
+
+/* Define to 1 if you have the `ipcalc' library (-lipcalc). */
+#undef HAVE_LIBIPCALC
 
 /* Define to 1 if you have the `pthread' library (-lpthread). */
 #undef HAVE_LIBPTHREAD

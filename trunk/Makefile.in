@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 1.33 2010-08-02 17:36:41 oops Exp $
+# $Id: Makefile.in,v 1.34 2010-08-07 17:21:22 oops Exp $
 srcdir          = @srcdir@
 top_srcdir      = @top_srcdir@
 builddir        = @builddir@
@@ -22,9 +22,9 @@ LDFLAGS         = @LDFLAGS@ $(LIBS)
 DEFS            = @DEFS@ $(CPPFLAGS)
 KR_DEFS         = @KR_DEFS@ $(CFLAGS)
 
-OBJECT          = krdb.lo krnet.lo krispapi.lo krisp.lo
-UTIL_OBJ        = krisplookup.lo krispmkdb.lo ip2long.lo netcalc.lo
-HEADER_NAME     = krisp-config krispcommon krispapi krisp krdb krversion krnet
+OBJECT          = krdb.lo krispapi.lo krisp.lo
+UTIL_OBJ        = krisplookup.lo krispmkdb.lo
+HEADER_NAME     = krisp-config krispcommon krispapi krisp krdb krversion
 
 SONAME_MAJOR    = @SONAME_MAJOR@
 SONAME_MINOR    = @SONAME_MINOR@
@@ -60,16 +60,14 @@ P_LIBTOOL       = $(LIBTOOL) --mode=install @INSTALL_PROGRAM@ -m755
 D_LIBTOOL       = $(LIBTOOL) --mode=install @INSTALL_DATA@ -m644
 L_LIBTOOL       = $(LIBTOOL) --mode=install $(INSTALL)
 
-MAN1            = krisplookup krispmkdb ip2long netcalc
-MAN3            = krisp_version kr_open kr_close kr_search kr_search_ex kr_ip2long kr_long2ip kr_prefix2long kr_netmask
+MAN1            = krisplookup krispmkdb
+MAN3            = krisp_version kr_open kr_close kr_search kr_search_ex
 
 
 all: $(OBJECT) $(UTIL_OBJ)
 	$(MAKE) libs
 	$(PLINK) -o $(PROG)lookup $(PROG)lookup.lo libkrisp.la
 	$(PLINK) -o $(PROG)mkdb $(PROG)mkdb.lo $(OBJECT) $(LDFLAGS)
-	$(PLINK) -o ip2long ip2long.lo libkrisp.la
-	$(PLINK) -o netcalc netcalc.lo libkrisp.la
 
 krdb.lo: krdb.c database/sqlite.c database/sqlite3.c krdb.h krispcommon.h
 	$(COMPILE) -o $@ -c $<
@@ -80,19 +78,10 @@ krispapi.lo: krispapi.c krdb.h krispapi.h krispcommon.h
 krisp.lo: krisp.c krdb.h krisp.h krispapi.h krispcommon.h
 	$(COMPILE) -o $@ -c $<
 
-krnet.lo: krnet.c krnet.h
-	$(COMPILE) -o $@ -c $<
-
 krisplookup.lo: krisplookup.c krisp.h krdb.h krispapi.h krispcommon.h
 	$(COMPILE) -o $@ -c $<
 
 krispmkdb.lo: krispmkdb.c krispcommon.h krisp.h krdb.h krispapi.h
-	$(COMPILE) -o $@ -c $<
-
-ip2long.lo: ip2long.c krnet.h krdb.h krispapi.h
-	$(COMPILE) -o $@ -c $<
-
-netcalc.lo: netcalc.c krnet.h krispapi.h
 	$(COMPILE) -o $@ -c $<
 
 libs:
@@ -110,8 +99,6 @@ install: install-header install-data install-man
 	$(P_LIBTOOL) $(PROG)-config $(DESTDIR)$(bindir)/$(PROG)-config
 	$(P_LIBTOOL) $(PROG)lookup $(DESTDIR)$(bindir)/$(PROG)lookup
 	$(P_LIBTOOL) $(PROG)mkdb $(DESTDIR)$(bindir)/$(PROG)mkdb
-	$(P_LIBTOOL) ip2long $(DESTDIR)$(bindir)/ip2long
-	$(P_LIBTOOL) netcalc $(DESTDIR)$(bindir)/netcalc
 	$(L_LIBTOOL) lib$(PROG).la $(DESTDIR)$(libdir)/lib$(PROG).la
 	$(LIBTOOL) --finish $(libdir)
 
@@ -141,7 +128,7 @@ test: all
 	make -C test
 
 clean:
-	-$(RM) -r *.o *.lo* *.la* $(PROG)lookup $(PROG)mkdb ip2long netcalc
+	-$(RM) -r *.o *.lo* *.la* $(PROG)lookup $(PROG)mkdb
 	-$(RM) -r .libs db/$(PROG).dat
 	make -C test clean
 

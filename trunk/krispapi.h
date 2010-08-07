@@ -1,5 +1,5 @@
 /*
- * $Id: krispapi.h,v 1.5 2010-06-24 17:24:34 oops Exp $
+ * $Id: krispapi.h,v 1.6 2010-08-07 17:21:22 oops Exp $
  *
  * Notice: if return value of API that has '_f' prefix is not NULL,
  *         it is must free memory!
@@ -8,10 +8,10 @@
 #ifndef KR_API_H
 #define KR_API_H
 
+#include <ipcalc.h>
 #include <krversion.h>
 #include <krispcommon.h>
 #include <krdb.h>
-#include <krnet.h>
 
 /*
  * Init information structure

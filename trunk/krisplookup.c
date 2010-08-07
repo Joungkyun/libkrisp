@@ -1,5 +1,5 @@
 /*
- * $Id: krisplookup.c,v 1.45 2010-06-18 13:53:21 oops Exp $
+ * $Id: krisplookup.c,v 1.46 2010-08-07 17:21:22 oops Exp $
  */
 
 #include <krisp.h>
@@ -211,17 +211,17 @@ noconvert:
 		free (ispname);
 #endif
 
-		printf ("SUBNET    : %s\n", kr_long2ip (isp.netmask));
+		printf ("SUBNET    : %s\n", long2ip (isp.netmask));
 		printf (
 				"NETWORK   : %s\n",
-				kr_long2ip (kr_network (isp.start, isp.netmask))
+				long2ip (network (isp.start, isp.netmask))
 		);
 		printf (
 				"BROADCAST : %s\n",
-				kr_long2ip (kr_broadcast(isp.start, isp.netmask))
+				long2ip (broadcast(isp.start, isp.netmask))
 		);
-		printf ("DB RANGE  : %s - ", kr_long2ip (isp.start));
-		printf ("%s\n", kr_long2ip (isp.end));
+		printf ("DB RANGE  : %s - ", long2ip (isp.start));
+		printf ("%s\n", long2ip (isp.end));
 		printf ("NATION    : %s (%s)\n", isp.cname, isp.ccode);
 	}
 
