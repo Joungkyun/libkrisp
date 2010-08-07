@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 1.35 2010-08-07 18:07:15 oops Exp $
+# $Id: Makefile.in,v 1.36 2010-08-07 18:27:14 oops Exp $
 srcdir          = @srcdir@
 top_srcdir      = @top_srcdir@
 builddir        = @builddir@
@@ -96,11 +96,12 @@ data:
 
 install: install-header install-data install-man
 	$(MKDIR) $(DESTDIR)$(bindir)
-	$(MKDIR) $(DESTDIR)$(libdir)
+	$(MKDIR) $(DESTDIR)$(libdir)/pkgconfig
 	$(P_LIBTOOL) $(PROG)-config $(DESTDIR)$(bindir)/$(PROG)$(COMPAT)-config
 	$(P_LIBTOOL) $(PROG)lookup $(DESTDIR)$(bindir)/$(PROG)lookup$(COMPAT)
 	$(P_LIBTOOL) $(PROG)mkdb $(DESTDIR)$(bindir)/$(PROG)mkdb$(COMPAT)
 	$(L_LIBTOOL) lib$(PROG)$(COMPAT).la $(DESTDIR)$(libdir)/lib$(PROG)$(COMPAT).la
+	$(L_LIBTOOL) $(PROG).pc $(DESTDIR)$(libdir)/pkgconfig/$(PROG)$(COMPAT).pc
 	$(LIBTOOL) --finish $(libdir)
 
 install-data:
