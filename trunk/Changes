@@ -1,6 +1,6 @@
 Changelog
 
-$Id: Changes,v 1.112 2010-08-07 18:07:55 oops Exp $
+$Id: Changes,v 1.113 2010-08-07 18:27:14 oops Exp $
 
 * 3.0.2
 
@@ -8,6 +8,7 @@ Sun, Aug  8 2010 JoungKyun.Kim <http://oops.org>
 	- link with libipcalc
 	- remove ip2long, netcalc that forked libipcalc
 	- add --with-compat build option for makeing compat library
+	- add krisp.pc that is pkg-config configuration file
 
 
 * 3.0.1
