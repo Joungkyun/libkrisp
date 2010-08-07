@@ -1,7 +1,7 @@
 # Process this file with autoconf to produce a configure script.
 # Configure template for krisp library
 #
-# $Id: configure.ac,v 1.33 2010-08-07 17:21:22 oops Exp $
+# $Id: configure.ac,v 1.34 2010-08-07 18:07:15 oops Exp $
 
 #
 AC_PREREQ(2.59)
@@ -31,6 +31,9 @@ AC_PROG_LN_S
 AC_PROG_AWK
 AC_PROG_MAKE_SET
 AC_PROG_LIBTOOL
+
+AC_ARG_WITH(compat,
+[  --with-compat=VERSION   build compat library])
 
 AC_ARG_WITH(sqlite,
 [  --with-sqlite=PATH      sqlite path [[default: /usr]]])
@@ -72,6 +75,22 @@ if test ! -f "$ac_cv_path_MV"; then
 fi
 
 AC_CHECK_LIB(dl, dlopen,,)
+
+if test "x$with_compat" != "x" && test "$with_compat" != "no" ; then
+	AC_MSG_CHECKING(for compat library version)
+	if test "$with_compat" = "yes"; then
+		AC_MSG_ERROR(Don't specify compat library version)
+	fi
+
+	compatv=`echo $with_compat | $PERL -pe 's/[[0-9]]//g'`
+	if test -n "$compatv"; then
+		AC_MSG_ERROR(compat version is only numeric)
+	fi
+
+	AC_MSG_RESULT([$with_compat])
+	COMPAT_VERSION=$with_compat
+fi
+AC_SUBST(COMPAT_VERSION)
 
 if test "x$with_sqlite" != "x"; then
 	SEARCHPATH="$dbpath /usr /usr/local /opt"
