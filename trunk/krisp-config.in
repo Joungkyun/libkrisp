@@ -1,10 +1,11 @@
 #!/bin/sh
-# $Id: krisp-config.in,v 1.9 2010-08-02 17:56:53 oops Exp $
+# $Id: krisp-config.in,v 1.10 2010-08-07 17:47:54 oops Exp $
 
 prefix="@prefix@"
 exec_prefix="@exec_prefix@"
 exec_prefix_set=no
 includedir="@includedir@"
+local_la_file=".libs/lib@PACKAGE_NAME@.la"
 la_file="@libdir@/lib@PACKAGE_NAME@.la"
 
 usage="\
@@ -15,7 +16,11 @@ if test $# -eq 0; then
 	exit 1
 fi
 
-. $la_file
+if [ -f "$local_la_file" ]; then
+	. $local_la_file
+else
+	. $la_file
+fi
 
 while test $# -gt 0; do
 	case "$1" in
