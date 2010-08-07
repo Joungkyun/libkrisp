@@ -8281,7 +8281,7 @@ echo "$as_me: error: can't find $ipcalcconfig" >&2;}
    { (exit 1); exit 1; }; }
 fi
 
-ipcalc_ldflags="`$ipcalcconfig --libs` | $PERL -pe 's/[:space:]*-lipcalc//g'"
+ipcalc_ldflags="`$ipcalcconfig --libs | $PERL -pe 's/[:space:]*-lipcalc//g'`"
 ipcalc_defs="`$ipcalcconfig --defs`"
 export LDFLAGS="$ipcalc_ldflags $LDFLAGS"
 export CPPFLAGS="$ipcalc_defs $CPPFLAGS"

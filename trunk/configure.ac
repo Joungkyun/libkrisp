@@ -1,7 +1,7 @@
 # Process this file with autoconf to produce a configure script.
 # Configure template for krisp library
 #
-# $Id: configure.ac,v 1.37 2010-08-07 19:05:51 oops Exp $
+# $Id: configure.ac,v 1.38 2010-08-07 19:31:27 oops Exp $
 
 #
 AC_PREREQ(2.59)
@@ -161,7 +161,7 @@ else
 	AC_MSG_ERROR(can't find $ipcalcconfig)
 fi
 
-ipcalc_ldflags="`$ipcalcconfig --libs` | $PERL -pe 's/[[:space:]]*-lipcalc//g'"
+ipcalc_ldflags="`$ipcalcconfig --libs | $PERL -pe 's/[[:space:]]*-lipcalc//g'`"
 ipcalc_defs="`$ipcalcconfig --defs`"
 export LDFLAGS="$ipcalc_ldflags $LDFLAGS"
 export CPPFLAGS="$ipcalc_defs $CPPFLAGS"
