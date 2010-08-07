@@ -1,5 +1,5 @@
 /*
- * $Id: krisp.h,v 1.25 2010-06-30 14:38:54 oops Exp $
+ * $Id: krisp.h,v 1.26 2010-08-07 17:21:22 oops Exp $
  */
 
 #ifndef KR_ISP_H
@@ -37,69 +37,6 @@ void kr_close (KR_API *);
  */
 int kr_search (KRNET_API *, KR_API *);
 int kr_search_ex (KRNET_API_EX *, KR_API *);
-
-/*
- * KRISP network conversion api
- */
-
-/*
- * Valid IPv4 address
- * short valid_ipv4_addr (char * ip, char * err)
- */
-#define valid_ipv4_addr _kr_valid_ip_address
-
-/*
- * Converts a string containing an (IPv4) Internet Protocol
- * dotted address into a proper address
- * ulong kr_ip2long (char * ip)
- */
-#define kr_ip2long _kr_ip2long
-
-/*
- * Converts IPv4 address into a string in Internet standard dotted format
- * The string is returned in a statically allocated buffer, which subsequent
- * calls will overwrite.
- * char * kr_long2ip (ulong long_ip)
- * void kr_long2ip_r (ulong src_ip, char * dest_ip)
- */
-#define kr_long2ip _kr_long2ip
-#define kr_long2ip_r _kr_long2ip_r
-
-/*
- * convert prefix to long
- * ulong kr_prefix2long (short prefix)
- */
-#define kr_prefix2long _kr_prefix2long
-
-/*
- * convert long prefix to digit
- * short kr_long2prefix (ulong prefix)
- */
-#define kr_long2prefix _kr_long2prefix
-
-/*
- * return long type of subnet maak with start ip and end ip
- * ulong kr_netmask (ulong start, ulong end)
- */
-#define kr_netmask _kr_guess_netmask
-
-/*
- * return long type of network address
- * ulong kr_network (ulong ip, ulong mask)
- */
-#define kr_network _kr_network
-
-/*
- * return long type of broadcast address
- * ulong kr_broadcast (ulong ip, ulong mask)
- */
-#define kr_broadcast _kr_broadcast
-
-/*
- * return network prefix of subnet mask with start ip and end ip
- * short kr_prefix (ulogn start, ulong end)
- */
-#define kr_prefix _kr_guess_prefix
 
 #define SAFECPY_256(dest, src) _safecpy(dest, src, 256)
 #define SAFECPY_512(dest, src) _safecpy(dest, src, 512)

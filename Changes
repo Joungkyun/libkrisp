@@ -1,6 +1,13 @@
 Changelog
 
-$Id: Changes,v 1.110 2010-08-02 17:56:52 oops Exp $
+$Id: Changes,v 1.111 2010-08-07 17:21:22 oops Exp $
+
+* 3.0.2
+
+Sun, Aug  8 2010 JoungKyun.Kim <http://oops.org>
+	- link with libipcalc
+	- remove ip2long, netcalc that forked libipcalc
+
 
 * 3.0.1
 

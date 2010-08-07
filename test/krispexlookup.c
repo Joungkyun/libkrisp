@@ -1,5 +1,5 @@
 /*
- * $Id: krispexlookup.c,v 1.1 2010-07-01 17:31:14 oops Exp $
+ * $Id: krispexlookup.c,v 1.2 2010-08-07 17:24:02 oops Exp $
  */
 
 #include <krisp.h>
@@ -165,7 +165,7 @@ int main (int argc, char ** argv) {
 		strcpy (iname, isp.size ? isp.dummy[3] : "N/A");
 	}
 
-	netmask = kr_netmask (isp.start, isp.end);
+	netmask = guess_netmask (isp.start, isp.end);
 
 	if ( verbose )
 		fprintf (stderr, "\n");
@@ -226,17 +226,17 @@ noconvert:
 		free (ispname);
 #endif
 
-		printf ("SUBNET    : %s\n", kr_long2ip (netmask));
+		printf ("SUBNET    : %s\n", long2ip (netmask));
 		printf (
 				"NETWORK   : %s\n",
-				kr_long2ip (kr_network (isp.start, netmask))
+				long2ip (network (isp.start, netmask))
 		);
 		printf (
 				"BROADCAST : %s\n",
-				kr_long2ip (kr_broadcast(isp.start, netmask))
+				long2ip (broadcast(isp.start, netmask))
 		);
-		printf ("DB RANGE  : %s - ", kr_long2ip (isp.start));
-		printf ("%s\n", kr_long2ip (isp.end));
+		printf ("DB RANGE  : %s - ", long2ip (isp.start));
+		printf ("%s\n", long2ip (isp.end));
 		printf ("NATION    : %s (%s)\n", cname, ccode);
 	}
 

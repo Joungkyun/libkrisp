@@ -1,5 +1,5 @@
 /*
- * $Id: thread_sample2.c,v 1.7 2010-06-28 18:54:45 oops Exp $
+ * $Id: thread_sample2.c,v 1.8 2010-08-07 17:24:02 oops Exp $
  */
 
 #include <krisp.h>
@@ -50,7 +50,7 @@ void * thread_main (void * arg) { // {{{
 
 	tno = (int) arg;
 
-	ip = kr_long2ip (prand ());
+	ip = long2ip (prand ());
 
 	/* database open */
 	if ( kr_open (&db, NULL, err) == false ) {

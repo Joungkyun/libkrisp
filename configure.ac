@@ -1,7 +1,7 @@
 # Process this file with autoconf to produce a configure script.
 # Configure template for krisp library
 #
-# $Id: configure.ac,v 1.32 2010-08-02 17:38:33 oops Exp $
+# $Id: configure.ac,v 1.33 2010-08-07 17:21:22 oops Exp $
 
 #
 AC_PREREQ(2.59)
@@ -34,6 +34,9 @@ AC_PROG_LIBTOOL
 
 AC_ARG_WITH(sqlite,
 [  --with-sqlite=PATH      sqlite path [[default: /usr]]])
+
+AC_ARG_WITH(ipcalc,
+[  --with-ipcalc=PATH      prefix of ipcalc library [[default: /usr]]])
 
 AC_ARG_WITH(libiconv,
 [  --with-libiconv=PATH    libiconv prefix])
@@ -122,9 +125,53 @@ else
 	KR_DEFS="$KR_DEFS -DHAVE_LIBSQLITE"
 fi
 
-if test "x$with_libiconv" != "x"; then
+if test "x$with_ipcalc" != "x"; then
+	SEARCHPATH="$dbpath /usr /usr/local /opt"
+
+	for i in $SEARCHPATH
+	do
+		if test -f "$i/lib/libipcalc.so" -o -f "$i/lib/libipcalc.a"; then
+			ipcalclib_tmp="L$i/lib"
+		elif test -f -f "$i/lib64/libipcalc.so" -o -f "$i/lib64/libipcalc.a"; then
+			ipcalclib_tmp="L$i/lib64"
+		fi
+
+		if test "x$ipcalclib_tmp" != "x"; then
+			chk=`echo "$ipcalclib" | sed 's/-//g' | grep "$ipcalclib_tmp "`
+			if test -z "$chk"; then
+				ipcalclib="$ipcalclib -$ipcalclib_tmp "
+			fi
+		fi
+
+		if test -f "$i/include/ipcalc.h"; then
+			ipcalchead_tmp="I$i/include"
+		fi
+
+		if test "x$ipcalchead_tmp" != "x"; then
+			chk=`echo "$ipcalchead" | sed 's/-//g' | grep "$ipcalchead_tmp "`
+			if test -z "$chk" ; then
+				ipcalchead="$ipcalchead -$ipcalchead_tmp "
+			fi
+		fi
+	done
+
+	ipcalclib=`echo "$ipcalclib" | sed 's/^[ ]*\|[ ]*$//g'`
+	ipcalchead=`echo "$ipcalchead" | sed 's/^[ ]*\|[ ]*$//g'`
+
+	export LDFLAGS="$ipcalclib $LDFALSG"
+	export CPPFLAGS="$ipcalchead $CPPFLAGS"
+fi
+
+AC_CHECK_LIB(
+	ipcalc, ip2long,,
+	[ AC_MSG_ERROR([Can not find libipcalc library (-lipcalc)])]
+)
+
+if test "x$with_libiconv" != "x" && test "x$with_libiconv" != "xno" ; then
 	if test -f "$with_libiconv/lib/libiconv.so" -o -f "$with_libiconv/lib/libiconv.a"; then
 		export LDFLAGS="$LDFLAGS -L$with_libiconv/lib"
+	elif test -f "$with_libiconv/lib64/libiconv.so" -o -f "$with_libiconv/lib64/libiconv.a"; then
+		export LDFLAGS="$LDFLAGS -L$with_libiconv/lib64"
 	fi
 
 	if test -f "$with_libiconv/include/iconv.h"; then
