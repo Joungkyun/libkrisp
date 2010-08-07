@@ -1,10 +1,11 @@
 Changelog
 
-$Id: Changes,v 1.113 2010-08-07 18:27:14 oops Exp $
+$Id: Changes,v 1.114 2010-08-07 19:06:21 oops Exp $
 
 * 3.0.2
 
 Sun, Aug  8 2010 JoungKyun.Kim <http://oops.org>
+	- release 3.0.2
 	- link with libipcalc
 	- remove ip2long, netcalc that forked libipcalc
 	- add --with-compat build option for makeing compat library
@@ -14,6 +15,7 @@ Sun, Aug  8 2010 JoungKyun.Kim <http://oops.org>
 * 3.0.1
 
 Tue, Aug  3 2010 JoungKyun.Kim <http://oops.org>
+	- release 3.0.1
 	- moved header files to %includedir/krisp
 	- removed dependency library on --libs and, add --link for dependency
 	  library on krisp-config
