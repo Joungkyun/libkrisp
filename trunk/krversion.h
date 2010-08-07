@@ -1,12 +1,12 @@
 /*
- * $Id: krversion.h,v 1.19 2010-08-02 17:38:33 oops Exp $
+ * $Id: krversion.h,v 1.20 2010-08-07 19:05:51 oops Exp $
  */
 
 #ifndef KR_VERSION_H
 #define KR_VERSION_H
 
-#define KRISP_VERSION "3.0.1"
-#define KRISP_UVERSION "003000001"
+#define KRISP_VERSION "3.0.2"
+#define KRISP_UVERSION "003000002"
 
 #endif
 
