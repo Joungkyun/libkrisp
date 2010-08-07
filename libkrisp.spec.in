@@ -9,8 +9,8 @@ Release: 1
 Epoch: 1
 License: LGPL
 Group: System Environment/Libraries
-Requires: %{sqlitepkgname}
-BuildRequires: %{sqlitepkgname}-devel
+Requires: %{sqlitepkgname} libipcalc
+BuildRequires: %{sqlitepkgname}-devel libipcalc-devel
 Source0: ftp://mirror.oops.org/pub/Linux/OOPS/Source/${name}/%{name}-%{version}.tar.bz2
 URL: http://devel.oops.org
 Buildroot: /var/tmp/%{name}-%{version}-root
