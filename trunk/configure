@@ -1020,7 +1020,7 @@ Optional Packages:
   --with-pic              try to use only PIC/non-PIC objects default=use both
   --with-compat=VERSION   build compat library
   --with-sqlite=PATH      sqlite path [default: /usr]
-  --with-ipcalc=PATH      prefix of ipcalc library [default: /usr]
+  --with-ipcalc=PATH      path of ipcalc-config [default: /usr/bin/ipcalc-config]
   --with-libiconv=PATH    libiconv prefix
 
 Some influential environment variables:
@@ -8260,42 +8260,31 @@ fi
 	KR_DEFS="$KR_DEFS -DHAVE_LIBSQLITE"
 fi
 
-if test "x$with_ipcalc" != "x"; then
-	SEARCHPATH="$dbpath /usr /usr/local /opt"
-
-	for i in $SEARCHPATH
-	do
-		if test -f "$i/lib/libipcalc.so" -o -f "$i/lib/libipcalc.a"; then
-			ipcalclib_tmp="L$i/lib"
-		elif test -f -f "$i/lib64/libipcalc.so" -o -f "$i/lib64/libipcalc.a"; then
-			ipcalclib_tmp="L$i/lib64"
-		fi
-
-		if test "x$ipcalclib_tmp" != "x"; then
-			chk=`echo "$ipcalclib" | sed 's/-//g' | grep "$ipcalclib_tmp "`
-			if test -z "$chk"; then
-				ipcalclib="$ipcalclib -$ipcalclib_tmp "
-			fi
-		fi
-
-		if test -f "$i/include/ipcalc.h"; then
-			ipcalchead_tmp="I$i/include"
-		fi
-
-		if test "x$ipcalchead_tmp" != "x"; then
-			chk=`echo "$ipcalchead" | sed 's/-//g' | grep "$ipcalchead_tmp "`
-			if test -z "$chk" ; then
-				ipcalchead="$ipcalchead -$ipcalchead_tmp "
-			fi
-		fi
-	done
-
-	ipcalclib=`echo "$ipcalclib" | sed 's/^ *\| *$//g'`
-	ipcalchead=`echo "$ipcalchead" | sed 's/^ *\| *$//g'`
-
-	export LDFLAGS="$ipcalclib $LDFALSG"
-	export CPPFLAGS="$ipcalchead $CPPFLAGS"
+if test "x$with_ipcalc" != "x" && test "x$with_ipcalc" != "xno"; then
+	if test "x$with_ipcalc" = "xyes"; then
+		ipcalcconfig=/usr/bin/ipcalc-config
+	else
+		ipcalcconfig=$with_ipcalc
+	fi
+else
+	ipcalcconfig=/usr/bin/ipcalc-config
 fi
+
+echo "$as_me:$LINENO: checking for ipcalc-config path" >&5
+echo $ECHO_N "checking for ipcalc-config path... $ECHO_C" >&6
+if test -f "$ipcalcconfig"; then
+	echo "$as_me:$LINENO: result: $ipcalcconfig" >&5
+echo "${ECHO_T}$ipcalcconfig" >&6
+else
+	{ { echo "$as_me:$LINENO: error: can't find $ipcalcconfig" >&5
+echo "$as_me: error: can't find $ipcalcconfig" >&2;}
+   { (exit 1); exit 1; }; }
+fi
+
+ipcalc_ldflags="`$ipcalcconfig --libs` | $PERL -pe 's/[:space:]*-lipcalc//g'"
+ipcalc_defs="`$ipcalcconfig --defs`"
+export LDFLAGS="$ipcalc_ldflags $LDFLAGS"
+export CPPFLAGS="$ipcalc_defs $CPPFLAGS"
 
 
 echo "$as_me:$LINENO: checking for ip2long in -lipcalc" >&5

@@ -1,7 +1,7 @@
 # Process this file with autoconf to produce a configure script.
 # Configure template for krisp library
 #
-# $Id: configure.ac,v 1.35 2010-08-07 18:27:14 oops Exp $
+# $Id: configure.ac,v 1.36 2010-08-07 19:03:11 oops Exp $
 
 #
 AC_PREREQ(2.59)
@@ -39,7 +39,7 @@ AC_ARG_WITH(sqlite,
 [  --with-sqlite=PATH      sqlite path [[default: /usr]]])
 
 AC_ARG_WITH(ipcalc,
-[  --with-ipcalc=PATH      prefix of ipcalc library [[default: /usr]]])
+[  --with-ipcalc=PATH      path of ipcalc-config [[default: /usr/bin/ipcalc-config]]])
 
 AC_ARG_WITH(libiconv,
 [  --with-libiconv=PATH    libiconv prefix])
@@ -144,42 +144,27 @@ else
 	KR_DEFS="$KR_DEFS -DHAVE_LIBSQLITE"
 fi
 
-if test "x$with_ipcalc" != "x"; then
-	SEARCHPATH="$dbpath /usr /usr/local /opt"
-
-	for i in $SEARCHPATH
-	do
-		if test -f "$i/lib/libipcalc.so" -o -f "$i/lib/libipcalc.a"; then
-			ipcalclib_tmp="L$i/lib"
-		elif test -f -f "$i/lib64/libipcalc.so" -o -f "$i/lib64/libipcalc.a"; then
-			ipcalclib_tmp="L$i/lib64"
-		fi
-
-		if test "x$ipcalclib_tmp" != "x"; then
-			chk=`echo "$ipcalclib" | sed 's/-//g' | grep "$ipcalclib_tmp "`
-			if test -z "$chk"; then
-				ipcalclib="$ipcalclib -$ipcalclib_tmp "
-			fi
-		fi
-
-		if test -f "$i/include/ipcalc.h"; then
-			ipcalchead_tmp="I$i/include"
-		fi
-
-		if test "x$ipcalchead_tmp" != "x"; then
-			chk=`echo "$ipcalchead" | sed 's/-//g' | grep "$ipcalchead_tmp "`
-			if test -z "$chk" ; then
-				ipcalchead="$ipcalchead -$ipcalchead_tmp "
-			fi
-		fi
-	done
-
-	ipcalclib=`echo "$ipcalclib" | sed 's/^[ ]*\|[ ]*$//g'`
-	ipcalchead=`echo "$ipcalchead" | sed 's/^[ ]*\|[ ]*$//g'`
-
-	export LDFLAGS="$ipcalclib $LDFALSG"
-	export CPPFLAGS="$ipcalchead $CPPFLAGS"
+if test "x$with_ipcalc" != "x" && test "x$with_ipcalc" != "xno"; then
+	if test "x$with_ipcalc" = "xyes"; then
+		ipcalcconfig=/usr/bin/ipcalc-config
+	else
+		ipcalcconfig=$with_ipcalc
+	fi
+else
+	ipcalcconfig=/usr/bin/ipcalc-config
 fi
+
+AC_MSG_CHECKING(for ipcalc-config path)
+if test -f "$ipcalcconfig"; then
+	AC_MSG_RESULT([$ipcalcconfig])
+else
+	AC_MSG_ERROR(can't find $ipcalcconfig)
+fi
+
+ipcalc_ldflags="`$ipcalcconfig --libs` | $PERL -pe 's/[[:space:]]*-lipcalc//g'"
+ipcalc_defs="`$ipcalcconfig --defs`"
+export LDFLAGS="$ipcalc_ldflags $LDFLAGS"
+export CPPFLAGS="$ipcalc_defs $CPPFLAGS"
 
 AC_CHECK_LIB(
 	ipcalc, ip2long,,
