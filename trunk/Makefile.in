@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 1.34 2010-08-07 17:21:22 oops Exp $
+# $Id: Makefile.in,v 1.35 2010-08-07 18:07:15 oops Exp $
 srcdir          = @srcdir@
 top_srcdir      = @top_srcdir@
 builddir        = @builddir@
@@ -14,6 +14,7 @@ host_vendor     = @host_vendor@
 
 PROG            = @PACKAGE_NAME@
 VERSION         = @PACKAGE_VERSION@
+COMPAT          = @COMPAT_VERSION@
 CC              = @CC@ -Wall
 CFLAGS          = @CFLAGS@
 CPPFLAGS        = -I. @CPPFLAGS@
@@ -66,7 +67,7 @@ MAN3            = krisp_version kr_open kr_close kr_search kr_search_ex
 
 all: $(OBJECT) $(UTIL_OBJ)
 	$(MAKE) libs
-	$(PLINK) -o $(PROG)lookup $(PROG)lookup.lo libkrisp.la
+	$(PLINK) -o $(PROG)lookup $(PROG)lookup.lo libkrisp$(COMPAT).la
 	$(PLINK) -o $(PROG)mkdb $(PROG)mkdb.lo $(OBJECT) $(LDFLAGS)
 
 krdb.lo: krdb.c database/sqlite.c database/sqlite3.c krdb.h krispcommon.h
@@ -86,9 +87,9 @@ krispmkdb.lo: krispmkdb.c krispcommon.h krisp.h krdb.h krispapi.h
 
 libs:
 	$(PERL) -pi -e 's!/\*[\s]+(#undef )KR_(PACKAGE_[A-Z]+)[\s]+\*/!	$$1$$2!g' krisp-config.h
-	$(LINK) -o lib$(PROG).la $(OBJECT) $(LDFLAGS)
-	$(PERL) -pi -e 's! /[^ ]*libsqlite.la! -lsqlite!g' .libs/libkrisp.lai libkrisp.la
-	$(PERL) -pi -e 's! /[^ ]*libsqlite3.la! -lsqlite3!g' .libs/libkrisp.lai libkrisp.la
+	$(LINK) -o lib$(PROG)$(COMPAT).la $(OBJECT) $(LDFLAGS)
+	$(PERL) -pi -e 's! /[^ ]*libsqlite.la! -lsqlite!g' .libs/libkrisp$(COMPAT).lai libkrisp$(COMPAT).la
+	$(PERL) -pi -e 's! /[^ ]*libsqlite3.la! -lsqlite3!g' .libs/libkrisp$(COMPAT).lai libkrisp$(COMPAT).la
 
 data:
 	./krispmkdb -c db/krisp.csv -t krisp -y db/krisp.dat
@@ -96,19 +97,20 @@ data:
 install: install-header install-data install-man
 	$(MKDIR) $(DESTDIR)$(bindir)
 	$(MKDIR) $(DESTDIR)$(libdir)
-	$(P_LIBTOOL) $(PROG)-config $(DESTDIR)$(bindir)/$(PROG)-config
-	$(P_LIBTOOL) $(PROG)lookup $(DESTDIR)$(bindir)/$(PROG)lookup
-	$(P_LIBTOOL) $(PROG)mkdb $(DESTDIR)$(bindir)/$(PROG)mkdb
-	$(L_LIBTOOL) lib$(PROG).la $(DESTDIR)$(libdir)/lib$(PROG).la
+	$(P_LIBTOOL) $(PROG)-config $(DESTDIR)$(bindir)/$(PROG)$(COMPAT)-config
+	$(P_LIBTOOL) $(PROG)lookup $(DESTDIR)$(bindir)/$(PROG)lookup$(COMPAT)
+	$(P_LIBTOOL) $(PROG)mkdb $(DESTDIR)$(bindir)/$(PROG)mkdb$(COMPAT)
+	$(L_LIBTOOL) lib$(PROG)$(COMPAT).la $(DESTDIR)$(libdir)/lib$(PROG)$(COMPAT).la
 	$(LIBTOOL) --finish $(libdir)
 
 install-data:
-	$(MKDIR) $(DESTDIR)$(datadir)/$(PROG)
+	$(MKDIR) $(DESTDIR)$(datadir)/$(PROG)$(COMPAT)
 	for i in krisp.dat krisp.csv; do \
-		$(D_LIBTOOL) db/$$i $(DESTDIR)$(datadir)/$(PROG)/ ; \
+		$(D_LIBTOOL) db/$$i $(DESTDIR)$(datadir)/$(PROG)$(COMPAT)/ ; \
 	done
 
 install-man:
+ifndef COMPAT
 	$(MKDIR) $(DESTDIR)$(mandir)/ko/man1
 	$(MKDIR) $(DESTDIR)$(mandir)/ko/man3
 	for i in $(MAN1); do \
@@ -117,11 +119,12 @@ install-man:
 	for i in $(MAN3); do \
 		$(D_LIBTOOL) man/$$i.3 $(DESTDIR)$(mandir)/ko/man3/ ; \
 	done
+endif
 
 install-header:
-	$(MKDIR) $(DESTDIR)$(includedir)/krisp
+	$(MKDIR) $(DESTDIR)$(includedir)/krisp$(COMPAT)
 	for i in $(HEADER_NAME); do \
-		$(D_LIBTOOL) $$i.h $(DESTDIR)$(includedir)/krisp/ ; \
+		$(D_LIBTOOL) $$i.h $(DESTDIR)$(includedir)/krisp$(COMPAT)/ ; \
 	done
 
 test: all
