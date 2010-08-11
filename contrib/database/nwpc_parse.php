@@ -1,7 +1,7 @@
 #!/usr/bin/php
 <?php
 /*
- * $Id: nwpc_parse.php,v 1.1 2010-06-07 11:31:27 oops Exp $
+ * $Id: nwpc_parse.php,v 1.2 2010-08-11 20:04:50 oops Exp $
  * Requirement
  *
  * over PHP5
@@ -203,8 +203,8 @@ if ( ! extension_loaded ('geoip') ) {
 	$gi      = GeoIP_open ($_geoip_t);
 }
 
-if ( file_exists ('/usr/local/src/cvs/php/pear_krisp/KRISP/georegion.php') ) {
-	require_once '/usr/local/src/cvs/php/pear_krisp/KRISP/georegion.php';
+if ( file_exists ('/usr/local/src/cvs/php/pear_krisp/v1/KRISP/georegion.php') ) {
+	require_once '/usr/local/src/cvs/php/pear_krisp/v1/KRISP/georegion.php';
 }
 
 if ( trim ($argv[1]) && file_exists ($argv[1]) ) {
