@@ -1,6 +1,13 @@
 Changelog
 
-$Id: Changes,v 1.114 2010-08-07 19:06:21 oops Exp $
+$Id: Changes,v 1.115 2010-08-11 20:06:20 oops Exp $
+
+
+* 3.0.3
+
+Thu, Aug 12 2010 JoungKyun.Kim <http://oops.org>
+	- fixed typo
+
 
 * 3.0.2
 

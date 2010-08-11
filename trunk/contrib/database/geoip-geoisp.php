@@ -1,7 +1,7 @@
 #!/usr/bin/php
 <?php
 #
-# $Id: geoip-geoisp.php,v 1.1 2010-06-07 11:31:27 oops Exp $
+# $Id: geoip-geoisp.php,v 1.2 2010-08-11 20:05:07 oops Exp $
 #
 # merge GEOIP database and GeoISP database
 #
@@ -10,7 +10,7 @@ require_once ('oGetopt.php');
 
 function banner () { // {{{
 	echo <<<EOF
- * Merge GEOIP data and GeoIPISP CVS format
+ * Merge GEOIP data and GeoIPISP CSV format
  *
 
 EOF;
@@ -20,10 +20,10 @@ function usage ($prog) { // {{{
 	echo <<<EOF
 Usage: {$prog} [opt]
 Options:
-            -g|--geoip=GEOIP_CVS    path of GeoIP cvs format file
+            -g|--geoip=GEOIP_CSV    path of GeoIP csv format file
                                     [Default: ./GeoIPCountryWhois.csv]
             -h|--help               print this messages
-            -i|--geoisp=GEOISP_CVS  path of GeoIPISP cvs format file
+            -i|--geoisp=GEOISP_CSV  path of GeoIPISP csv format file
                                     [Default: ./GeoIPISP.csv]
             -v|--verbose            verbose mode
 
@@ -672,7 +672,7 @@ foreach ( $opt as $key => $v ) {
 
 	if ( ! file_exists ($v) ) {
 		ePrint::ePrintf (
-			'%s: %s cvs file is not found (%s)',
+			'%s: %s csv file is not found (%s)',
 			array ($errMark, $key, $v)
 		);
 		exit (1);
