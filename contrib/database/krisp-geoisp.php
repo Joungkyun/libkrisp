@@ -1,16 +1,16 @@
 #!/usr/bin/php
 <?php
 #
-# $Id: krisp-geoisp.php,v 1.1 2010-06-07 11:31:27 oops Exp $
+# $Id: krisp-geoisp.php,v 1.2 2010-08-11 20:05:07 oops Exp $
 #
-# Merge KRISP data and GeoIP-GeoISP-Merge CVS format
+# Merge KRISP data and GeoIP-GeoISP-Merge CSV format
 #
 
 require_once ('oGetopt.php');
 
 function banner () { // {{{
 	echo <<<EOF
- * Merge KRISP data and GeoIP-GeoISP-Merge CVS format
+ * Merge KRISP data and GeoIP-GeoISP-Merge CSV format
  *
 
 EOF;
@@ -20,10 +20,10 @@ function usage ($prog) { // {{{
 	echo <<<EOF
 Usage: {$prog} [opt]
 Options:
-            -g|--geoisp=GEOISP_CVS  path of GeoIP-GeoISP merge cvs format file
+            -g|--geoisp=GEOISP_CSV  path of GeoIP-GeoISP merge csv format file
                                     [Default: ./geoip-geoisp-merge.csv]
             -h|--help               print this messages
-            -k|--krisp=KRISP_CVS    path of KRISP cvs format file
+            -k|--krisp=KRISP_CSV    path of KRISP csv format file
                                     [Default: ./krisp.csv]
             -v|--verbose            verbose mode
 
@@ -665,7 +665,7 @@ foreach ( $opt as $key => $v ) {
 
 	if ( ! file_exists ($v) ) {
 		ePrint::ePrintf (
-			'%s: %s cvs file is not found (%s)',
+			'%s: %s csv file is not found (%s)',
 			array ($errMark, $key, $v)
 		);
 		exit (1);
