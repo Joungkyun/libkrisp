@@ -1,7 +1,7 @@
 #!/usr/bin/php
 <?php
 /*
- * $Id: nwpc_parse.php,v 1.2 2010-08-11 20:04:50 oops Exp $
+ * $Id: nwpc_parse.php,v 1.3 2010-08-20 09:30:26 oops Exp $
  * Requirement
  *
  * over PHP5
@@ -221,8 +221,10 @@ if ( trim ($argv[1]) && file_exists ($argv[1]) ) {
 error_log ("* Save file results: {$SAVE}", 0);
 
 $nwzformat = 0;
-if ( $argc == 3 && $argv[2] == 'nwz' )
+if ( ($argc == 3 || $argc == 4) && $argv[2] == 'nwz' )
 	$nwzformat = 1;
+
+$nwzdebug = ($argc == 4) ? 1 : 0;
 
 $stderr = fopen ('php://stderr', 'w');
 $line = _file_init ($_file);
@@ -277,25 +279,33 @@ foreach ( $line as $v ) {
 	$o_start = $old[O_CLASS] . '.' . $old[O_START];
 	$o_end   = $old[O_CLASS] . '.' . $old[O_END];
 	#printf ("%s|%s|%s|%s|%s\n", $o_start, $o_end, $old[O_NAME], $old[O_CITY], $old[O_REGION]);
-	if ( $nwzformat ) {
-		$DATA = sprintf (
-			"%s\t%s\t%s|%s|%s\n",
-			_ip2long ($o_start),
-			_ip2long ($o_end),
-			$old[O_NAME],
-			$old[O_CITY],
-			$old[O_REGION]
-		);
-	} else {
-		$DATA = sprintf (
-			"%s\t%s\t%s|%s\n",
-			_ip2long ($o_start),
-			_ip2long ($o_end),
-			$old[O_CITY],
-			$old[O_REGION]
-		);
+	$nu = _ip2long ($o_end) - _ip2long ($o_start);
+	if ( $nwzdebug )
+		$nup = sprintf ("%-3d\t", $nu);
+
+	if ( $nu > 1 ) {
+		if ( $nwzformat ) {
+			$DATA = sprintf (
+				"%s%s\t%s\t%s|%s|%s\n",
+				$nup,
+				_ip2long ($o_start),
+				_ip2long ($o_end),
+				$old[O_NAME],
+				$old[O_CITY],
+				$old[O_REGION]
+			);
+		} else {
+			$DATA = sprintf (
+				"%s%s\t%s\t%s|%s\n",
+				$nup,
+				_ip2long ($o_start),
+				_ip2long ($o_end),
+				$old[O_CITY],
+				$old[O_REGION]
+			);
+		}
+		fwrite ($fp, $DATA, strlen ($DATA));
 	}
-	fwrite ($fp, $DATA, strlen ($DATA));
 	/*
 	printf ("%s|KR|Korea, Republic of|||%s|%s|1\n",
 			_ip2long ($old[O_CLASS].".0"), fix_city ($old[O_CITY]), fix_region ($old[O_REGION]));
@@ -305,9 +315,14 @@ foreach ( $line as $v ) {
 
 $o_start = $old[O_CLASS] . '.' . $old[O_START];
 $o_end   = $old[O_CLASS] . '.' . $old[O_END];
+$nu = _ip2long ($o_end) - _ip2long ($o_start);
+if ( $nwzdebug )
+	$nup = sprintf ("%-3d\t", $nu);
+
 if ( $nwzformat ) {
 	$DATA = sprintf (
-		"%s\t%s\t%s|%s|%s\n",
+		"%s%s\t%s\t%s|%s|%s\n",
+		$nup,
 		_ip2long ($o_start),
 		_ip2long ($o_end),
 		$old[O_NAME],
@@ -316,7 +331,8 @@ if ( $nwzformat ) {
 	);
 } else {
 	$DATA = sprintf (
-		"%s\t%s\t%s|%s\n",
+		"%s%s\t%s\t%s|%s\n",
+		$nup,
 		_ip2long ($o_start),
 		_ip2long ($o_end),
 		$old[O_CITY],
