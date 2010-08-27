@@ -1,7 +1,7 @@
 #!/usr/bin/php
 <?php
 /*
- * $Id: nwpc_parse.php,v 1.4 2010-08-27 16:13:38 oops Exp $
+ * $Id: nwpc_parse.php,v 1.5 2010-08-27 16:19:05 oops Exp $
  * Requirement
  *
  * over PHP5
@@ -178,12 +178,13 @@ if ( file_exists ('../lib/fix-eng-gu.php') ) {
 
 $_geoip = 0;
 if ( ! extension_loaded ('geoip') ) {
-	dl ('geoip.so');
-	$_geoip = 1; // extension
+	if ( version_compare (PHP_VERSION, '5.3.0') < 0 )
+		dl ('geoip.so');
 
 	if ( function_exists ('GeoIP_open') ) {
 		$geoip_t = GEOIP_INDEX_CACHE | GEOIP_CHECK_CACHE;
 		$gi      = GeoIP_open ($_geoip_t);
+		$_geoip = 1; // extension
 	} else {
 		$_geoip = 0; // pear
 		@include_once 'Net/GeoIP.php';
