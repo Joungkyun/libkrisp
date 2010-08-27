@@ -1,7 +1,7 @@
 #!/usr/bin/php
 <?php
 /*
- * $Id: nwpc_parse.php,v 1.3 2010-08-20 09:30:26 oops Exp $
+ * $Id: nwpc_parse.php,v 1.4 2010-08-27 16:13:38 oops Exp $
  * Requirement
  *
  * over PHP5
@@ -136,7 +136,7 @@ function _file_init ($f) {
 		$_r[$i] .= fix_strint ($_component[_END]) . '|';
 
 		$_component[_ADDR]  = addr_parser (trim ($_component[_ADDR]));
-		$_region = split ('[ ]+', $_component[_ADDR]);
+		$_region = preg_split ('/[ ]+/', $_component[_ADDR]);
 		$_r[$i]  .= $_region[1] . '|';
 		$_r[$i]  .= $_region[0] . '|';
 		$_r[$i]  .= trim ($_component[_NAME]);
