@@ -1,11 +1,11 @@
 # Process this file with autoconf to produce a configure script.
 # Configure template for krisp library
 #
-# $Id: configure.ac,v 1.38 2010-08-07 19:31:27 oops Exp $
+# $Id: configure.ac,v 1.39 2010-09-09 17:50:02 oops Exp $
 
 #
 AC_PREREQ(2.59)
-AC_INIT([krisp], [3.0.2], [http://oops.org])
+AC_INIT([krisp], [3.1.0], [http://oops.org])
 AC_CONFIG_SRCDIR([krisp.h])
 AC_CONFIG_HEADER([krisp-config.h krispcommon.h])
 AC_PREFIX_DEFAULT([/usr/local])
@@ -193,6 +193,9 @@ if test "x$ac_cv_lib_pthread_pthread_create" != "x"; then
 	KR_DEFS="$KR_DEFS -DHAVE_PTHREAD_H"
 fi
 
+if test "x$prefix" = "xNONE" ; then
+	prefix=$ac_default_prefix
+fi
 DBPATH=$(eval echo ${datadir}/krisp)
 AC_SUBST(DBPATH)
 
