@@ -1,5 +1,5 @@
 /*
- * $Id: krisp.h,v 1.27 2010-09-09 19:23:46 oops Exp $
+ * $Id: krisp.h,v 1.28 2010-09-09 19:54:29 oops Exp $
  */
 
 #ifndef KR_ISP_H
@@ -35,8 +35,8 @@ void kr_close (KR_API **);
 /*
  * search isp information of given ip address
  */
-int kr_search (KRNET_API *, KR_API *);
-int kr_search_ex (KRNET_API_EX *, KR_API *);
+int kr_search (KRNET_API *, KR_API **);
+int kr_search_ex (KRNET_API_EX *, KR_API **);
 
 #define SAFECPY_256(dest, src) _safecpy(dest, src, 256)
 #define SAFECPY_512(dest, src) _safecpy(dest, src, 512)
