@@ -27,7 +27,7 @@ kr_search_ex - libkrisp database의 사용자 table을 제어 한다.
 .br
 .BI "} KRNET_API_EX;"
 .sp
-.BI "int kr_search_ex (KRNET_API_EX *" u_isp ", KR_API *" db ");"
+.BI "int kr_search_ex (KRNET_API_EX *" u_isp ", KR_API **" db ");"
 
 .SH 설명
 .BI kr_search
@@ -84,7 +84,7 @@ API를 제공한다. loop에서
 .br
 .BI ""db->table " = " user_define_table ";"
 .sp
-.BI "kr_search_ex (&" u_isp ", " db ");"
+.BI "kr_search_ex (&" u_isp ", &" db ");"
 .br
 .BI "initStruct_ex (&" u_isp ", " true ");"
 
@@ -118,7 +118,7 @@ int main (void) {
     for ( r=0; r<2; r++ ) {
         // defined safecpy_256 in krispapi.h
         safecpy_256 (isp.ip, addr);
-        if ( kr_search_ex (&u_isp, db) ) {
+        if ( kr_search_ex (&u_isp, &db) ) {
             printf ("ERROR: %s\\n", u_isp.err);
             initStruct_ex (&u_isp, true);
             kr_close (&db);

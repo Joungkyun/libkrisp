@@ -1,4 +1,4 @@
-$Id: README,v 1.18 2010-09-09 19:23:46 oops Exp $
+$Id: README,v 1.19 2010-09-09 19:54:29 oops Exp $
 
 libkrisp - Korea ISP library
 
@@ -37,7 +37,7 @@ int main (void) {
 	isp.verbose = false;
     // defined SAFECPY_256 in krispapi.h
     SAFECPY_256 (isp.ip, addr);
-    if ( kr_search (&isp, db) ) {
+    if ( kr_search (&isp, &db) ) {
         printf ("ERROR: %s\n", isp.err);
         kr_close (&db);
         return 1;

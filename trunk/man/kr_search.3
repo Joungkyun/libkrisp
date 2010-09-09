@@ -31,7 +31,7 @@ kr_search - libkrisp database 에서 IP 에 대한 정보를 검색하여 반환
 .br
 .BI "} " KRNET_API ";"
 .br
-.BI "int kr_search (KRNET_API *" isp ", KR_API *" db ");"
+.BI "int kr_search (KRNET_API *" isp ", KR_API **" db ");"
 
 .SH 설명
 .BI kr_search
@@ -51,7 +51,7 @@ struct의 ip member를 꼭 초기화 해 주어야 한다.
 .PP
 .BI "strcpy (" isp.ip ", " ipaddress ");"
 .br
-.BI "kr_search (&" isp ", " db ");"
+.BI "kr_search (&" isp ", &" db ");"
 
 
 .SH 반환값
@@ -77,7 +77,7 @@ int main (void) {
     isp.verbose = false;
     // defined safecpy_256 in krispapi.h
     safecpy_256 (isp.ip, addr);
-    if ( kr_search (&isp, db) ) {
+    if ( kr_search (&isp, &db) ) {
         printf ("ERROR: %s\\n", isp.err);
         kr_close (&db);
         return 1;

@@ -1,5 +1,5 @@
 /*
- * $Id: krispapi.h,v 1.6 2010-08-07 17:21:22 oops Exp $
+ * $Id: krispapi.h,v 1.7 2010-09-09 19:54:29 oops Exp $
  *
  * Notice: if return value of API that has '_f' prefix is not NULL,
  *         it is must free memory!
@@ -59,9 +59,9 @@ void _safecpy (char *, char *, int);
 /*
  * for thread safe
  */
-KR_LOCAL_API void krisp_mutex_lock (KR_API *);
-KR_LOCAL_API void krisp_mutex_unlock (KR_API *);
-KR_LOCAL_API void krisp_mutex_destroy (KR_API *);
+KR_LOCAL_API void krisp_mutex_lock (KR_API **);
+KR_LOCAL_API void krisp_mutex_unlock (KR_API **);
+KR_LOCAL_API void krisp_mutex_destroy (KR_API **);
 
 /*
  * Local variables:
