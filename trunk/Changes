@@ -1,6 +1,6 @@
 Changelog
 
-$Id: Changes,v 1.116 2010-09-09 17:50:02 oops Exp $
+$Id: Changes,v 1.117 2010-09-09 19:23:46 oops Exp $
 
 
 * 3.1.0
@@ -8,6 +8,8 @@ $Id: Changes,v 1.116 2010-09-09 17:50:02 oops Exp $
 Fri, Sep 10 2010 JoungKyun.Kim <http://oops.org>
 	- version update 3.1.0
 	- fixed wrong database path when don't give --prefix option
+	- fixed memory leak on kr_close
+	  changed proto type of kr_close -> kr_close (KR_API **)
 
 Thu, Aug 12 2010 JoungKyun.Kim <http://oops.org>
 	- fixed typo

@@ -1,5 +1,5 @@
 /*
- * $Id: krtest.c,v 1.14 2010-08-07 17:24:02 oops Exp $
+ * $Id: krtest.c,v 1.15 2010-09-09 19:23:46 oops Exp $
  */
 
 #include <krisp.h>
@@ -115,7 +115,7 @@ int main (int argc, char ** argv) {
 	/* database open */
 	if ( kr_open (&db, datafile, err) == false ) {
 		fprintf (stderr, "ERROR Connect: %s\n", err);
-		kr_close (db);
+		kr_close (&db);
 		return 1;
 	}
 
@@ -137,7 +137,7 @@ int main (int argc, char ** argv) {
 		SAFECPY_256 (isp.ip, ip);
 		if ( kr_search (&isp, db) ) {
 			fprintf (stderr, "ERROR: %s\n", isp.err);
-			kr_close (db);
+			kr_close (&db);
 			return 1;
 		}
 
@@ -152,7 +152,7 @@ int main (int argc, char ** argv) {
 	fprintf (stderr, "%.4f sec\n", t2 - t1);
 
 	/* database close */
-	kr_close (db);
+	kr_close (&db);
 
 	return 0;
 }
