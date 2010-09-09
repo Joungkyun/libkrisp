@@ -1,4 +1,4 @@
-$Id: README,v 1.17 2010-06-30 18:43:31 oops Exp $
+$Id: README,v 1.18 2010-09-09 19:23:46 oops Exp $
 
 libkrisp - Korea ISP library
 
@@ -39,11 +39,11 @@ int main (void) {
     SAFECPY_256 (isp.ip, addr);
     if ( kr_search (&isp, db) ) {
         printf ("ERROR: %s\n", isp.err);
-        kr_close (db);
+        kr_close (&db);
         return 1;
     }
 
-    kr_close (db);
+    kr_close (&db);
 
     /*
      * kr_long2ip is returned in a statically allocated buffer, which

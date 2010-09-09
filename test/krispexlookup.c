@@ -1,5 +1,5 @@
 /*
- * $Id: krispexlookup.c,v 1.2 2010-08-07 17:24:02 oops Exp $
+ * $Id: krispexlookup.c,v 1.3 2010-09-09 19:23:46 oops Exp $
  */
 
 #include <krisp.h>
@@ -154,7 +154,7 @@ int main (int argc, char ** argv) {
 	db->table = "krisp";
 	if ( kr_search_ex (&isp, db) ) {
 		fprintf (stderr, "ERROR: %s\n", isp.err);
-		kr_close (db);
+		kr_close (&db);
 		return 1;
 	}
 
@@ -243,7 +243,7 @@ noconvert:
 	initStruct_ex (&isp, true);
 
 	/* database close */
-	kr_close (db);
+	kr_close (&db);
 
 	return 0;
 }

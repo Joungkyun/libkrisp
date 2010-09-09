@@ -1,5 +1,5 @@
 /*
- * $Id: krisp.h,v 1.26 2010-08-07 17:21:22 oops Exp $
+ * $Id: krisp.h,v 1.27 2010-09-09 19:23:46 oops Exp $
  */
 
 #ifndef KR_ISP_H
@@ -30,7 +30,7 @@ bool kr_open_safe (KR_API **, char *, char *);
 /*
  * close krisp database
  */
-void kr_close (KR_API *);
+void kr_close (KR_API **);
 
 /*
  * search isp information of given ip address
