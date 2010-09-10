@@ -1,5 +1,5 @@
 /*
- * $Id: krispexlookup.c,v 1.7 2010-09-10 12:44:26 oops Exp $
+ * $Id: krispexlookup.c,v 1.8 2010-09-10 13:23:24 oops Exp $
  */
 
 #include <krisp.h>
@@ -143,6 +143,8 @@ int main (int argc, char ** argv) {
 		fprintf (stderr, "ERROR Connect: %s\n", err);
 		return 1;
 	}
+
+	db->db_time_stamp_interval = 0;
 
 	isp.verbose = verbose;
 	ip = argv[optind];
