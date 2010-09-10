@@ -1,5 +1,5 @@
 /*
- * $Id: krispcommon.h.in,v 1.2 2010-08-06 19:24:48 oops Exp $
+ * $Id: krispcommon.h.in,v 1.3 2010-09-10 12:44:25 oops Exp $
  */
 
 #ifndef KR_COMMON_H
@@ -35,6 +35,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
+#include <time.h>
 
 #ifdef HAVE_PTHREAD_H
 	#include <pthread.h>
@@ -78,6 +82,7 @@
 
 typedef struct db_argument {
 	char 			err[1024];
+	char			database[256];
 #ifdef HAVE_PTHREAD_H
 	pthread_mutex_t	mutex;
 #endif
@@ -97,6 +102,12 @@ typedef struct db_argument {
 #endif
 	int				rows;	// vm rows
 	int				cols;	// number of columns
+
+	time_t          db_time_stamp;			// database mtime stamp
+	time_t          db_stamp_checked;		// record db mtime check time
+	time_t          db_time_stamp_interval; // database mtime stamp check interval.
+											// If value is 0, don't check.
+
 	short			verbose;
 #ifdef HAVE_PTHREAD_H
 	short			threadsafe;

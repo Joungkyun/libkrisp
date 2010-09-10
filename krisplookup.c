@@ -1,11 +1,8 @@
 /*
- * $Id: krisplookup.c,v 1.50 2010-09-10 11:09:14 oops Exp $
+ * $Id: krisplookup.c,v 1.51 2010-09-10 12:44:25 oops Exp $
  */
 
 #include <krisp.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <unistd.h>
 
 #ifdef HAVE_GETOPT_H
 #include <getopt.h>

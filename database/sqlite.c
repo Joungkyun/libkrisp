@@ -1,5 +1,5 @@
 /*
- * $Id: sqlite.c,v 1.8 2010-06-24 17:24:34 oops Exp $
+ * $Id: sqlite.c,v 1.9 2010-09-10 12:44:25 oops Exp $
  *
  * libkrisp sqlite2 frontend API
  */
@@ -24,8 +24,8 @@ KR_LOCAL_API int kr_dbFree (KR_API *db) {
 	return 0;
 }
 
-KR_LOCAL_API bool kr_dbConnect (KR_API *db, char *file) {
-	db->c = sqlite_open ((file != NULL) ? file : DBPATH, 0644, &db->dberr);
+KR_LOCAL_API bool kr_dbConnect (KR_API *db) {
+	db->c = sqlite_open (db->database, 0644, &db->dberr);
 
 	if ( db->c == NULL ) {
 		kr_dbError (db);

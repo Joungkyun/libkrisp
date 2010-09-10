@@ -1,13 +1,8 @@
 /*
- * $Id: thread_sample1.c,v 1.13 2010-09-10 11:09:14 oops Exp $
+ * $Id: thread_sample1.c,v 1.14 2010-09-10 12:44:26 oops Exp $
  */
 
 #include <krisp.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <unistd.h>
-#include <time.h>
-
 #include <sys/time.h>
 
 #ifdef HAVE_GETOPT_H

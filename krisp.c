@@ -1,5 +1,5 @@
 /*
- * $Id: krisp.c,v 1.101 2010-09-10 11:09:13 oops Exp $
+ * $Id: krisp.c,v 1.102 2010-09-10 12:44:25 oops Exp $
  */
 
 #include <stdio.h>
@@ -19,7 +19,6 @@ char * krisp_uversion (void) { // {{{
 
 KR_LOCAL_API bool _kr_open (KR_API **db, char *file, char *err, bool safe) { // {{{
 	struct stat		f;
-	char *			data;
 
 	memset (err, 0, 1);
 
@@ -29,20 +28,24 @@ KR_LOCAL_API bool _kr_open (KR_API **db, char *file, char *err, bool safe) { // 
 		return false;
 	}
 
-	data = (file == NULL) ? DBPATH : file;
+	SAFECPY_256 ((*db)->database, (file == NULL ) ? DBPATH : file);
 
 	f.st_size = 0;
-	if ( stat (data, &f) == -1 ) {
-		sprintf (err, "kr_open:: Can't find database (%s)", data);
+	if ( stat ((*db)->database, &f) == -1 ) {
+		sprintf (err, "kr_open:: Can't find database (%s)", (*db)->database);
 		free (*db);
 		return false;
 	}
 
 	if ( f.st_size < 1 ) {
-		sprintf (err, "kr_open:: %s size is zero", data);
+		sprintf (err, "kr_open:: %s size is zero", (*db)->database);
 		free (*db);
 		return false;
 	}
+
+	(*db)->db_time_stamp_interval = 3600;
+	(*db)->db_time_stamp = f.st_mtime;
+	(*db)->db_stamp_checked = time (NULL);
 
 #ifdef HAVE_PTHREAD_H
 	(*db)->threadsafe = safe;
@@ -51,7 +54,7 @@ KR_LOCAL_API bool _kr_open (KR_API **db, char *file, char *err, bool safe) { // 
 #endif
 	(*db)->verbose = false;
 
-	if ( kr_dbConnect (*db, data) == false ) {
+	if ( kr_dbConnect (*db) == false ) {
 		SAFECPY_1024 (err, (*db)->err);
 		free (*db);
 		return false;
@@ -76,6 +79,7 @@ void kr_close (KR_API **db) { // {{{
 
 	kr_dbClose (*db);
 	free (*db);
+	*db = NULL;
 } // }}}
 
 /*
@@ -87,7 +91,7 @@ int kr_search (KRNET_API *isp, KR_API *db) { // {{{
 	char			err[1024];
 
 	if ( db == NULL ) {
-		SAFECPY_1024 (isp->err, "kr_search::KR_API *db is null");
+		SAFECPY_1024 (isp->err, "kr_search:: KR_API *db is null");
 		return 1;
 	}
 
@@ -97,6 +101,23 @@ int kr_search (KRNET_API *isp, KR_API *db) { // {{{
 	raw.verbose = isp->verbose;
 
 	krisp_mutex_lock (db);
+
+	// check database mtime
+	if ( isp->verbose )
+		fprintf (stderr, "DEBUG: Check changed %s\n", db->database);
+
+	if ( check_database_mtime (db) == true ) {
+		kr_dbClose (db);
+
+		if ( isp->verbose )
+			fprintf (stderr, "DEBUG: *** db reconnect\n");
+
+		if ( kr_dbConnect (db) == false ) {
+			SAFECPY_1024 (isp->err, db->err);
+			return 1;
+		}
+	}
+
 	db->table = "krisp";
 
 	memset (raw.ip, 0, 1);
@@ -181,7 +202,7 @@ int kr_search_ex (KRNET_API_EX *raw, KR_API *db) { // {{{
 	char	err[1024];
 
 	if ( db == NULL ) {
-		SAFECPY_1024 (raw->err, "kr_search::KR_API *db is null");
+		SAFECPY_1024 (raw->err, "kr_search:: KR_API *db is null");
 		return 1;
 	}
 
@@ -190,6 +211,23 @@ int kr_search_ex (KRNET_API_EX *raw, KR_API *db) { // {{{
 	db->verbose = raw->verbose;
 
 	krisp_mutex_lock (db);
+
+	// check database mtime
+	if ( raw->verbose )
+		fprintf (stderr, "DEBUG: Check changed %s\n", db->database);
+
+	if ( check_database_mtime (db) == true ) {
+		kr_dbClose (db);
+
+		if ( raw->verbose )
+			fprintf (stderr, "DEBUG: ** db reconnec\n");
+
+		if ( kr_dbConnect (db) == false ) {
+			SAFECPY_1024 (raw->err, db->err);
+			return 1;
+		}
+	}
+
 	initRawStruct (raw, false);
 
 	if ( valid_ip_address (raw->ip, err) ) {
