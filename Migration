@@ -109,7 +109,7 @@ $id: $
         strcpy (isp.ip, "1.1.1.1");
         if ( kr_search (&isp, db) ) {
             fprintf (stderr, "ERROR: %s\n", dberr);
-            kr_close (db);
+            kr_close (&db);
             return 1;
         }
 
@@ -125,7 +125,7 @@ $id: $
         SAFECPY_256 (isp.ip, addr);
         if ( kr_search (&isp, db) ) {
             fprintf (stderr, "ERROR: %s\n", isp.err);
-            kr_close (db);
+            kr_close (&db);
             return 1;
         }
 

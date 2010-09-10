@@ -1,5 +1,5 @@
 /*
- * $Id: thread_sample.c,v 1.16 2010-09-10 09:10:50 oops Exp $
+ * $Id: thread_sample.c,v 1.17 2010-09-10 11:09:14 oops Exp $
  */
 
 #include <krisp.h>
@@ -36,7 +36,7 @@ int main (void) { // {{{
 	/* database open */
 	if ( kr_open_safe (&db, NULL, err) == false ) {
 		fprintf (stderr, "ERROR Connect: %s\n", err);
-		kr_close (db);
+		kr_close (&db);
 		return 1;
 	}
 
@@ -57,7 +57,7 @@ int main (void) { // {{{
 			printf ("ERROR; return code from pthread_join() is %d, thread %d\n", r, i);
 	}
 
-	kr_close (db);
+	kr_close (&db);
 
 	return 0;
 } // }}}

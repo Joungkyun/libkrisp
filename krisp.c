@@ -1,5 +1,5 @@
 /*
- * $Id: krisp.c,v 1.100 2010-09-10 09:17:58 oops Exp $
+ * $Id: krisp.c,v 1.101 2010-09-10 11:09:13 oops Exp $
  */
 
 #include <stdio.h>
@@ -68,14 +68,14 @@ bool kr_open (KR_API **db, char *file, char *err) { // {{{
 	return _kr_open (db, file, err, false);
 } // }}}
 
-void kr_close (KR_API *db) { // {{{
-	if ( db == NULL )
+void kr_close (KR_API **db) { // {{{
+	if ( *db == NULL )
 		return;
 
-	krisp_mutex_destroy (db);
+	krisp_mutex_destroy (*db);
 
-	kr_dbClose (db);
-	free (db);
+	kr_dbClose (*db);
+	free (*db);
 } // }}}
 
 /*
