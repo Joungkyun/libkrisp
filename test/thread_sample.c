@@ -1,5 +1,5 @@
 /*
- * $Id: thread_sample.c,v 1.12 2010-09-09 19:54:29 oops Exp $
+ * $Id: thread_sample.c,v 1.13 2010-09-10 08:25:48 oops Exp $
  */
 
 #include <krisp.h>
@@ -28,10 +28,11 @@ ulong prand (void);
 
 int main (void) { // {{{
 	int			i = 0, r;
-	int			status;
+	void *		status;
 	KR_API *	db;
 	tArg *		kr;
 	char		err[1024];
+	char		err1[1024];
 
 	/* database open */
 	if ( kr_open_safe (&db, NULL, err) == false ) {
@@ -50,11 +51,12 @@ int main (void) { // {{{
 	}
 
 	for ( i=0; i<THREAD_SIZE; i++ ) {
-		r = pthread_join (threads[i], (void **) &status);
+		printf("[%ld] i=%d\n", pthread_self(), i);
+		r = pthread_join (threads[i], &status);
 		if ( r == 0 )
-			printf("Completed join with thread %d status= %d\n",i, status);
+			printf ("Completed join with thread %d status=%d\n", i, (int) status);
 		else
-			printf("ERROR; return code from pthread_join() is %d, thread %d\n", r, i);
+			printf ("ERROR; return code from pthread_join() is %d, thread %d\n", r, i);
 	}
 
 	kr_close (&db);

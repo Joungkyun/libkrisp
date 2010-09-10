@@ -1,5 +1,5 @@
 /*
- * $Id: krispapi.c,v 1.16 2010-09-10 06:19:27 oops Exp $
+ * $Id: krispapi.c,v 1.17 2010-09-10 08:25:48 oops Exp $
  */
 
 #include <stdio.h>
@@ -130,7 +130,7 @@ KR_LOCAL_API short parseDummyData (char *** d, char * s, char delemeter) { // {{
 
 	len++;
 	rlen = len;
-	*d = (char **) malloc (sizeof (char *) * len + 1);
+	*d = (char **) malloc (sizeof (char *) * (len + 1));
 	if ( *d == NULL ) {
 		return 0;
 	}
