@@ -1,5 +1,5 @@
 /*
- * $Id: krispapi.h,v 1.7 2010-09-09 19:54:29 oops Exp $
+ * $Id: krispapi.h,v 1.8 2010-09-10 06:19:27 oops Exp $
  *
  * Notice: if return value of API that has '_f' prefix is not NULL,
  *         it is must free memory!
@@ -38,7 +38,7 @@ KR_LOCAL_API int getISPinfo (KR_API *, RAW_KRNET_API *);
  * Seperate pipe data that has isp information
  *
  */
-KR_LOCAL_API int parseDummyData (char ***, char *, char delemeter);
+KR_LOCAL_API short parseDummyData (char ***, char *, char delemeter);
 
 /*
  * Convert character numeric to int numeric

@@ -1,5 +1,5 @@
 /*
- * $Id: krispmkdb.c,v 1.17 2010-09-09 19:23:46 oops Exp $
+ * $Id: krispmkdb.c,v 1.18 2010-09-10 06:19:27 oops Exp $
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -85,8 +85,8 @@ short put_data (KR_API * db, char * csv) { // {{{
 	char	sql[2048];
 	char	tmp[FILEBUF + 1];
 	char **	buf;
-	int		r, i;
 	char *	quote_string;
+	short	r, i;
 
 	if ( (fp = fopen (csv, "rb")) == NULL ) {
 		fprintf (stderr, "ERROR: Can't open %s in read mode\n", csv);
