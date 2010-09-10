@@ -1,5 +1,5 @@
 /*
- * $Id: thread_sample1.c,v 1.11 2010-09-10 09:07:09 oops Exp $
+ * $Id: thread_sample1.c,v 1.12 2010-09-10 09:10:50 oops Exp $
  */
 
 #include <krisp.h>
@@ -28,7 +28,7 @@ ulong prand (void);
 
 int main (void) { // {{{
 	int			i, r;
-	void *		status;
+	long		status;
 	KR_API *	db[THREAD_SIZE];
 	tArg *		kr;
 	char		err[1024];
