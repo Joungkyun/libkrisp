@@ -5,7 +5,7 @@ kr_close - libkrisp 의 database handle을 종료하고 memory를 해제한다.
 .SH 사용법
 .BI "#include <krisp.h>"
 .br
-.BI "void kr_close (KR_API **" db ");"
+.BI "void kr_close (KR_API *" db ");"
 .SH 설명
 .BI kr_close
 API는 libkrisp 를 링크하여
@@ -35,13 +35,13 @@ int main (void) {
     isp.verbose = false;
     // defined safecpy_256 in krispapi.h
     safecpy_256 (isp.ip, addr);
-    if ( kr_search (&isp, &db) ) {
+    if ( kr_search (&isp, db) ) {
         printf ("ERROR: %s\\n", isp.err);
-        kr_close (&db);
+        kr_close (db);
         return 1;
     }
 
-    kr_close (&db);
+    kr_close (db);
 
     /*
      * kr_long2ip is returned in a statically allocated buffer, which

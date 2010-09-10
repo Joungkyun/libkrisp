@@ -1,5 +1,5 @@
 /*
- * $Id: krispmkdb.c,v 1.18 2010-09-10 06:19:27 oops Exp $
+ * $Id: krispmkdb.c,v 1.19 2010-09-10 08:55:21 oops Exp $
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -85,8 +85,8 @@ short put_data (KR_API * db, char * csv) { // {{{
 	char	sql[2048];
 	char	tmp[FILEBUF + 1];
 	char **	buf;
+	int		r, i;
 	char *	quote_string;
-	short	r, i;
 
 	if ( (fp = fopen (csv, "rb")) == NULL ) {
 		fprintf (stderr, "ERROR: Can't open %s in read mode\n", csv);
@@ -203,7 +203,7 @@ int main (int argc, char ** argv) {
 	// Get existed table list
 	if ( kr_dbQuery (db, "SELECT tbl_name FROM sqlite_master WHERE type = 'table'") ) {
 		fprintf (stderr, "ERROR: %s\n", db->err);
-		kr_close (&db);
+		kr_close (db);
 		return 1;
 	}
 
@@ -252,7 +252,7 @@ pass_assume:
 		sprintf (sql, "DELETE FROM '%s'", table);
 		if ( kr_dbExecute (db, sql) ) {
 			fprintf (stderr, "ERROR: failed delete %s table (%s)\n", table, db->err);
-			kr_close (&db);
+			kr_close (db);
 			return 1;
 		}
 	}
@@ -276,13 +276,13 @@ pass_assume:
 
 		if ( kr_dbExecute (db, sql) ) {
 			fprintf (stderr, "ERROR: failed to create %s table (%s)\n", table, db->err);
-			kr_close (&db);
+			kr_close (db);
 			return 1;
 		}
 	}
 
 	r = put_data (db, csv);
-	kr_close (&db);
+	kr_close (db);
 
 	return r;
 }

@@ -1,20 +1,9 @@
 Changelog
 
-$Id: Changes,v 1.120 2010-09-10 08:25:48 oops Exp $
+$Id: Changes,v 1.121 2010-09-10 08:55:21 oops Exp $
 
 
-* 3.1.0
-
-Fri, Sep 10 2010 JoungKyun.Kim <http://oops.org>
-	- version update 3.1.0
-	- fixed wrong database path when don't give --prefix option
-	- fixed memory leak on kr_close
-	  changed proto type of kr_close -> kr_close (KR_API **)
-	- fixed wrong mutex lock
-	  changed proto type of kr_search -> kr_search (KRNET_API *, KR_API **)
-	  changed proto type of kr_search_ex -> kr_search_ex (KRNET_API_EX *, KR_API **)
-	- fixed return type parseDummyData api
-	- fixed architecture problems on x86_64 system
+* 3.0.3
 
 Thu, Aug 12 2010 JoungKyun.Kim <http://oops.org>
 	- fixed typo

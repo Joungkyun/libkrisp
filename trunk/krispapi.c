@@ -1,5 +1,5 @@
 /*
- * $Id: krispapi.c,v 1.17 2010-09-10 08:25:48 oops Exp $
+ * $Id: krispapi.c,v 1.18 2010-09-10 08:55:21 oops Exp $
  */
 
 #include <stdio.h>
@@ -99,10 +99,10 @@ KR_LOCAL_API int getISPinfo (KR_API * db, RAW_KRNET_API * n) { // {{{
 	return 0;
 } // }}}
 
-KR_LOCAL_API short parseDummyData (char *** d, char * s, char delemeter) { // {{{
+KR_LOCAL_API int parseDummyData (char *** d, char * s, char delemeter) { // {{{
+	int		len = 0;
+	int		i, rlen;
 	char *	buf;
-	int		rlen;
-	short	i, len = 0;
 
 	if ( s == NULL ) {
 		*d = NULL;
@@ -130,7 +130,7 @@ KR_LOCAL_API short parseDummyData (char *** d, char * s, char delemeter) { // {{
 
 	len++;
 	rlen = len;
-	*d = (char **) malloc (sizeof (char *) * (len + 1));
+	*d = (char **) malloc (sizeof (char *) * len + 1);
 	if ( *d == NULL ) {
 		return 0;
 	}
@@ -142,7 +142,7 @@ KR_LOCAL_API short parseDummyData (char *** d, char * s, char delemeter) { // {{
 	}
 	(*d)[--len] = s;
 
-	return (short) rlen;
+	return rlen;
 } // }}}
 
 KR_LOCAL_API int chartoint (char c) { // {{{
@@ -193,39 +193,39 @@ void _safecpy (char * stor, char * str, int size) { // {{{
 	stor[size] = 0;
 } // }}}
 
-KR_LOCAL_API void krisp_mutex_lock (KR_API ** db) { // {{{
+KR_LOCAL_API void krisp_mutex_lock (KR_API * db) { // {{{
 #ifdef HAVE_PTHREAD_H
-	if ( ! (*db)->threadsafe )
+	if ( ! db->threadsafe )
 		return;
 
-	if ( (*db)->verbose )
+	if ( db->verbose )
 		fprintf (stderr, "DEBUG: Thread Mutex is locked\n");
-	pthread_mutex_lock (&((*db)->mutex));
+	pthread_mutex_lock (&(db->mutex));
 #endif
 
 	return;
 } // }}}
 
-KR_LOCAL_API void krisp_mutex_unlock (KR_API ** db) { // {{{
+KR_LOCAL_API void krisp_mutex_unlock (KR_API * db) { // {{{
 #ifdef HAVE_PTHREAD_H
-	if ( ! (*db)->threadsafe )
+	if ( ! db->threadsafe )
 		return;
 
-	pthread_mutex_unlock (&((*db)->mutex));
-	if ( (*db)->verbose )
+	pthread_mutex_unlock (&(db->mutex));
+	if ( db->verbose )
 		fprintf (stderr, "DEBUG: Thread Mutex is unlocked\n");
 #endif
 
 	return;
 } // }}}
 
-KR_LOCAL_API void krisp_mutex_destroy (KR_API ** db) { // {{{
+KR_LOCAL_API void krisp_mutex_destroy (KR_API * db) { // {{{
 #ifdef HAVE_PTHREAD_H
-	if ( ! (*db)->threadsafe )
+	if ( ! db->threadsafe )
 		return;
 
-	pthread_mutex_destroy (&((*db)->mutex));
-	if ( (*db)->verbose )
+	pthread_mutex_destroy (&(db->mutex));
+	if ( db->verbose )
 		fprintf (stderr, "DEBUG: Thread Mutex destory\n");
 #endif
 
