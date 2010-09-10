@@ -1,5 +1,5 @@
 /*
- * $Id: thread_sample1.c,v 1.9 2010-09-10 08:25:48 oops Exp $
+ * $Id: thread_sample1.c,v 1.10 2010-09-10 08:55:21 oops Exp $
  */
 
 #include <krisp.h>
@@ -28,7 +28,7 @@ ulong prand (void);
 
 int main (void) { // {{{
 	int			i, r;
-	void *		status;
+	int			status;
 	KR_API *	db[THREAD_SIZE];
 	tArg *		kr;
 	char		err[1024];
@@ -39,7 +39,7 @@ int main (void) { // {{{
 			fprintf (stderr, "ERROR Connect: %s\n", err);
 
 			for ( r=0; r<=i; r++ )
-				kr_close (&db[r]);
+				kr_close (db[r]);
 			return 1;
 		}
 	}
@@ -56,9 +56,9 @@ int main (void) { // {{{
 	for ( i=0; i<THREAD_SIZE; i++ ) {
 		r = pthread_join (threads[i], (void **) &status);
 		if ( r == 0 )
-			printf ("Completed join with thread %d status=%d\n", i, (int) status);
+			printf("Completed join with thread %d status= %d\n",i, status);
 		else
-			printf ("ERROR; return code from pthread_join() is %d, thread %d\n", r, i);
+			printf("ERROR; return code from pthread_join() is %d, thread %d\n", r, i);
 	}
 
 	return 0;
@@ -77,12 +77,12 @@ void * thread_main (void * arg) { // {{{
 	((tArg *) arg)->db->verbose= false;
 	SAFECPY_256 (isp.ip, ip);
 
-	if ( kr_search (&isp, &((tArg *) arg)->db) ) {
+	if ( kr_search (&isp, ((tArg *) arg)->db) ) {
 		fprintf (stderr, "ERROR: %s\n", isp.err);
 	} else
 		printf ("--> Thread %d : %15s => %s\n", tno, isp.ip, isp.icode);
 
-	kr_close (&((tArg *) arg)->db);
+	kr_close (((tArg *) arg)->db);
 	free (arg);
 
 	pthread_exit ((void *) 0);

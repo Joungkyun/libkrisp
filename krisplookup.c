@@ -1,5 +1,5 @@
 /*
- * $Id: krisplookup.c,v 1.48 2010-09-09 19:54:29 oops Exp $
+ * $Id: krisplookup.c,v 1.49 2010-09-10 08:55:21 oops Exp $
  */
 
 #include <krisp.h>
@@ -146,9 +146,9 @@ int main (int argc, char ** argv) {
 	ip = argv[optind];
 
 	SAFECPY_256 (isp.ip, ip);
-	if ( kr_search (&isp, &db) ) {
+	if ( kr_search (&isp, db) ) {
 		fprintf (stderr, "ERROR: %s\n", isp.err);
-		kr_close (&db);
+		kr_close (db);
 		return 1;
 	}
 
@@ -226,7 +226,7 @@ noconvert:
 	}
 
 	/* database close */
-	kr_close (&db);
+	kr_close (db);
 
 	return 0;
 }

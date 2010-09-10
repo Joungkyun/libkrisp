@@ -1,5 +1,5 @@
 /*
- * $Id: krisp.c,v 1.98 2010-09-09 19:54:29 oops Exp $
+ * $Id: krisp.c,v 1.99 2010-09-10 08:55:21 oops Exp $
  */
 
 #include <stdio.h>
@@ -68,32 +68,31 @@ bool kr_open (KR_API **db, char *file, char *err) { // {{{
 	return _kr_open (db, file, err, false);
 } // }}}
 
-void kr_close (KR_API **db) { // {{{
+void kr_close (KR_API *db) { // {{{
+	krisp_mutex_destroy (db);
+
 	if ( db == NULL )
 		return;
 
-	krisp_mutex_destroy (db);
-
-	kr_dbClose (*db);
-	free (*db);
-	*db = NULL;
+	kr_dbClose (db);
+	free (db);
 } // }}}
 
 /*
  * if return 1, db error
  */
-int kr_search (KRNET_API *isp, KR_API **db) { // {{{
+int kr_search (KRNET_API *isp, KR_API *db) { // {{{
 	RAW_KRNET_API	raw;
 	int				r;
 	char			err[1024];
 
 	if ( isp->verbose != 0 && isp->verbose != 1 )
 		isp->verbose = 0;
-	(*db)->verbose = isp->verbose;
+	db->verbose = isp->verbose;
 	raw.verbose = isp->verbose;
 
 	krisp_mutex_lock (db);
-	(*db)->table = "krisp";
+	db->table = "krisp";
 
 	memset (raw.ip, 0, 1);
 	initRawStruct (&raw, false);
@@ -106,10 +105,10 @@ int kr_search (KRNET_API *isp, KR_API **db) { // {{{
 	}
 
 	strcpy (raw.ip, isp->ip);
-	if ( (r = getISPinfo (*db, &raw)) != 0 ) {
+	if ( (r = getISPinfo (db, &raw)) != 0 ) {
 		// SQL error
 		if ( r == -1 ) {
-			SAFECPY_1024 (isp->err, (*db)->err);
+			SAFECPY_1024 (isp->err, db->err);
 			krisp_mutex_unlock (db);
 			return 1;
 		}
@@ -155,7 +154,7 @@ jumpNet:
 goWrongData:
 
 	if ( isp->verbose ) {
-		fprintf (stderr, "DEBUG: TABLE  => %s\n", (*db)->table);
+		fprintf (stderr, "DEBUG: TABLE  => %s\n", db->table);
 		fprintf (stderr, "DEBUG: DATA   => %s\n", raw.dummydata);
 		fprintf (stderr, "DEBUG: ISP    => %s (%s)\n", isp->iname, isp->icode);
 		fprintf (stderr, "DEBUG: NATION => %s (%s)\n", isp->cname, isp->ccode);
@@ -172,29 +171,29 @@ goWrongData:
 /*
  * if return 1, db error
  */
-int kr_search_ex (KRNET_API_EX *raw, KR_API **db) { // {{{
+int kr_search_ex (KRNET_API_EX *raw, KR_API *db) { // {{{
 	int		r;
 	char	err[1024];
 
 	if ( raw->verbose != 0 && raw->verbose != 1 )
 		raw->verbose = 0;
-	(*db)->verbose = raw->verbose;
+	db->verbose = raw->verbose;
 
 	krisp_mutex_lock (db);
 	initRawStruct (raw, false);
 
 	if ( valid_ip_address (raw->ip, err) ) {
 		SAFECPY_1024 (raw->err, err);
-		(*db)->table = "krisp";
+		db->table = "krisp";
 		krisp_mutex_unlock (db);
 		return 0;
 	}
 
-	if ( (r = getISPinfo (*db, raw)) != 0 ) {
+	if ( (r = getISPinfo (db, raw)) != 0 ) {
 		// SQL error
 		if ( r == -1 ) {
-			SAFECPY_1024 (raw->err, (*db)->err);
-			(*db)->table = "krisp";
+			SAFECPY_1024 (raw->err, db->err);
+			db->table = "krisp";
 			krisp_mutex_unlock (db);
 			return 1;
 		}
@@ -215,11 +214,11 @@ int kr_search_ex (KRNET_API_EX *raw, KR_API **db) { // {{{
 	raw->size = parseDummyData (&(raw->dummy), raw->dummydata, 0);
 
 	if ( raw->verbose ) {
-		fprintf (stderr, "DEBUG: TABLE  => %s\n", (*db)->table);
+		fprintf (stderr, "DEBUG: TABLE  => %s\n", db->table);
 		fprintf (stderr, "DEBUG: DATA   => %s\n", raw->dummydata);
 	}
 
-	(*db)->table = "krisp";
+	db->table = "krisp";
 	krisp_mutex_unlock (db);
 	return 0;
 } // }}}

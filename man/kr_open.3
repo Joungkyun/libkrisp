@@ -103,13 +103,13 @@ int main (void) {
 
     isp.verbose = false;
     safecpy_256 (isp.ip, addr);
-    if ( kr_search (&isp, &db) ) {
+    if ( kr_search (&isp, db) ) {
         printf ("ERROR: %s\\n", isp.err);
-        kr_close (&db);
+        kr_close (db);
         return 1;
     }
 
-    kr_close (&db);
+    kr_close (db);
 
     /*
      * kr_long2ip is returned in a statically allocated buffer, which
