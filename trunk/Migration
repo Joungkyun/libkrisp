@@ -109,7 +109,7 @@ $id: $
         strcpy (isp.ip, "1.1.1.1");
         if ( kr_search (&isp, db) ) {
             fprintf (stderr, "ERROR: %s\n", dberr);
-            kr_close (&db);
+            kr_close (db);
             return 1;
         }
 
@@ -129,22 +129,22 @@ $id: $
             return 1;
         }
 
-        printf ("netmask   : %s\n", kr_long2ip (isp.netmask));
-        printf ("network   : %s\n", kr_long2ip (isp.start));
-        printf ("broadcast : %s\n", kr_long2ip (isp.end));
+        printf ("netmask   : %s\n", long2ip (isp.netmask));
+        printf ("network   : %s\n", long2ip (isp.start));
+        printf ("broadcast : %s\n", long2ip (isp.end));
 
     만약 DB의 start와 end 필드가 network을 의미하지 않는다면, 다음과 같이 정확
     한 network 주소와 broadcast 주소를 구할 수 있다.
 
         printf (
             "network   : %s\n",
-            kr_long2ip (kr_network (isp.start, isp.netmask))
+            long2ip (kr_network (isp.start, isp.netmask))
         );
         printf (
             "broadcast : %s\n",
-            kr_long2ip (kr_broadcast (isp.start, isp.netmask))
+            long2ip (kr_broadcast (isp.start, isp.netmask))
         );
 
-    kr_long2ip 는 정적 할당 버퍼를 반환하기 때문에 printf의 argument에 동시에
-    사용할 수 없다.
+    long2ip는 정적 할당 버퍼를 반환하기 때문에 printf의 argument에 동시에 사용
+    할 수 없다. long2ip는 libipcalc에 포함이 되어 있다.
 

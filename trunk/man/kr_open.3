@@ -7,6 +7,16 @@ kr_open - libkrisp 의 database 를 연다.
 .br
 .BI "typedef struct " db_argument " {"
 .br
+.BI "    char            " err[1024] ";"
+.br
+.BI "    char            " database[256] ";"
+.br
+.BI "#ifdef HAVE_PTHREAD_H"
+.br
+.BI "    pthread_mutex_t " mutex ";"
+.br
+.BI "#endif"
+.br
 .BI "#if defined(HAVE_LIBSQLITE3)"
 .br
 .BI "    sqlite3 *       " c ";      // db resource"
@@ -21,13 +31,13 @@ kr_open - libkrisp 의 database 를 연다.
 .br
 .BI "#endif"
 .br
-.BI "    short           " r ";      // execute result code"
+.BI "    const char **   " rowdata ";"
 .br
-.BI "    short           " final ";  // force finalize"
+.BI "    const char **   " colname ";"
 .br
-.BI "    int             " rows ";   // vm rows"
+.BI "    char *          " table ";"
 .br
-.BI "    int             " cols ";   // number of columns"
+.BI "    char *          " old_table ";"
 .br
 .BI "#if defined(HAVE_LIBSQLITE)"
 .br
@@ -35,15 +45,33 @@ kr_open - libkrisp 의 database 를 연다.
 .br
 .BI "#endif"
 .br
-.BI "    char            " err[1024] ";"
+.BI "    int             " rows ";   // vm rows"
 .br
-.BI "    char *          " table ";"
+.BI "    int             " cols ";   // number of columns"
 .br
-.BI "    char *          " old_table ";"
+.BI " "
 .br
-.BI "    const char **   " rowdata ";"
+.BI "    time_t          " db_time_stamp "; // database mtime stamp"
 .br
-.BI "    const char **   " colname ";"
+.BI "    time_t          " db_stamp_checked "; // record db mtime check time"
+.br
+.BI "    //db mtime stamp check interval. If value is 0, don't check
+.br
+.BI "    time_t          " db_time_stamp_interval ";"
+.br
+.BI " "
+.br
+.BI "    short           " verbose ";"
+.br
+.BI "#ifdef HAVE_PTHREAD_H"
+.br
+.BI "    short           " threadsafe ";"
+.br
+.BI "#endif"
+.br
+.BI "    short           " r ";      // execute result code"
+.br
+.BI "    short           " final ";  // force finalize"
 .br
 .BI "} " KR_API ";"
 .PP
@@ -100,6 +128,10 @@ int main (void) {
         fprintf (stderr, "ERROR Connect: %s\\n", err);
         return 1;
     }
+
+    // If you want to change check interval of database file
+    // modification, uncomment next line. (default is 3600)
+    //db->db_time_stamp_interval = 86400;
 
     isp.verbose = false;
     safecpy_256 (isp.ip, addr);
