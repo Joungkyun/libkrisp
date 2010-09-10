@@ -1,9 +1,12 @@
 Changelog
 
-$Id: Changes,v 1.121 2010-09-10 08:55:21 oops Exp $
+$Id: Changes,v 1.122 2010-09-10 09:17:58 oops Exp $
 
 
 * 3.0.3
+
+Fri, Sep 10 2010 JoungKyun.Kim <http://oops.org>
+	- fixed segfault kr_search(_ex) when KR_NET structure is null
 
 Thu, Aug 12 2010 JoungKyun.Kim <http://oops.org>
 	- fixed typo
