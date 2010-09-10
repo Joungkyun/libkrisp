@@ -1,5 +1,5 @@
 /*
- * $Id: krispapi.c,v 1.15 2010-09-09 19:54:29 oops Exp $
+ * $Id: krispapi.c,v 1.16 2010-09-10 06:19:27 oops Exp $
  */
 
 #include <stdio.h>
@@ -99,10 +99,10 @@ KR_LOCAL_API int getISPinfo (KR_API * db, RAW_KRNET_API * n) { // {{{
 	return 0;
 } // }}}
 
-KR_LOCAL_API int parseDummyData (char *** d, char * s, char delemeter) { // {{{
-	int		len = 0;
-	int		i, rlen;
+KR_LOCAL_API short parseDummyData (char *** d, char * s, char delemeter) { // {{{
 	char *	buf;
+	int		rlen;
+	short	i, len = 0;
 
 	if ( s == NULL ) {
 		*d = NULL;
@@ -142,7 +142,7 @@ KR_LOCAL_API int parseDummyData (char *** d, char * s, char delemeter) { // {{{
 	}
 	(*d)[--len] = s;
 
-	return rlen;
+	return (short) rlen;
 } // }}}
 
 KR_LOCAL_API int chartoint (char c) { // {{{

@@ -1,6 +1,6 @@
 Changelog
 
-$Id: Changes,v 1.118 2010-09-09 19:54:29 oops Exp $
+$Id: Changes,v 1.119 2010-09-10 06:19:27 oops Exp $
 
 
 * 3.1.0
@@ -13,6 +13,7 @@ Fri, Sep 10 2010 JoungKyun.Kim <http://oops.org>
 	- fixed wrong mutex lock
 	  changed proto type of kr_search -> kr_search (KRNET_API *, KR_API **)
 	  changed proto type of kr_search_ex -> kr_search_ex (KRNET_API_EX *, KR_API **)
+	- fixed return type parseDummyData api
 
 Thu, Aug 12 2010 JoungKyun.Kim <http://oops.org>
 	- fixed typo
