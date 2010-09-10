@@ -1,5 +1,5 @@
 /*
- * $Id: thread_sample1.c,v 1.12 2010-09-10 09:10:50 oops Exp $
+ * $Id: thread_sample1.c,v 1.13 2010-09-10 11:09:14 oops Exp $
  */
 
 #include <krisp.h>
@@ -39,7 +39,7 @@ int main (void) { // {{{
 			fprintf (stderr, "ERROR Connect: %s\n", err);
 
 			for ( r=0; r<=i; r++ )
-				kr_close (db[r]);
+				kr_close (&db[r]);
 			return 1;
 		}
 	}
@@ -82,7 +82,7 @@ void * thread_main (void * arg) { // {{{
 	} else
 		printf ("--> Thread %d : %15s => %s\n", tno, isp.ip, isp.icode);
 
-	kr_close (((tArg *) arg)->db);
+	kr_close (&((tArg *) arg)->db);
 	free (arg);
 
 	pthread_exit ((void *) 0);

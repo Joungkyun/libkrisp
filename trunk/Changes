@@ -1,6 +1,12 @@
 Changelog
 
-$Id: Changes,v 1.122 2010-09-10 09:17:58 oops Exp $
+$Id: Changes,v 1.123 2010-09-10 11:09:13 oops Exp $
+
+
+* 3.1.0
+Fri, Sep 10 2010 JoungKyun.Kim <http://oops.org>
+	- changed kr_close api proto type
+	  kr_close (KR_API *) => kr_close (KR_API **)
 
 
 * 3.0.3

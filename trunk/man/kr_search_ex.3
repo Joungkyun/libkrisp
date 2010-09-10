@@ -121,7 +121,7 @@ int main (void) {
         if ( kr_search_ex (&u_isp, db) ) {
             printf ("ERROR: %s\\n", u_isp.err);
             initStruct_ex (&u_isp, true);
-            kr_close (db);
+            kr_close (&db);
             return 1;
         }
 
@@ -136,7 +136,7 @@ int main (void) {
         initStruct_ex (&u_isp, true);
     }
 
-    kr_close (db);
+    kr_close (&db);
 
     return 0;
 }
