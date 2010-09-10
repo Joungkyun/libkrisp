@@ -1,5 +1,5 @@
 /*
- * $Id: thread_sample2.c,v 1.13 2010-09-10 09:07:10 oops Exp $
+ * $Id: thread_sample2.c,v 1.14 2010-09-10 09:10:50 oops Exp $
  */
 
 #include <krisp.h>
@@ -23,7 +23,7 @@ ulong prand (void);
 
 int main (void) { // {{{
 	int		i, r;
-	void *	status;
+	long	status;
 
 	for ( i=0; i<THREAD_SIZE; i++ ) {
 		pthread_create (&threads[i], NULL, &thread_main, (void *) i);
