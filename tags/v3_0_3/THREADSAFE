@@ -1,0 +1,26 @@
+$:Id $
+
+libkrisp Thread Safe 문서
+
+작성: 김정균 2010.06.15 http://oops.org
+
+이 문서는 libkrisp로 thread programing을 할 경우를 위한 문서이다.
+
+libkrisp는 sqlite backend가 thread safe한지 안한지 여부(sqlite 빌드시에 결정
+된다)와는 상관 없이 thread safe를 지원한다.
+
+libkrisp API를 이용하여 thread 작성 시, kr_open API를 thread 외부에서 호출을
+해서 handle만 thread에 넘겨줄 경우, thread safe하지 못하게 된다. 이를 위하여
+kr_open API 대신 kr_open_safe API를 사용하면 thread safe를 보장 하게 된다.
+
+kr_search API를 호출 시에, 첫 번째 인자로 주어지는 KRNET_API 구조체를 thread
+에서 공유할 경우, 알아서 thread safe를 구현해야 한다. 이는 libkrisp가 제어를
+할 수 없는 경우이다. 그러므로 kr_search API의 KRNET_API 구조체는 될수 있으면
+thread끼리 공유하지 않도록 한다.
+
+kr_open API를 thread 지역 변수를 이용하여 사용할 경우에는 thread safe 문제를
+고민할 필요가 없다.
+
+성능을 위한다면, kr_open_safe API 호출 시에, kr_search에 mutex lock이 걸리기
+때문에 될 수 있으면 kr_open / kr_search / kr_close 과정을 각 thread 내부에서
+처리 하는 것을 권장 한다.
