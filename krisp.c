@@ -1,5 +1,5 @@
 /*
- * $Id: krisp.c,v 1.99 2010-09-10 08:55:21 oops Exp $
+ * $Id: krisp.c,v 1.100 2010-09-10 09:17:58 oops Exp $
  */
 
 #include <stdio.h>
@@ -69,10 +69,10 @@ bool kr_open (KR_API **db, char *file, char *err) { // {{{
 } // }}}
 
 void kr_close (KR_API *db) { // {{{
-	krisp_mutex_destroy (db);
-
 	if ( db == NULL )
 		return;
+
+	krisp_mutex_destroy (db);
 
 	kr_dbClose (db);
 	free (db);
@@ -85,6 +85,11 @@ int kr_search (KRNET_API *isp, KR_API *db) { // {{{
 	RAW_KRNET_API	raw;
 	int				r;
 	char			err[1024];
+
+	if ( db == NULL ) {
+		SAFECPY_1024 (isp->err, "kr_search::KR_API *db is null");
+		return 1;
+	}
 
 	if ( isp->verbose != 0 && isp->verbose != 1 )
 		isp->verbose = 0;
@@ -174,6 +179,11 @@ goWrongData:
 int kr_search_ex (KRNET_API_EX *raw, KR_API *db) { // {{{
 	int		r;
 	char	err[1024];
+
+	if ( db == NULL ) {
+		SAFECPY_1024 (raw->err, "kr_search::KR_API *db is null");
+		return 1;
+	}
 
 	if ( raw->verbose != 0 && raw->verbose != 1 )
 		raw->verbose = 0;
