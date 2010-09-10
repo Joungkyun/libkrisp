@@ -1,5 +1,5 @@
 /*
- * $Id: sqlite3.c,v 1.13 2010-06-24 17:24:34 oops Exp $
+ * $Id: sqlite3.c,v 1.14 2010-09-10 12:44:26 oops Exp $
  *
  * libkrisp sqlite3 frontend API
  */
@@ -39,13 +39,13 @@ KR_LOCAL_API int kr_dbFree (KR_API *db) {
 	return 0;
 }
 
-KR_LOCAL_API bool kr_dbConnect (KR_API *db, char *file) {
+KR_LOCAL_API bool kr_dbConnect (KR_API *db) {
 	char * errmsg;
 
 #if SQLITE_VERSION_NUMBER >= 3005000
 	if ( sqlite3_libversion_number () >= 3005000 ) {
 		db->r = sqlite3_open_v2 (
-			(file != NULL) ? file : DBPATH,
+			db->database,
 			&db->c,
 			(db->threadsafe && sqlite3_threadsafe ()) ?
 				SQLITE_OPEN_READONLY|SQLITE_OPEN_FULLMUTEX :
@@ -54,7 +54,7 @@ KR_LOCAL_API bool kr_dbConnect (KR_API *db, char *file) {
 		);
 	} else
 #endif
-		db->r = sqlite3_open ((file != NULL) ? file : DBPATH, &db->c);
+		db->r = sqlite3_open (db->database, &db->c);
 
 	if ( db->r ) {
 		kr_dbError (db);

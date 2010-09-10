@@ -1,5 +1,5 @@
 /*
- * $Id: krispapi.h,v 1.10 2010-09-10 09:01:21 oops Exp $
+ * $Id: krispapi.h,v 1.11 2010-09-10 12:44:25 oops Exp $
  *
  * Notice: if return value of API that has '_f' prefix is not NULL,
  *         it is must free memory!
@@ -62,6 +62,11 @@ void _safecpy (char *, char *, int);
 KR_LOCAL_API void krisp_mutex_lock (KR_API *);
 KR_LOCAL_API void krisp_mutex_unlock (KR_API *);
 KR_LOCAL_API void krisp_mutex_destroy (KR_API *);
+
+/*
+ * for check krisp database changing
+ */
+KR_LOCAL_API bool check_database_mtime (KR_API *);
 
 /*
  * Local variables:

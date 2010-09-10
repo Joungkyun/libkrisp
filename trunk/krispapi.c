@@ -1,5 +1,5 @@
 /*
- * $Id: krispapi.c,v 1.20 2010-09-10 09:07:09 oops Exp $
+ * $Id: krispapi.c,v 1.21 2010-09-10 12:44:25 oops Exp $
  */
 
 #include <stdio.h>
@@ -230,6 +230,29 @@ KR_LOCAL_API void krisp_mutex_destroy (KR_API * db) { // {{{
 #endif
 
 	return;
+} // }}}
+
+KR_LOCAL_API bool check_database_mtime (KR_API *db) { // {{{
+	struct stat	f;
+	time_t		current;
+
+	if ( db->db_time_stamp_interval < 1 )
+		return false;
+
+	current = time (NULL);
+	if ( (current - db->db_stamp_checked) < db->db_time_stamp_interval )
+		return false;
+
+	if ( stat (db->database, &f) == -1 )
+		return false;
+
+	if ( db->db_time_stamp == f.st_mtime )
+		return false;
+
+	db->db_time_stamp = f.st_mtime;
+	db->db_stamp_checked = current;
+
+	return true;
 } // }}}
 
 /*

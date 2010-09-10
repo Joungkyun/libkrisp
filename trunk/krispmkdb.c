@@ -1,12 +1,9 @@
 /*
- * $Id: krispmkdb.c,v 1.21 2010-09-10 11:09:14 oops Exp $
+ * $Id: krispmkdb.c,v 1.22 2010-09-10 12:44:25 oops Exp $
  */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <unistd.h>
 
 #include <krisp.h>
 #include <krdb.h>
