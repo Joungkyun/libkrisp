@@ -1,5 +1,5 @@
 /*
- * $Id: krispapi.c,v 1.19 2010-09-10 09:01:21 oops Exp $
+ * $Id: krispapi.c,v 1.20 2010-09-10 09:07:09 oops Exp $
  */
 
 #include <stdio.h>
@@ -74,7 +74,7 @@ KR_LOCAL_API int getISPinfo (KR_API * db, RAW_KRNET_API * n) { // {{{
 					}
 					break;
 				case 2 :
-					n->dummydata = (char *) malloc (sizeof (char) * strlen (db->rowdata[r]) + 1);
+					n->dummydata = (char *) malloc (sizeof (char) * (strlen (db->rowdata[r]) + 1));
 					if ( n->dummydata != NULL )
 						strcpy (n->dummydata, db->rowdata[r]);
 					break;
@@ -130,7 +130,7 @@ KR_LOCAL_API short parseDummyData (char *** d, char * s, char delemeter) { // {{
 
 	len++;
 	rlen = len;
-	*d = (char **) malloc (sizeof (char *) * len + 1);
+	*d = (char **) malloc (sizeof (char *) * (len + 1));
 	if ( *d == NULL ) {
 		return 0;
 	}
