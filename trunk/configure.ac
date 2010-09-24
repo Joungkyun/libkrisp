@@ -1,7 +1,7 @@
 # Process this file with autoconf to produce a configure script.
 # Configure template for krisp library
 #
-# $Id: configure.ac,v 1.44 2010-09-20 08:05:32 oops Exp $
+# $Id: configure.ac,v 1.45 2010-09-24 07:34:50 oops Exp $
 
 #
 AC_PREREQ(2.59)
@@ -191,6 +191,7 @@ fi
 AC_CHECK_LIB(pthread, pthread_create,,,)
 if test "x$ac_cv_lib_pthread_pthread_create" != "x"; then
 	KR_DEFS="$KR_DEFS -DHAVE_PTHREAD_H"
+	CPPFLAGS="$CPPFLAGS -D_REENTRANT"
 fi
 
 if test "x$prefix" = "xNONE" ; then
