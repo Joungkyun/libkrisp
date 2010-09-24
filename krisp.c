@@ -1,5 +1,5 @@
 /*
- * $Id: krisp.c,v 1.104 2010-09-20 08:14:50 oops Exp $
+ * $Id: krisp.c,v 1.105 2010-09-24 08:18:45 oops Exp $
  */
 
 #include <stdio.h>
@@ -44,7 +44,7 @@ KR_LOCAL_API bool _kr_open (KR_API **db, char *file, char *err, bool safe) { // 
 		return false;
 	}
 
-	(*db)->db_time_stamp_interval = 3600;
+	(*db)->db_time_stamp_interval = 0;
 	(*db)->db_time_stamp = f.st_mtime;
 	(*db)->db_stamp_checked = time (NULL);
 
