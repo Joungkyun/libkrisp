@@ -1,0 +1,150 @@
+$id: $
+
+이 문서는 libkrips 2.x 이하 버전에서 3.x로의 변경 사항을 기술한다.
+
+1. kr_open API의 첫 번째 API 형식이 point로 변경
+
+   kr_open의 첫 번째 인자가 single point(*) 에서 double point(**) 로 변경이 되
+   었고, error message를 위하여 3번째 인자가 추가 되었다.
+
+   기존의 코드
+
+       KR_API db;
+
+       if ( kr_open (&db, NULL) ) {
+           fprintf (stderr, "ERROR Connect: %s\n", dberr);
+           return 1;
+       }
+
+   는 다음과 같이 변경이 되어야 한다.
+
+       KR_API *db;
+       char err[1024];
+
+       if ( kr_open (&db, NULL, err) == false ) {
+           fprintf (stderr, "ERROR Connect: %s\n", err);
+           return 1;
+       }
+
+   기존의 코드에서 KR_API를 다음과 같이 포인터로 선언했을 경우
+
+       KR_API *db;
+
+       db = (KR_API *) malloc (sizeof (KR_API));
+
+       if ( kr_open (db, NULL) ) {
+           fprintf (stderr, "ERROR Connect: %s\n", dberr);
+           return 1;
+       }
+
+   3.x 부터는 kr_open API 내부에서 memory 할당을 수행하므로 memory 할당을 하지
+   않은채 주소를 넘겨 주어야 한다.
+
+
+2. global variable dberr 삭제
+
+   DB error message가 저장되던 dberr global variable이 thread safe를 위하여 이
+   제거되고, KR_API structure의 dberr member에 DB error message가 저장된다.
+
+   다음의 2.x code
+
+       extern const char dberr[1024];
+       KR_API db;
+
+       if ( kr_open (&db, NULL) ) {
+           fprintf (stderr, "ERROR Connect: %s\n", dberr);
+           return 1;
+       }
+
+   는 다음과 같이 변경이 되어야 한다.
+
+       KR_API *db;
+       char err[1024];
+
+       if ( kr_open (&db, NULL, err) == false ) {
+           fprintf (stderr, "ERROR Connect: %s\n", err);
+           return 1;
+       }
+
+
+3. KRNET_API structure 변경
+
+   2.x
+        typedef struct netinfos {
+            char            key[16];
+            char            ip[256];
+            char            netmask[16];
+            char            network[16];
+            char            broadcast[16];
+            char            icode[128];
+            char            iname[128];
+            char            ccode[4];
+            char            cname[128];
+            char            city[64];
+            char            region[4];
+        } KRNET_API;
+
+    3.x
+        typedef struct netinfos {
+            short           verbose;
+            char            ip[256];
+            ulong           netmask;
+            ulong           start;
+            ulong           end;
+            char            icode[64];
+            char            iname[64];
+            char            ccode[4];
+            char            cname[64];
+        } KRNET_API;
+
+    3.x 부터 verbose member가 추가 되었다. KRNET_API를 선언한 후, verbose 멤버
+    를 true로 설정을 하면 debug message가 출력이 된다. verbose member의 기본값
+    은 false 이다.
+
+    또한, netmask의 type이 string에서 unsigned long type으로 변경이 되었으며,
+    network, broadcast member가 제거되고 start, end member가 추가 되었다. 그러
+    므로 기존의 코드
+
+        KRNET_API isp;
+        strcpy (isp.ip, "1.1.1.1");
+        if ( kr_search (&isp, db) ) {
+            fprintf (stderr, "ERROR: %s\n", dberr);
+            kr_close (db);
+            return 1;
+        }
+
+        printf ("netmask   : %s\n", isp.netmask);
+        printf ("network   : %s\n", isp.network);
+        printf ("broadcast : %s\n", isp.broadcast);
+
+    는 다음과 같이 변경이 되어야 한다.
+
+        KRNET_API isp;
+        isp.verbose = false;
+        // defined SAFECPY_256 in krisp.h
+        SAFECPY_256 (isp.ip, addr);
+        if ( kr_search (&isp, db) ) {
+            fprintf (stderr, "ERROR: %s\n", isp.err);
+            kr_close (&db);
+            return 1;
+        }
+
+        printf ("netmask   : %s\n", long2ip (isp.netmask));
+        printf ("network   : %s\n", long2ip (isp.start));
+        printf ("broadcast : %s\n", long2ip (isp.end));
+
+    만약 DB의 start와 end 필드가 network을 의미하지 않는다면, 다음과 같이 정확
+    한 network 주소와 broadcast 주소를 구할 수 있다.
+
+        printf (
+            "network   : %s\n",
+            long2ip (kr_network (isp.start, isp.netmask))
+        );
+        printf (
+            "broadcast : %s\n",
+            long2ip (kr_broadcast (isp.start, isp.netmask))
+        );
+
+    long2ip는 정적 할당 버퍼를 반환하기 때문에 printf의 argument에 동시에 사용
+    할 수 없다. long2ip는 libipcalc에 포함이 되어 있다.
+

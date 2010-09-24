@@ -1,0 +1,115 @@
+Changelog
+
+$Id: Changes,v 1.129 2010-09-24 08:18:45 oops Exp $
+
+* 3.1.1
+Fri, Sep 24 2010 JoungKyun.Kim <http://oops.org>
+	- add journal_mode=OFF option on sqlite3 database handle
+	- add _REENTRANT compile flag
+	- changed default value of db_time_stamp_interval from 3600 sec to 0 sec
+
+Mon, Sep 20 2010 JoungKyun.Kim <http://oops.org>
+	- initialize db handler to NULL when database connect failed on kr_open
+
+
+* 3.1.0
+Fri, Sep 10 2010 JoungKyun.Kim <http://oops.org>
+	- changed kr_close api proto type
+	  kr_close (KR_API *) => kr_close (KR_API **)
+	- reconnect database when changed mtime of database
+	  add 4 members in KR_NET struct
+	  database
+	  db_time_stamp_interval
+	  db_time_stamp
+	  db_stamp_checked
+
+
+* 3.0.3
+
+Fri, Sep 10 2010 JoungKyun.Kim <http://oops.org>
+	- fixed segfault kr_search(_ex) when KR_NET structure is null
+
+Thu, Aug 12 2010 JoungKyun.Kim <http://oops.org>
+	- fixed typo
+
+
+* 3.0.2
+
+Sun, Aug  8 2010 JoungKyun.Kim <http://oops.org>
+	- release 3.0.2
+	- link with libipcalc
+	- remove ip2long, netcalc that forked libipcalc
+	- add --with-compat build option for makeing compat library
+	- add krisp.pc that is pkg-config configuration file
+
+
+* 3.0.1
+
+Tue, Aug  3 2010 JoungKyun.Kim <http://oops.org>
+	- release 3.0.1
+	- moved header files to %includedir/krisp
+	- removed dependency library on --libs and, add --link for dependency
+	  library on krisp-config
+
+
+* 3.0.0
+
+Fri, Jul 16 2010 JoungKyun.Kim <http://oops.org>
+	- release 3.0.0
+	- update database on july
+
+Fri, Jul  2 2010 JoungKyun.Kim <http://oops.org>
+	- enhanced build environments
+
+Wed, Jun 30 2010 JoungKyun.Kim <http://oops.org>
+	- add kr_long2ip_r api for thread safe
+	- changed mutex lock per db constructor
+
+Tue, Jun 29 2010 JoungKyun.Kim <http://oops.org>
+	- rewrite _kr_valid_ip_address and change proto type
+
+Sun, Jun 27 2010 JoungKyun.Kim <http://oops.org>
+	- initialize verbose member of KRNET_API(_ex) on kr_search(_ex) API
+
+Fri, Jun 25 2010 JoungKyun.Kim <http://oops.org>
+	- rename internal api name
+	- make local symbol
+	- fix wrong caculation of netcalc when use FQDN instead of IP address
+
+Thu, Jun 24 2010 JoungKyun.Kim <http://oops.org>
+	- support multiple build (make -j4)
+	- fixed dl link error
+
+Fri, Jun 18 2010 JoungKyun.Kim <http://oops.org>
+	- fixed sqlite3_open_v2 compatibility problems under sqlite 3.5.0
+	- add bool type to change some APIs and variables and structure members
+	- don't call kr_close api any more when failed kr_open
+
+Wed, Jun 16 2010 JoungKyun.Kim <http://oops.org>
+	- changed proto type of kr_open
+	- add err member on kr_search/kr_search_ex for thread safe
+
+Mon, Jun 14 2010 JoungKyun.Kim <http://oops.org>
+	- add thread safe
+
+Thu, Jun 10 2010 JoungKyun.Kim <http://oops.org>
+	- add database file check on kr_open
+
+Wed, Jun  9 2010 JoungKyun.Kim <http://oops.org>
+	- fixed segfault on kr_open
+
+Tue, Jun  8 2010 JoungKyun.Kim <http://oops.org>
+	- init verbose member of KR_API to 0 on kr_open
+	- add dummy member array size on RAW_KRNET_API
+	- changed frontend api from function to define
+
+Sat, May 22 2010 JoungKyun.Kim <http://oops.org>
+	- changed query algoritm
+	- changed database structure
+	- support internal geoip/geoipisp database
+	  Don't need geoip library any more
+	  Support convert scripts
+	- update SONAME to 2.0.0
+	  changed usage of almost APIs
+
+
