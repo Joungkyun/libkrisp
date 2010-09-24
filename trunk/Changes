@@ -1,11 +1,12 @@
 Changelog
 
-$Id: Changes,v 1.128 2010-09-24 07:34:49 oops Exp $
+$Id: Changes,v 1.129 2010-09-24 08:18:45 oops Exp $
 
 * 3.1.1
 Fri, Sep 24 2010 JoungKyun.Kim <http://oops.org>
 	- add journal_mode=OFF option on sqlite3 database handle
 	- add _REENTRANT compile flag
+	- changed default value of db_time_stamp_interval from 3600 sec to 0 sec
 
 Mon, Sep 20 2010 JoungKyun.Kim <http://oops.org>
 	- initialize db handler to NULL when database connect failed on kr_open
