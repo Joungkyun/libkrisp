@@ -1,8 +1,11 @@
 Changelog
 
-$Id: Changes,v 1.126 2010-09-20 08:14:50 oops Exp $
+$Id: Changes,v 1.127 2010-09-24 07:18:52 oops Exp $
 
 * 3.1.1
+Fri, Sep 24 2010 JoungKyun.Kim <http://oops.org>
+	- add journal_mode=OFF option on sqlite3 database handle
+
 Mon, Sep 20 2010 JoungKyun.Kim <http://oops.org>
 	- initialize db handler to NULL when database connect failed on kr_open
 
