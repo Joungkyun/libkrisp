@@ -1,5 +1,5 @@
 /*
- * $Id: sqlite3.c,v 1.14 2010-09-10 12:44:26 oops Exp $
+ * $Id: sqlite3.c,v 1.15 2010-09-24 07:18:52 oops Exp $
  *
  * libkrisp sqlite3 frontend API
  */
@@ -64,7 +64,7 @@ KR_LOCAL_API bool kr_dbConnect (KR_API *db) {
 	sqlite3_busy_timeout (db->c, 500);
 	sqlite3_exec (
 		db->c,
-		"PRAGMA synchronous=OFF; PRAGMA count_changes=OFF; PRAGMA temp_store=memory;",
+		"PRAGMA synchronous=OFF; PRAGMA count_changes=OFF; PRAGMA temp_store=memory; journal_mode=OFF",
 		NULL, NULL, &errmsg
 	);
 	sqlite3_free (errmsg);
