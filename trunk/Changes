@@ -1,8 +1,11 @@
 Changelog
 
-$Id: Changes,v 1.129 2010-09-24 08:18:45 oops Exp $
+$Id: Changes,v 1.130 2010-11-04 09:31:01 oops Exp $
 
 * 3.1.1
+Mon, Sep 27 2010 JoungKyun.Kim <http://oops.org>
+	- release 3.1.1
+
 Fri, Sep 24 2010 JoungKyun.Kim <http://oops.org>
 	- add journal_mode=OFF option on sqlite3 database handle
 	- add _REENTRANT compile flag
