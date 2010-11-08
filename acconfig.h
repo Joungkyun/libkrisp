@@ -1,4 +1,4 @@
-/* $Id: acconfig.h,v 1.4 2010-11-08 06:11:50 oops Exp $ */
+/* $Id: acconfig.h,v 1.5 2010-11-08 06:38:58 oops Exp $ */
 #ifndef KRISP_CONFIG_H
 #define KRISP_CONFIG_H
 
@@ -34,7 +34,9 @@
  *   */
 
 #if ! defined C_ULONG_DEFINED
-	typedef unsigned long   ulong;
+#	if ! defined ulong
+		typedef unsigned long   ulong;
+#	endif
 #endif
 
 #endif /*  KRISP_CONFIG_H */
