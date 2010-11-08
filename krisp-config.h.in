@@ -1,5 +1,5 @@
 /* krisp-config.h.in.  Generated from configure.ac by autoheader.  */
-/* $Id: krisp-config.h.in,v 1.29 2010-11-08 06:08:11 oops Exp $ */
+/* $Id: krisp-config.h.in,v 1.30 2010-11-08 06:11:50 oops Exp $ */
 #ifndef KRISP_CONFIG_H
 #define KRISP_CONFIG_H
 
@@ -153,5 +153,13 @@
 
 /* Define to `unsigned' if <sys/types.h> does not define. */
 #undef size_t
+
+/*
+ *  * Compotable C Type
+ *   */
+
+#if ! defined C_ULONG_DEFINED
+	typedef unsigned long   ulong;
+#endif
 
 #endif /*  KRISP_CONFIG_H */
