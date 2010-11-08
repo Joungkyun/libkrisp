@@ -1,7 +1,7 @@
 # Process this file with autoconf to produce a configure script.
 # Configure template for krisp library
 #
-# $Id: configure.ac,v 1.46 2010-11-08 05:39:08 oops Exp $
+# $Id: configure.ac,v 1.47 2010-11-08 06:03:19 oops Exp $
 
 #
 AC_PREREQ(2.59)
@@ -44,10 +44,10 @@ AC_ARG_WITH(ipcalc,
 AC_ARG_WITH(libiconv,
 [  --with-libiconv=PATH    libiconv prefix])
 
-AC_PATH_PROG(MAKE, make)
-if test ! -f "$ac_cv_path_MAKE"; then
-	AC_MSG_ERROR(Can't not found make)
-fi
+#AC_PATH_PROG(MAKE, make)
+#if test ! -f "$ac_cv_path_MAKE"; then
+#	AC_MSG_ERROR(Can't not found make)
+#fi
 
 AC_PATH_PROG(PERL, perl)
 if test ! -f "$ac_cv_path_PERL"; then
@@ -219,6 +219,9 @@ AC_HEADER_TIME
 AC_FUNC_MALLOC
 AC_FUNC_STAT
 AC_CHECK_FUNCS([getopt_long])
+
+# Type check
+AC_CHECK_TYPE([ulong], [AC_DEFINE([C_ULONG_DEFINED], [1], [Define to 1 if the ulong type exists in C.])])
 
 AC_CONFIG_FILES([Makefile test/Makefile krisp.pc krisp-config krdb.h libkrisp.spec])
 AC_OUTPUT

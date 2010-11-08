@@ -1,5 +1,5 @@
 /* krisp-config.h.in.  Generated from configure.ac by autoheader.  */
-/* $Id: krisp-config.h.in,v 1.27 2010-09-24 07:34:50 oops Exp $ */
+/* $Id: krisp-config.h.in,v 1.28 2010-11-08 06:03:19 oops Exp $ */
 #ifndef KRISP_CONFIG_H
 #define KRISP_CONFIG_H
 
@@ -27,6 +27,9 @@
 /* config.h:  a general config file */
 
 
+
+/* Define to 1 if the ulong type exists in C. */
+#undef C_ULONG_DEFINED
 
 /* Define to 1 if you have the <arpa/inet.h> header file. */
 #undef HAVE_ARPA_INET_H
