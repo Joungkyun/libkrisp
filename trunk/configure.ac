@@ -1,7 +1,7 @@
 # Process this file with autoconf to produce a configure script.
 # Configure template for krisp library
 #
-# $Id: configure.ac,v 1.47 2010-11-08 06:03:19 oops Exp $
+# $Id: configure.ac,v 1.48 2010-11-08 06:08:11 oops Exp $
 
 #
 AC_PREREQ(2.59)
@@ -101,7 +101,7 @@ if test "x$with_sqlite" != "x"; then
 		do
 			if test -f "$i/lib/lib${j}.so" -o -f "$i/lib/lib${j}.a"; then
 				sqlitelib_tmp="L$i/lib"
-			elif test -f -f "$i/lib64/lib${j}.so" -o -f "$i/lib64/lib${j}.a"; then
+			elif test -f "$i/lib64/lib${j}.so" -o -f "$i/lib64/lib${j}.a"; then
 				sqlitelib_tmp="L$i/lib64"
 			fi
 
