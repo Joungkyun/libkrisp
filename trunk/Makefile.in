@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 1.38 2011-01-11 10:24:44 oops Exp $
+# $Id: Makefile.in,v 1.39 2011-01-12 08:45:01 oops Exp $
 srcdir          = @srcdir@
 top_srcdir      = @top_srcdir@
 builddir        = @builddir@
@@ -61,8 +61,7 @@ P_LIBTOOL       = $(LIBTOOL) --mode=install @INSTALL_PROGRAM@ -m755
 D_LIBTOOL       = $(LIBTOOL) --mode=install @INSTALL_DATA@ -m644
 L_LIBTOOL       = $(LIBTOOL) --mode=install $(INSTALL)
 
-MAN1            = krisplookup krispmkdb
-MAN3            = krisp_version kr_open kr_close kr_search kr_search_ex
+MANLANG         = ko
 
 
 all: $(OBJECT) $(UTIL_OBJ)
@@ -112,13 +111,25 @@ install-data:
 
 install-man:
 ifndef COMPAT
-	$(MKDIR) $(DESTDIR)$(mandir)/man1
-	$(MKDIR) $(DESTDIR)$(mandir)/man3
-	for i in $(MAN1); do \
-		$(D_LIBTOOL) man/$$i.1 $(DESTDIR)$(mandir)/man1/ ; \
+	$(MKDIR) $(DESTDIR)$(mandir)/ko/man1
+	$(MKDIR) $(DESTDIR)$(mandir)/ko/man3
+
+	# install english man page
+	for manno in 1 3; do \
+		$(MKDIR) $(DESTDIR)$(mandir)/man$$manno; \
+		for i in `ls man/*.$$manno`; do \
+			$(D_LIBTOOL) $$i $(DESTDIR)$(mandir)/man$$manno/ ; \
+		done; \
 	done
-	for i in $(MAN3); do \
-		$(D_LIBTOOL) man/$$i.3 $(DESTDIR)$(mandir)/man3/ ; \
+
+	# support languages
+	for l in $(MANLANG); do \
+		for manno in 1 3; do \
+			$(MKDIR) $(DESTDIR)$(mandir)/$$l/man$$manno; \
+			for i in `ls man/$$l/*.$$manno`; do \
+				$(D_LIBTOOL) $$i $(DESTDIR)$(mandir)/$$l/man$$manno/ ; \
+			done; \
+		done; \
 	done
 endif
 

@@ -1,19 +1,21 @@
-.TH KRISPLOOKUP 1 "22 May 2010"
+.TH KRISPLOOKUP 1 "11 Jan 2011"
 
-.SH 이름
+.SH NAME
 .BI krisplookup
-\- 한국의 IP 주소나 호스트 이름을 이용하여 IPS 정보를 구하는 응용 프로그램
-.SH 사용법
+\- Obtain Country, ISP information of any IP address.
+
+.SH SYNOPSIS
 .BI "krisplookup \-[fhin] <" ipaddress "|" hostname ">"
-.SH 설명
-krisplookup 은 한국의 IP 주소나 호스트 이름에 대하여, libkrisp 라이브러리를
-이용하여, ISP 정보를 얻기 위한 유틸리티이다.
+
+.SH DESCRIPTION
+krisplookup is utility to get information of Country and ISP
+about specify ip address.
 .PP
-예를 들어,
+For example,
 .PP
 .BI "krisplookup " oops.org
 .PP
-명령은 다음의 정보를 반환한다.
+command prints follow informations.
 .PP
 .BI "oops.org (210.124.122.26): (주)데이콤 (BORANET)"
 .br
@@ -26,24 +28,25 @@ krisplookup 은 한국의 IP 주소나 호스트 이름에 대하여, libkrisp �
 .BI "NATION : Korea, Republic of (KR)"
 .br
 .PP
-.SH 옵션
+.SH OPTIONS
 .IP "-f"
-기본적으로 krisplookup 은 Hard coding 되어진 database path 를 이용하다. 만약
-업데이트된 database file 을 테스트 하기 위하여, default database 대신 -f 옵션을
-사용할 수 있다.
+Specifies user database. Basically krisp database is been hard cording.
+If you want to open other database file as krisp, using -f option.
 .IP "-h"
-krisplookup 의 사용법을 출력한다.
+Print help messages.
 .IP "-i"
-ISP 코드만 출력한다.
+Print only isp code.
 .IP "-n"
-국가 코드만 출력한다.
-.SH 저자
-김정균
-.SH 버그 리포트
-<http://oops.org> 의 QnA 게시판을 이용한다.
-.SH 저작권
-Copyright (c) 2010 JoungKyun.Kim <http://oops.org>
+Print only country code.
 
-이 프로그램은
-.BI GPL
-을 따르며, 사용시의 어떠한 문제에 대하여 보증하지 않는다.
+.SH AUTHORS
+JoungKyun.Kim <http://oops.org>
+
+.SH BUGS
+Report to QnA bulletin board of http://oops.org
+
+.SH COPYRIGHT
+Copyright (c) 2011 JoungKyun.Kim <http://oops.org>
+
+This api is follows
+.BI LGPL 2.1
