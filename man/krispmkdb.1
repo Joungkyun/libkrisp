@@ -1,33 +1,36 @@
-.TH KRISPMKDB 1 "12 Jun 2006"
+.TH KRISPMKDB 1 "11 Jan 2011"
 
-.SH 이름
+.SH NAME
 .BI krispmkdb
-\- libkrisp 의 database 를 만드는 응용 프로그램
-.SH 사용법
+\- create database of libkrisp form krisp raw CSV data file.
+.SH SYNOPSIS
 .BI "krispmkdb -[chty] " saveFile
-.SH 설명
+
+.SH DESCRIPTION
 .BI krispmkdb
- libkrisp에서 제공하는 raw csv data file을 이용하여 지정한
-database의 table을 갱신하거나 추가하는 도구이다.
-.SH 옵션
+ creates libkrisp database from krisp raw csv data file.
+
+.SH OPTIONS
 .IP "-c"
-추가 또는 갱신할 csv 파일을 지정한다.
+Specify csv file for add or update.
 .IP "-h"
-krispmkdb 의 사용법을 출력한다.
+print usages.
 .IP "-t"
-추가 또는 갱신할 table 이름을 지정한다.
+Specify table name of database for add or update.
 .IP "-y"
-none interactive mode로 작동한다.
-.SH 저자
-김정균
-.SH 버그 리포트
-<http://oops.org> 의 QnA 게시판을 이용한다.
-.SH 저작권
-Copyright (c) 2010 JoungKyun.Kim <http://oops.org>
+Execute with none interactive mode.
 
-이 프로그램은
-.BI GPL
-을 따르며, 사용시의 어떠한 문제에 대하여 보증하지 않는다.
+.SH AUTHORS
+JoungKyun.Kim <http://oops.org>
 
-.SH "참고"
+.SH BUGS
+Report to QnA bulletin board of http://oops.org
+
+.SH COPYRIGHT
+Copyright (c) 2011 JoungKyun.Kim <http://oops.org>
+
+This api is follows
+.BI LGPL 2.1
+
+.SH "SEE ALSO"
 kr_search(3), kr_search_ex(3)

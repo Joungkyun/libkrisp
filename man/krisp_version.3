@@ -1,24 +1,24 @@
-.TH KRISP_VERSION 3 "22 May 2010"
+.TH KRISP_VERSION 3 "10 Jan 2011"
 
-.SH 이름
-krisp_version - libkrisp 의 버전을 반환한다.
+.SH NAME
+krisp_version \- return version of libkrisp
 
-.SH 사용법
+.SH SYNOPSIS
 .BI "#include <krisp.h>"
 .br
 .BI "char * krisp_version (" void ");"
 .br
 .BI "char * krisp_uversion (" void ");"
 
-.SH 설명
+.SH DESCRIPTION
 .BI krisp_version
-API는 libkrisp 의 버전을 출력한다.
+API retruns version of libkrisp
 .PP
 .BI krisp_uversion
-API는 버전을 정수형으로 표시한다. 각 버전은 3자리씩으로 구현이 되며,
-1.1.1 의 경우 001001001 로 반환을 한다.
+API returns decimical version. Each version is construct with
+three numbers. For example, 1.1.1 is to return with 001001001.
 
-.SH 예제
+.SH EXAMPLE
 .nf
 #include <krisp.h>
 
@@ -30,15 +30,14 @@ int main (void) {
 }
 .fi
 
-.SH 저자
-김정균
+.SH AUTHORS
+JoungKyun.Kim <http://oops.org>
 
-.SH 버그 리포트
-<http://oops.org> 의 QnA 게시판을 이용한다.
+.SH BUGS
+Report to QnA bulletin board of http://oops.org
 
-.SH 저작권
-Copyright (c) 2010 JoungKyun.Kim <http://oops.org>
+.SH COPYRIGHT
+Copyright (c) 2011 JoungKyun.Kim <http://oops.org>
 
-이 API는
-.BI LGPL
-을 따르며, 사용시의 어떠한 문제에 대하여 보증하지 않는다.
+This api is follows
+.BI LGPL 2.1
