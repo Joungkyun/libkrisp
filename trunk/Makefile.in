@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 1.39 2011-01-12 08:45:01 oops Exp $
+# $Id: Makefile.in,v 1.40 2011-01-12 08:53:12 oops Exp $
 srcdir          = @srcdir@
 top_srcdir      = @top_srcdir@
 builddir        = @builddir@
@@ -56,7 +56,7 @@ SQLITE			= @SQLITE@
 CC_OPT          = $(CC) $(CFLAGS) $(DEFS)
 LINK            = $(LIBTOOL) --mode=link $(CC_OPT) -rpath $(libdir) -version-info $(SONAME_INFO)
 PLINK           = $(LIBTOOL) --mode=link $(CC_OPT) -rpath $(libdir)
-COMPILE         = $(LIBTOOL) --mode=compile $(CC_OPT) $(DEFS) -prefer-pic
+COMPILE         = $(LIBTOOL) --mode=compile $(CC_OPT) -prefer-pic
 P_LIBTOOL       = $(LIBTOOL) --mode=install @INSTALL_PROGRAM@ -m755
 D_LIBTOOL       = $(LIBTOOL) --mode=install @INSTALL_DATA@ -m644
 L_LIBTOOL       = $(LIBTOOL) --mode=install $(INSTALL)
