@@ -1,0 +1,15 @@
+diff -ruNp libkrisp.org//Makefile.in libkrisp/Makefile.in
+--- libkrisp.org//Makefile.in	2011-01-12 18:51:47.000000000 +0900
++++ libkrisp/Makefile.in	2011-01-12 18:55:21.295399074 +0900
+@@ -96,6 +96,11 @@ data:
+ install: install-header install-data install-man
+ 	$(MKDIR) $(DESTDIR)$(bindir)
+ 	$(MKDIR) $(DESTDIR)$(libdir)/pkgconfig
++
++	for i in .libs/lib$(PROG)$(COMPAT).so.$(SONAME_VERSION) .libs/$(PROG)lookup $(PROG)mkdb; do \
++		/usr/bin/chrpath -d $$i; \
++	done
++
+ 	$(P_LIBTOOL) $(PROG)-config $(DESTDIR)$(bindir)/$(PROG)$(COMPAT)-config
+ 	$(P_LIBTOOL) $(PROG)lookup $(DESTDIR)$(bindir)/$(PROG)lookup$(COMPAT)
+ 	$(P_LIBTOOL) $(PROG)mkdb $(DESTDIR)$(bindir)/$(PROG)mkdb$(COMPAT)
