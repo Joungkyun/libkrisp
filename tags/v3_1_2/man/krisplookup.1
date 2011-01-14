@@ -1,0 +1,52 @@
+.TH KRISPLOOKUP 1 "11 Jan 2011"
+
+.SH NAME
+.BI krisplookup
+\- Obtain Country, ISP information of any IP address.
+
+.SH SYNOPSIS
+.BI "krisplookup \-[fhin] <" ipaddress "|" hostname ">"
+
+.SH DESCRIPTION
+krisplookup is utility to get information of Country and ISP
+about specify ip address.
+.PP
+For example,
+.PP
+.BI "krisplookup " oops.org
+.PP
+command prints follow informations.
+.PP
+.BI "oops.org (210.124.122.26): (주)데이콤 (BORANET)"
+.br
+.BI "SUBNET : 255.255.0.0"
+.br
+.BI "NETWORK: 210.124.0.0"
+.br
+.BI "BCAST  : 210.124.255.255"
+.br
+.BI "NATION : Korea, Republic of (KR)"
+.br
+.PP
+.SH OPTIONS
+.IP "-f"
+Specifies user database. Basically krisp database is been hard cording.
+If you want to open other database file as krisp, using -f option.
+.IP "-h"
+Print help messages.
+.IP "-i"
+Print only isp code.
+.IP "-n"
+Print only country code.
+
+.SH AUTHORS
+JoungKyun.Kim <http://oops.org>
+
+.SH BUGS
+Report to QnA bulletin board of http://oops.org
+
+.SH COPYRIGHT
+Copyright (c) 2011 JoungKyun.Kim <http://oops.org>
+
+This api is follows
+.BI LGPL 2.1

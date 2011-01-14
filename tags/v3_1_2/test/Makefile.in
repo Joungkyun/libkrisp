@@ -1,0 +1,71 @@
+# $Id: Makefile.in,v 1.7 2010-07-02 18:16:45 oops Exp $
+srcdir          = @srcdir@
+top_srcdir      = ..
+builddir        = @builddir@
+top_builddir    = ..
+
+build           = @build@
+build_cpu       = @build_cpu@
+build_vendor    = @build_vendor@
+build_os        = @build_os@
+host            = @host@
+host_cpu        = @host_cpu@
+host_vendor     = @host_vendor@
+
+PROG            = @PACKAGE_NAME@
+VERSION         = @PACKAGE_VERSION@
+CC              = @CC@ -Wall
+CFLAGS          = @CFLAGS@
+CPPFLAGS        = -I. -I.. @CPPFLAGS@
+LIBS            = @LIBS@
+LDFLAGS         = @LDFLAGS@ $(LIBS)
+DEFS            = @DEFS@ $(CPPFLAGS)
+
+TEST_OBJ        = krispexlookup.lo krtest.lo thread_sample.lo thread_sample1.lo thread_sample2.lo
+REQ_HEADER		= ../krisp.h ../krispapi.h ../krispcommon.h
+
+prefix          = @prefix@
+exec_prefix     = @exec_prefix@
+datadir         = @datadir@
+includedir      = @includedir@
+libdir          = @libdir@
+bindir          = @bindir@
+mandir          = @mandir@
+DESTDIR         =
+
+LIBTOOL         = @LIBTOOL@
+RM              = @RM@ -f
+MAKE            = @MAKE@
+MKDIR           = @MKDIR@ -p
+LN              = @LN_S@
+
+CC_OPT          = $(CC) $(CFLAGS) $(DEFS)
+PLINK           = $(LIBTOOL) --mode=link $(CC_OPT) -rpath $(libdir)
+COMPILE         = $(LIBTOOL) --mode=compile $(CC_OPT) $(DEFS) -prefer-pic
+
+all: $(TEST_OBJ)
+	$(PLINK) -o krispexlookup krispexlookup.lo ../libkrisp.la
+	$(PLINK) -o krtest krtest.lo ../libkrisp.la
+	$(PLINK) -o thread_sample thread_sample.lo ../libkrisp.la
+	$(PLINK) -o thread_sample1 thread_sample1.lo ../libkrisp.la
+	$(PLINK) -o thread_sample2 thread_sample2.lo ../libkrisp.la
+
+krispexlookup.lo: krispexlookup.c $(REQ_HEADER)
+	$(COMPILE) -o $@ -c $<
+
+krtest.lo: krtest.c $(REQ_HEADER)
+	$(COMPILE) -o $@ -c $<
+
+thread_sample.lo: thread_sample.c $(REQ_HEADER)
+	$(COMPILE) -o $@ -c $<
+
+thread_sample1.lo: thread_sample1.c $(REQ_HEADER)
+	$(COMPILE) -o $@ -c $<
+
+thread_sample2.lo: thread_sample2.c $(REQ_HEADER)
+	$(COMPILE) -o $@ -c $<
+
+clean:
+	-$(RM) -r *.o *.lo* *.la* krtest thread_sample
+	-$(RM) -r thread_sample1 thread_sample2 krispexlookup
+	-$(RM) -r .libs
