@@ -1,5 +1,5 @@
 /*
- * $Id: krisp.c,v 1.105 2010-09-24 08:18:45 oops Exp $
+ * $Id: krisp.c,v 1.106 2011-01-14 05:05:15 oops Exp $
  */
 
 #include <stdio.h>
@@ -40,7 +40,7 @@ KR_LOCAL_API bool _kr_open (KR_API **db, char *file, char *err, bool safe) { // 
 
 	if ( f.st_size < 1 ) {
 		sprintf (err, "kr_open:: %s size is zero", (*db)->database);
-		kr_close (*db);
+		kr_close (db);
 		return false;
 	}
 
