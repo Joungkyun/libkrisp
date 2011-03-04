@@ -1,7 +1,7 @@
 #!/usr/bin/php
 <?php
 /*
- * $Id: nwpc_parse.php,v 1.5 2010-08-27 16:19:05 oops Exp $
+ * $Id: nwpc_parse.php,v 1.6 2011-03-04 11:55:11 oops Exp $
  * Requirement
  *
  * over PHP5
@@ -267,7 +267,7 @@ foreach ( $line as $v ) {
 		continue;
 	}
 
-	if ( $old[O_CLASS] == $l[F_CLASS] && $old[O_NAME] == $l[F_NAME] ) {
+	if ( $old[O_CLASS] == $l[F_CLASS] && ($old[O_END] + 1) == $l[F_START] && $old[O_NAME] == $l[F_NAME] ) {
 		if ( $l[F_START] < $old[O_START] )
 			$old[O_START] = $l[F_START];
 
