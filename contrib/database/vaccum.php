@@ -1,7 +1,7 @@
 #!/usr/bin/php
 <?php
 #
-# $Id: vaccum.php,v 1.2 2010-08-28 09:21:35 oops Exp $
+# $Id: vaccum.php,v 1.3 2011-03-07 15:42:24 oops Exp $
 #
 # Vaccum the data
 #
@@ -132,7 +132,7 @@ if ( $argc != 2 )
 	usage ($argv[0]);
 
 if ( ! file_exists ($argv[1]) ) {
-	ePrint::ePrintf ('%s: \'%s\' is not exists.', $eMark, $argv[1]);
+	ePrint::ePrintf ('%s: \'%s\' is not exists.', array ($eMark, $argv[1]));
 	usage ($argv[0]);
 }
 
