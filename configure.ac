@@ -6,6 +6,7 @@
 #
 AC_PREREQ(2.59)
 AC_INIT([krisp], [3.1.2], [http://oops.org])
+AC_CONFIG_AUX_DIR([tools])
 AC_CONFIG_SRCDIR([krisp.h])
 AC_CONFIG_HEADER([krisp-config.h krispcommon.h])
 AC_PREFIX_DEFAULT([/usr/local])
