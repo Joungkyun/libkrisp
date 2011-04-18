@@ -224,5 +224,5 @@ AC_CHECK_FUNCS([getopt_long])
 # Type check
 AC_CHECK_TYPE([ulong], [AC_DEFINE([C_ULONG_DEFINED], [1], [Define to 1 if the ulong type exists in C.])])
 
-AC_CONFIG_FILES([Makefile test/Makefile krisp.pc krisp-config krdb.h libkrisp.spec])
+AC_CONFIG_FILES([Makefile test/Makefile scripts/krisp.pc scripts/krisp-config krdb.h libkrisp.spec])
 AC_OUTPUT

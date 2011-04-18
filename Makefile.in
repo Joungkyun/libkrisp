@@ -96,11 +96,11 @@ data:
 install: install-header install-data install-man
 	$(MKDIR) $(DESTDIR)$(bindir)
 	$(MKDIR) $(DESTDIR)$(libdir)/pkgconfig
-	$(P_LIBTOOL) $(PROG)-config $(DESTDIR)$(bindir)/$(PROG)$(COMPAT)-config
+	$(P_LIBTOOL) scripts/$(PROG)-config $(DESTDIR)$(bindir)/$(PROG)$(COMPAT)-config
 	$(P_LIBTOOL) $(PROG)lookup $(DESTDIR)$(bindir)/$(PROG)lookup$(COMPAT)
 	$(P_LIBTOOL) $(PROG)mkdb $(DESTDIR)$(bindir)/$(PROG)mkdb$(COMPAT)
 	$(L_LIBTOOL) lib$(PROG)$(COMPAT).la $(DESTDIR)$(libdir)/lib$(PROG)$(COMPAT).la
-	$(D_LIBTOOL) $(PROG).pc $(DESTDIR)$(libdir)/pkgconfig/$(PROG)$(COMPAT).pc
+	$(D_LIBTOOL) scripts/$(PROG).pc $(DESTDIR)$(libdir)/pkgconfig/$(PROG)$(COMPAT).pc
 	$(LIBTOOL) --finish $(libdir)
 
 install-data:
@@ -148,7 +148,7 @@ clean:
 	make -C test clean
 
 distclean: clean
-	for i in `ls *.in`; \
+	for i in `ls scripts/*.in`; \
 	do \
 		rmfiles=`echo $$i | sed 's/\.in$$//g'`; \
 		$(RM) -r $$rmfiles; \
