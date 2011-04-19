@@ -84,6 +84,6 @@ popd
 %{?compat:%{_mandir}/ko/man3/*.3*}
 
 %changelog
-* Fri Sep 10 2010 JoungKyun.Kim <http://oops.org> - @PACKAGE_VERSION@-1
+* @PACKAGE_DATE@ JoungKyun.Kim <http://oops.org> - @PACKAGE_VERSION@-1
 - release @PACKAGE_VERSION@
 
