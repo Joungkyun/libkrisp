@@ -24,7 +24,6 @@ DEFS            = @DEFS@ $(CPPFLAGS)
 KR_DEFS         = @KR_DEFS@ $(CFLAGS)
 
 OBJECT          = krdb.lo krispapi.lo krisp.lo
-UTIL_OBJ        = krisplookup.lo krispmkdb.lo
 HEADER_NAME     = krisp-config krispcommon krispapi krisp krdb krversion
 
 SONAME_MAJOR    = @SONAME_MAJOR@
@@ -64,7 +63,7 @@ L_LIBTOOL       = $(LIBTOOL) --mode=install $(INSTALL)
 MANLANG         = ko
 
 
-all: $(OBJECT) $(UTIL_OBJ)
+all: $(OBJECT)
 	$(MAKE) libs
 	$(PLINK) -o $(PROG)lookup $(PROG)lookup.lo libkrisp$(COMPAT).la
 	$(PLINK) -o $(PROG)mkdb $(PROG)mkdb.lo $(OBJECT) $(LDFLAGS)
@@ -76,12 +75,6 @@ krispapi.lo: krispapi.c krdb.h krispapi.h krispcommon.h
 	$(COMPILE) -o $@ -c $<
 
 krisp.lo: krisp.c krdb.h krisp.h krispapi.h krispcommon.h
-	$(COMPILE) -o $@ -c $<
-
-krisplookup.lo: krisplookup.c krisp.h krdb.h krispapi.h krispcommon.h
-	$(COMPILE) -o $@ -c $<
-
-krispmkdb.lo: krispmkdb.c krispcommon.h krisp.h krdb.h krispapi.h
 	$(COMPILE) -o $@ -c $<
 
 libs:
@@ -139,13 +132,10 @@ install-header:
 		$(D_LIBTOOL) $$i.h $(DESTDIR)$(includedir)/krisp$(COMPAT)/ ; \
 	done
 
-test: all
-	make -C test
-
 clean:
 	-$(RM) -r *.o *.lo* *.la* $(PROG)lookup $(PROG)mkdb
 	-$(RM) -r .libs db/$(PROG).dat
-	make -C test clean
+	make -C clean
 
 distclean: clean
 	for i in `ls scripts/*.in`; \
