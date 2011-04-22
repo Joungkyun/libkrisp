@@ -5,8 +5,11 @@
 #ifndef KRDB_H
 #define KRDB_H
 
-#define DBROOT "@DBPATH@@COMPAT_VERSION@"
-#define DBPATH DBROOT "/krisp.dat"
+#ifndef DBPATH
+#include <krisp-config.h>
+#endif
+
+#define DEFAULT_DATABASE DBPATH "/krisp.dat"
 
 void	kr_dbError (KR_API *);
 void	kr_dbErrorClear (KR_API *);

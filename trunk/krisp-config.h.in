@@ -31,6 +31,9 @@
 /* Define to 1 if the ulong type exists in C. */
 #undef C_ULONG_DEFINED
 
+/* define krisp database locate. */
+#undef DBPATH
+
 /* Define to 1 if you have the <arpa/inet.h> header file. */
 #undef HAVE_ARPA_INET_H
 

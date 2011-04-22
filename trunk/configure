@@ -10573,7 +10573,12 @@ fi
 if test "x$prefix" = "xNONE" ; then
 	prefix=$ac_default_prefix
 fi
-DBPATH=$(eval echo ${datadir}/krisp)
+DBPATH="$(eval echo ${datadir}/krisp)$COMPAT_VERSION"
+
+
+cat >>confdefs.h <<_ACEOF
+#define DBPATH $DBPATH
+_ACEOF
 
 
 # Checks for header files.
