@@ -194,7 +194,7 @@ void _safecpy (char * stor, char * str, int size) { // {{{
 } // }}}
 
 KR_LOCAL_API void krisp_mutex_lock (KR_API * db) { // {{{
-#ifdef HAVE_PTHREAD_H
+#ifdef HAVE_LIBPTHREAD
 	if ( ! db->threadsafe )
 		return;
 
@@ -207,7 +207,7 @@ KR_LOCAL_API void krisp_mutex_lock (KR_API * db) { // {{{
 } // }}}
 
 KR_LOCAL_API void krisp_mutex_unlock (KR_API * db) { // {{{
-#ifdef HAVE_PTHREAD_H
+#ifdef HAVE_LIBPTHREAD
 	if ( ! db->threadsafe )
 		return;
 
@@ -220,7 +220,7 @@ KR_LOCAL_API void krisp_mutex_unlock (KR_API * db) { // {{{
 } // }}}
 
 KR_LOCAL_API void krisp_mutex_destroy (KR_API * db) { // {{{
-#ifdef HAVE_PTHREAD_H
+#ifdef HAVE_LIBPTHREAD
 	if ( ! db->threadsafe )
 		return;
 
