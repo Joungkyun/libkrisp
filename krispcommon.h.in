@@ -113,7 +113,7 @@ typedef struct raw_netinfos {
 	short			size;
 } RAW_KRNET_API;
 
-#define KRNET_API_EX RAW_KRNET_API
+typedef RAW_KRNET_API KRNET_API_EX;
 
 typedef struct netinfos {
 	char			err[1024];
