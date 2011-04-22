@@ -8,7 +8,7 @@
 
 #include <krispapi.h>
 
-void initStruct (KRNET_API * n) { // {{{
+KRISP_API void initStruct (KRNET_API * n) { // {{{
 	memset (n->err, 0, 1);
 	n->netmask = 0;
 	n->start   = 0;
@@ -19,7 +19,7 @@ void initStruct (KRNET_API * n) { // {{{
 	strcpy (n->cname, "N/A");
 } // }}}
 
-void initRawStruct (RAW_KRNET_API * n, bool mfree) { // {{{
+KRISP_API void initRawStruct (RAW_KRNET_API * n, bool mfree) { // {{{
 	memset (n->err, 0, 1);
 	//memset (n->ip, 0, 1);
 	n->start = 0;
@@ -33,14 +33,14 @@ void initRawStruct (RAW_KRNET_API * n, bool mfree) { // {{{
 	n->dummydata = NULL;
 } // }}}
 
-KR_LOCAL_API void kr_noneData (KRNET_API * n) { // {{{
+void kr_noneData (KRNET_API * n) { // {{{
 	strcpy (n->icode, "--");
 	strcpy (n->iname, "N/A");
 	strcpy (n->ccode, "--");
 	strcpy (n->cname, "N/A");
 } // }}}
 
-KR_LOCAL_API int getISPinfo (KR_API * db, RAW_KRNET_API * n) { // {{{
+int getISPinfo (KR_API * db, RAW_KRNET_API * n) { // {{{
 	ulong	longip;
 	char	sql[128] = { 0, };
 	int		r;
@@ -99,7 +99,7 @@ KR_LOCAL_API int getISPinfo (KR_API * db, RAW_KRNET_API * n) { // {{{
 	return 0;
 } // }}}
 
-KR_LOCAL_API short parseDummyData (char *** d, char * s, char delemeter) { // {{{
+short parseDummyData (char *** d, char * s, char delemeter) { // {{{
 	char *	buf;
 	int		rlen;
 	short	len = 0, i;
@@ -145,14 +145,14 @@ KR_LOCAL_API short parseDummyData (char *** d, char * s, char delemeter) { // {{
 	return (short) rlen;
 } // }}}
 
-KR_LOCAL_API int chartoint (char c) { // {{{
+int chartoint (char c) { // {{{
 	if (c > 47 && c < 58)
 		return c - 48;
 
 	return -1;
 } // }}}
 
-KR_LOCAL_API ulong strtolong (char * s) { // {{{
+ulong strtolong (char * s) { // {{{
 	int		len, i = 0, minus = 0, bufno = 0;
 	ulong	x = 1, res = 0;
 
@@ -182,7 +182,7 @@ KR_LOCAL_API ulong strtolong (char * s) { // {{{
 	return res;
 } // }}}
 
-void _safecpy (char * stor, char * str, int size) { // {{{
+KRISP_API void _safecpy (char * stor, char * str, int size) { // {{{
 	size--;
 	if ( strlen (str) > size ) {
 		memcpy (stor, str, size);
@@ -193,7 +193,7 @@ void _safecpy (char * stor, char * str, int size) { // {{{
 	stor[size] = 0;
 } // }}}
 
-KR_LOCAL_API void krisp_mutex_lock (KR_API * db) { // {{{
+void krisp_mutex_lock (KR_API * db) { // {{{
 #ifdef HAVE_LIBPTHREAD
 	if ( ! db->threadsafe )
 		return;
@@ -206,7 +206,7 @@ KR_LOCAL_API void krisp_mutex_lock (KR_API * db) { // {{{
 	return;
 } // }}}
 
-KR_LOCAL_API void krisp_mutex_unlock (KR_API * db) { // {{{
+void krisp_mutex_unlock (KR_API * db) { // {{{
 #ifdef HAVE_LIBPTHREAD
 	if ( ! db->threadsafe )
 		return;
@@ -219,7 +219,7 @@ KR_LOCAL_API void krisp_mutex_unlock (KR_API * db) { // {{{
 	return;
 } // }}}
 
-KR_LOCAL_API void krisp_mutex_destroy (KR_API * db) { // {{{
+void krisp_mutex_destroy (KR_API * db) { // {{{
 #ifdef HAVE_LIBPTHREAD
 	if ( ! db->threadsafe )
 		return;
@@ -232,7 +232,7 @@ KR_LOCAL_API void krisp_mutex_destroy (KR_API * db) { // {{{
 	return;
 } // }}}
 
-KR_LOCAL_API bool check_database_mtime (KR_API *db) { // {{{
+bool check_database_mtime (KR_API *db) { // {{{
 	struct stat	f;
 	time_t		current;
 

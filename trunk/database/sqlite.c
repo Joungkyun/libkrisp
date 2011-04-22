@@ -8,7 +8,7 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
-KR_LOCAL_API void kr_dbError (KR_API *db) {
+void kr_dbError (KR_API *db) {
 	memset (db->err, 0, 1024);
 	if ( db->dberr != NULL )
 		sprintf (db->err, "%s (Table: %s)", db->dberr, db->table);
@@ -16,15 +16,15 @@ KR_LOCAL_API void kr_dbError (KR_API *db) {
 	sqlite_freemem (db->dberr);
 }
 
-KR_LOCAL_API void kr_dbErrorClear (KR_API *db) {
+void kr_dbErrorClear (KR_API *db) {
 	memset (db->err, 0, 1024);
 }
 
-KR_LOCAL_API int kr_dbFree (KR_API *db) {
+int kr_dbFree (KR_API *db) {
 	return 0;
 }
 
-KR_LOCAL_API bool kr_dbConnect (KR_API *db) {
+bool kr_dbConnect (KR_API *db) {
 	db->c = sqlite_open (db->database, 0644, &db->dberr);
 
 	if ( db->c == NULL ) {
@@ -35,7 +35,7 @@ KR_LOCAL_API bool kr_dbConnect (KR_API *db) {
 	return true;
 }
 
-KR_LOCAL_API int kr_dbQuery (KR_API *db, char * sql) {
+int kr_dbQuery (KR_API *db, char * sql) {
 	db->final = 0;
 	db->rows  = 0;
 	db->cols  = 0;
@@ -50,7 +50,7 @@ KR_LOCAL_API int kr_dbQuery (KR_API *db, char * sql) {
 	return 0;
 }
 
-KR_LOCAL_API int kr_dbFetch (KR_API *db) {
+int kr_dbFetch (KR_API *db) {
 	if ( db->final ) {
 		db->final = 0;
 		db->r = SQLITE_OK;
@@ -82,7 +82,7 @@ finalize:
 	return 0;
 }
 
-KR_LOCAL_API int kr_dbExecute (KR_API *db, char *sql) {
+int kr_dbExecute (KR_API *db, char *sql) {
 	short r;
 
 	if ( kr_dbQuery (db, sql) )
@@ -95,14 +95,14 @@ KR_LOCAL_API int kr_dbExecute (KR_API *db, char *sql) {
 	return 0;
 }
 
-KR_LOCAL_API void kr_dbFinalize (KR_API *db) {
+void kr_dbFinalize (KR_API *db) {
 	if ( db->vm )
 		db->r = sqlite_finalize (db->vm, &db->dberr);
 
 	db->vm = NULL;
 }
 
-KR_LOCAL_API void kr_dbClose (KR_API *db) {
+void kr_dbClose (KR_API *db) {
 	if ( db->c != NULL )
 		sqlite_close (db->c);
 	memset (db->err, 0, 1024);

@@ -10,7 +10,7 @@
 
 #define L strlen
 
-KR_LOCAL_API void kr_dbError (KR_API *db) {
+void kr_dbError (KR_API *db) {
 	if ( ! sqlite3_errcode (db->c) )
 		return;
 
@@ -18,11 +18,11 @@ KR_LOCAL_API void kr_dbError (KR_API *db) {
 	sprintf (db->err, "%s (Table: %s)", sqlite3_errmsg (db->c), db->table);
 }
 
-KR_LOCAL_API void kr_dbErrorClear (KR_API *db) {
+void kr_dbErrorClear (KR_API *db) {
 	memset (db->err, 0, 1024);
 }
 
-KR_LOCAL_API int kr_dbFree (KR_API *db) {
+int kr_dbFree (KR_API *db) {
 	int i;
 
 	if ( db->verbose )
@@ -39,7 +39,7 @@ KR_LOCAL_API int kr_dbFree (KR_API *db) {
 	return 0;
 }
 
-KR_LOCAL_API bool kr_dbConnect (KR_API *db) {
+bool kr_dbConnect (KR_API *db) {
 	char * errmsg;
 
 #if SQLITE_VERSION_NUMBER >= 3005000
@@ -72,7 +72,7 @@ KR_LOCAL_API bool kr_dbConnect (KR_API *db) {
 	return true;
 }
 
-KR_LOCAL_API int kr_dbQuery (KR_API *db, char * sql) {
+int kr_dbQuery (KR_API *db, char * sql) {
 	db->final = 0;
 	db->rows  = 0;
 	db->cols  = 0;
@@ -93,7 +93,7 @@ KR_LOCAL_API int kr_dbQuery (KR_API *db, char * sql) {
 	return 0;
 }
 
-KR_LOCAL_API int kr_dbFetch (KR_API *db) {
+int kr_dbFetch (KR_API *db) {
 	int i;
 	char *colname;
 	char *rowdata;
@@ -148,7 +148,7 @@ finalize:
 	return 0;
 }
 
-KR_LOCAL_API int kr_dbExecute (KR_API *db, char *sql) {
+int kr_dbExecute (KR_API *db, char *sql) {
 	short r;
 
 	if ( kr_dbQuery (db, sql) )
@@ -161,7 +161,7 @@ KR_LOCAL_API int kr_dbExecute (KR_API *db, char *sql) {
 	return 0;
 }
 
-KR_LOCAL_API void kr_dbFinalize (KR_API *db) {
+void kr_dbFinalize (KR_API *db) {
 	if ( db->verbose )
 		fprintf (stderr, "DEBUG: **** db finalize\n");
 	if ( db->vm ) {
@@ -173,7 +173,7 @@ KR_LOCAL_API void kr_dbFinalize (KR_API *db) {
 	db->vm = NULL;
 }
 
-KR_LOCAL_API void kr_dbClose (KR_API *db) {
+void kr_dbClose (KR_API *db) {
 	if ( db->verbose )
 		fprintf (stderr, "DEBUG: **** db close\n");
 

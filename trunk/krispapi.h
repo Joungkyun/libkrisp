@@ -16,57 +16,62 @@
 #include <krisp.h>
 
 #if defined _WIN32 || defined __CYGWIN__
-	#define KR_LOCAL_API
-#else
-	#if defined(__GNUC__) && __GNUC__ >= 4
-		#define KR_LOCAL_API  __attribute__ ((visibility("hidden")))
+	#include "win95nt.h"
+	#ifdef KRISP_EXPORTS
+		#define KRISP_API __declspec(dllexport)
 	#else
-		#define KR_LOCAL_API
+		#define KRISP_API __declspec(dllimport)
+	#endif
+#else
+	#if HAVE_VISIBILITY
+		#define KRISP_API __attribute__ ((visibility("default")))
+	#else
+		#define KRISP_API
 	#endif
 #endif
 #include <krdb.h>
 
 #include <ipcalc.h>
 
-KR_LOCAL_API bool _kr_open (KR_API **db, char *file, char *err, bool safe);
+bool _kr_open (KR_API **db, char *file, char *err, bool safe);
 
 /*
  * Fill none isp data
  */
-KR_LOCAL_API void kr_noneData (KRNET_API *);
+void kr_noneData (KRNET_API *);
 
 /*
  * Get ISP information of each network from db
  */
-KR_LOCAL_API int getISPinfo (KR_API *, RAW_KRNET_API *);
+int getISPinfo (KR_API *, RAW_KRNET_API *);
 
 /*
  * Seperate pipe data that has isp information
  *
  */
-KR_LOCAL_API short parseDummyData (char ***, char *, char delemeter);
+short parseDummyData (char ***, char *, char delemeter);
 
 /*
  * Convert character numeric to int numeric
  */
-KR_LOCAL_API int chartoint (char);
+int chartoint (char);
 
 /*
  * Convert numeric strings to long numeric
  */
-KR_LOCAL_API ulong strtolong (char *);
+ulong strtolong (char *);
 
 /*
  * for thread safe
  */
-KR_LOCAL_API void krisp_mutex_lock (KR_API *);
-KR_LOCAL_API void krisp_mutex_unlock (KR_API *);
-KR_LOCAL_API void krisp_mutex_destroy (KR_API *);
+void krisp_mutex_lock (KR_API *);
+void krisp_mutex_unlock (KR_API *);
+void krisp_mutex_destroy (KR_API *);
 
 /*
  * for check krisp database changing
  */
-KR_LOCAL_API bool check_database_mtime (KR_API *);
+bool check_database_mtime (KR_API *);
 
 #endif
 
