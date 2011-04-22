@@ -20,11 +20,11 @@
 
 AM_CFLAGS = -Wall
 AM_CPPFLAGS = -I$(top_srcdir)
-LDADD = ../libkrisp@COMPAT_VERSION@.la
 
 bin_PROGRAMS = krisplookup@COMPAT_VERSION@
 krisplookup@COMPAT_VERSION@_SOURCES = krisplookup.c
+krisplookup@COMPAT_VERSION@_LDADD = ../libkrisp@COMPAT_VERSION@.la
 
 bin_PROGRAMS += krispmkdb@COMPAT_VERSION@
 krispmkdb@COMPAT_VERSION@_SOURCES = krispmkdb.c
-
+krispmkdb@COMPAT_VERSION@_LDADD = ../krdb.o ../krispapi.o ../krisp.o
