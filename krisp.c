@@ -29,7 +29,7 @@ bool _kr_open (KR_API **db, char *file, char *err, bool safe) { // {{{
 		return false;
 	}
 
-	SAFECPY_256 ((*db)->database, (file == NULL ) ? DBPATH : file);
+	SAFECPY_256 ((*db)->database, (file == NULL ) ? DEFAULT_DATABASE : file);
 
 	f.st_size = 0;
 	if ( stat ((*db)->database, &f) == -1 ) {

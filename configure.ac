@@ -75,8 +75,9 @@ fi
 if test "x$prefix" = "xNONE" ; then
 	prefix=$ac_default_prefix
 fi
-DBPATH=$(eval echo ${datadir}/krisp)
+DBPATH="$(eval echo ${datadir}/krisp)$COMPAT_VERSION"
 AC_SUBST(DBPATH)
+AC_DEFINE_UNQUOTED([DBPATH],[$DBPATH],[define krisp database locate.])
 
 # Checks for header files.
 AC_HEADER_STDC
