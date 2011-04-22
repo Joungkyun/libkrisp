@@ -8,22 +8,27 @@
 #ifndef KR_API_H
 #define KR_API_H
 
+#ifdef HAVE_CONFIG_H
+    #include <krisp-config.h>
+#endif
+
 #include <krversion.h>
-#include <krispcommon.h>
+#include <krisp.h>
+
+#if defined _WIN32 || defined __CYGWIN__
+	#define KR_LOCAL_API
+#else
+	#if defined(__GNUC__) && __GNUC__ >= 4
+		#define KR_LOCAL_API  __attribute__ ((visibility("hidden")))
+	#else
+		#define KR_LOCAL_API
+	#endif
+#endif
 #include <krdb.h>
 
 #include <ipcalc.h>
 
-/*
- * Init information structure
- */
-void initStruct (KRNET_API *);
-
-/*
- * Init raw database data structure
- */
-void initRawStruct (RAW_KRNET_API *, bool);
-#define initStruct_ex initRawStruct
+KR_LOCAL_API bool _kr_open (KR_API **db, char *file, char *err, bool safe);
 
 /*
  * Fill none isp data
@@ -52,12 +57,6 @@ KR_LOCAL_API int chartoint (char);
 KR_LOCAL_API ulong strtolong (char *);
 
 /*
- * Safe copy character
- */
-void _safecpy (char *, char *, int);
-#endif
-
-/*
  * for thread safe
  */
 KR_LOCAL_API void krisp_mutex_lock (KR_API *);
@@ -68,6 +67,8 @@ KR_LOCAL_API void krisp_mutex_destroy (KR_API *);
  * for check krisp database changing
  */
 KR_LOCAL_API bool check_database_mtime (KR_API *);
+
+#endif
 
 /*
  * Local variables:

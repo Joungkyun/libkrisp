@@ -7,7 +7,8 @@
 #include <string.h>
 #include <sys/stat.h>
 
-#include <krisp.h>
+#include <krispapi.h>
+#include <krversion.h>
 
 char * krisp_version (void) { // {{{
 	return KRISP_VERSION;
@@ -47,7 +48,7 @@ KR_LOCAL_API bool _kr_open (KR_API **db, char *file, char *err, bool safe) { // 
 	(*db)->db_time_stamp = f.st_mtime;
 	(*db)->db_stamp_checked = time (NULL);
 
-#ifdef HAVE_PTHREAD_H
+#ifdef HAVE_LIBPTHREAD
 	(*db)->threadsafe = safe;
 	if ( (*db)->threadsafe == true )
 		pthread_mutex_init (&((*db)->mutex), NULL);

@@ -2,7 +2,7 @@
  * $Id: krdb.c,v 1.16 2010-06-24 17:24:34 oops Exp $
  */
 
-#include <krispcommon.h>
+#include <krispapi.h>
 
 #if defined(HAVE_LIBSQLITE3)
 #include <sqlite3.h>

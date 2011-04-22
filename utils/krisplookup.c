@@ -2,7 +2,7 @@
  * $Id: krisplookup.c,v 1.52 2010-09-10 13:23:24 oops Exp $
  */
 
-#include <krisp.h>
+#include <krispapi.h>
 
 #ifdef HAVE_GETOPT_H
 #include <getopt.h>

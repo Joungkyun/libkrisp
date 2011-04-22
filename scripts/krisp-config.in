@@ -54,7 +54,7 @@ while test $# -gt 0; do
 			;;
 		--defs)
 			includes="-I${includedir}/krisp@COMPAT_VERSION@"
-			echo -n " @KR_DEFS@ $includes"
+			echo -n " $includes"
 			;;
 		--libs)
 			echo -n " -L${libdir} -l@PACKAGE_NAME@@COMPAT_VERSION@"

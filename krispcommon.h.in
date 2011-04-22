@@ -5,31 +5,17 @@
 #ifndef KR_COMMON_H
 #define KR_COMMON_H
 
-#ifdef HAVE_CONFIG_H
-	#include <krisp-config.h>
-#else
-	#ifndef HAVE_LIBSQLITE3
-		#undef HAVE_LIBSQLITE3
-	#endif
-	#ifndef HAVE_LIBSQLITE
-		#undef HAVE_LIBSQLITE
-	#endif
-	#ifndef HAVE_PTHREAD_H
-		#undef HAVE_PTHREAD_H
-	#endif
-	#ifndef HAVE_STDBOOL_H
-		#undef HAVE_STDBOOL_H
-	#endif
+#ifndef HAVE_LIBSQLITE3
+	#undef HAVE_LIBSQLITE3
 #endif
-
-#if defined _WIN32 || defined __CYGWIN__
-	#define KR_LOCAL_API
-#else
-	#if defined(__GNUC__) && __GNUC__ >= 4
-		#define KR_LOCAL_API  __attribute__ ((visibility("hidden")))
-	#else
-		#define KR_LOCAL_API
-	#endif
+#ifndef HAVE_LIBSQLITE
+	#undef HAVE_LIBSQLITE
+#endif
+#ifndef HAVE_PTHREAD_H
+	#undef HAVE_PTHREAD_H
+#endif
+#ifndef HAVE_STDBOOL_H
+	#undef HAVE_STDBOOL_H
 #endif
 
 #include <stdio.h>
@@ -148,7 +134,6 @@ struct cinfo {
 	ulong	network;
 	ulong	bcast;
 };
-
 #endif
 
 /*
