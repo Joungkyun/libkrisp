@@ -10,15 +10,15 @@
 #include <krispapi.h>
 #include <krversion.h>
 
-char * krisp_version (void) { // {{{
+KRISP_API char * krisp_version (void) { // {{{
 	return KRISP_VERSION;
 } // }}}
 
-char * krisp_uversion (void) { // {{{
+KRISP_API char * krisp_uversion (void) { // {{{
 	return KRISP_UVERSION;
 } // }}}
 
-KR_LOCAL_API bool _kr_open (KR_API **db, char *file, char *err, bool safe) { // {{{
+bool _kr_open (KR_API **db, char *file, char *err, bool safe) { // {{{
 	struct stat		f;
 
 	memset (err, 0, 1);
@@ -64,15 +64,15 @@ KR_LOCAL_API bool _kr_open (KR_API **db, char *file, char *err, bool safe) { // 
 	return true;
 } // }}}
 
-bool kr_open_safe (KR_API **db, char *file, char *err) { // {{{
+KRISP_API bool kr_open_safe (KR_API **db, char *file, char *err) { // {{{
 	return _kr_open (db, file, err, true);
 } // }}}
 
-bool kr_open (KR_API **db, char *file, char *err) { // {{{
+KRISP_API bool kr_open (KR_API **db, char *file, char *err) { // {{{
 	return _kr_open (db, file, err, false);
 } // }}}
 
-void kr_close (KR_API **db) { // {{{
+KRISP_API void kr_close (KR_API **db) { // {{{
 	if ( *db == NULL )
 		return;
 
@@ -86,7 +86,7 @@ void kr_close (KR_API **db) { // {{{
 /*
  * if return 1, db error
  */
-int kr_search (KRNET_API *isp, KR_API *db) { // {{{
+KRISP_API int kr_search (KRNET_API *isp, KR_API *db) { // {{{
 	RAW_KRNET_API	raw;
 	int				r;
 	char			err[1024];
@@ -198,7 +198,7 @@ goWrongData:
 /*
  * if return 1, db error
  */
-int kr_search_ex (KRNET_API_EX *raw, KR_API *db) { // {{{
+KRISP_API int kr_search_ex (KRNET_API_EX *raw, KR_API *db) { // {{{
 	int		r;
 	char	err[1024];
 

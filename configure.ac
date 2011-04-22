@@ -43,6 +43,8 @@ AC_PROG_MAKE_SET
 AC_PROG_LIBTOOL
 AC_LIB_RPATH
 
+AX_GL_VISIBILITY
+
 AC_PATH_PROG(PERL, perl)
 if test ! -f "$ac_cv_path_PERL"; then
 	AC_MSG_ERROR(Can't not found perl)

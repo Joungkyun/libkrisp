@@ -18,7 +18,7 @@
 #include <database/sqlite.c>
 #endif
 
-KR_LOCAL_API char * kr_dbQuote_f (char * v) { // {{{
+char * kr_dbQuote_f (char * v) { // {{{
 	int		no = 0;
 	size_t	t, l, start;
 	size_t	len;
