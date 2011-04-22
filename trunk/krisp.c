@@ -18,6 +18,17 @@ KRISP_API char * krisp_uversion (void) { // {{{
 	return KRISP_UVERSION;
 } // }}}
 
+KRISP_API void kr_close (KR_API **db) { // {{{
+	if ( *db == NULL )
+		return;
+
+	krisp_mutex_destroy (*db);
+
+	kr_dbClose (*db);
+	free (*db);
+	*db = NULL;
+} // }}}
+
 bool _kr_open (KR_API **db, char *file, char *err, bool safe) { // {{{
 	struct stat		f;
 
@@ -70,17 +81,6 @@ KRISP_API bool kr_open_safe (KR_API **db, char *file, char *err) { // {{{
 
 KRISP_API bool kr_open (KR_API **db, char *file, char *err) { // {{{
 	return _kr_open (db, file, err, false);
-} // }}}
-
-KRISP_API void kr_close (KR_API **db) { // {{{
-	if ( *db == NULL )
-		return;
-
-	krisp_mutex_destroy (*db);
-
-	kr_dbClose (*db);
-	free (*db);
-	*db = NULL;
 } // }}}
 
 /*
