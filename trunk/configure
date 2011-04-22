@@ -11857,7 +11857,7 @@ _ACEOF
 fi
 
 
-                                                                                          ac_config_files="$ac_config_files Makefile man/Makefile scripts/Makefile test/Makefile utils/Makefile scripts/krisp.pc scripts/krisp-config krdb.h m4/krisp.m4"
+                                                                                ac_config_files="$ac_config_files Makefile man/Makefile scripts/Makefile test/Makefile utils/Makefile scripts/krisp.pc scripts/krisp-config m4/krisp.m4"
 
 cat >confcache <<\_ACEOF
 # This file is a shell script that caches the results of configure
@@ -12405,7 +12405,6 @@ do
   "utils/Makefile" ) CONFIG_FILES="$CONFIG_FILES utils/Makefile" ;;
   "scripts/krisp.pc" ) CONFIG_FILES="$CONFIG_FILES scripts/krisp.pc" ;;
   "scripts/krisp-config" ) CONFIG_FILES="$CONFIG_FILES scripts/krisp-config" ;;
-  "krdb.h" ) CONFIG_FILES="$CONFIG_FILES krdb.h" ;;
   "m4/krisp.m4" ) CONFIG_FILES="$CONFIG_FILES m4/krisp.m4" ;;
   "krisp-config.h" ) CONFIG_HEADERS="$CONFIG_HEADERS krisp-config.h" ;;
   "krispcommon.h" ) CONFIG_HEADERS="$CONFIG_HEADERS krispcommon.h" ;;

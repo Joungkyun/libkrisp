@@ -108,7 +108,6 @@ AC_CONFIG_FILES([
 	utils/Makefile
 	scripts/krisp.pc
 	scripts/krisp-config
-	krdb.h
 	m4/krisp.m4
 ])
 AC_OUTPUT
