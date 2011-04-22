@@ -46,10 +46,10 @@ extern void kr_close (KR_API **);
 extern int kr_search (KRNET_API *, KR_API *);
 extern int kr_search_ex (KRNET_API_EX *, KR_API *);
 
-extern void _safecpy (char *, char *, int);
-#define SAFECPY_256(dest, src) _safecpy(dest, src, 256)
-#define SAFECPY_512(dest, src) _safecpy(dest, src, 512)
-#define SAFECPY_1024(dest, src) _safecpy(dest, src, 1024)
+extern void krisp_safecpy (char *, char *, int);
+#define SAFECPY_256(dest, src) krisp_safecpy(dest, src, 256)
+#define SAFECPY_512(dest, src) krisp_safecpy(dest, src, 512)
+#define SAFECPY_1024(dest, src) krisp_safecpy(dest, src, 1024)
 #endif
 
 /*

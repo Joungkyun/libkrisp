@@ -182,7 +182,7 @@ ulong strtolong (char * s) { // {{{
 	return res;
 } // }}}
 
-KRISP_API void _safecpy (char * stor, char * str, int size) { // {{{
+KRISP_API void krisp_safecpy (char * stor, char * str, int size) { // {{{
 	size--;
 	if ( strlen (str) > size ) {
 		memcpy (stor, str, size);
