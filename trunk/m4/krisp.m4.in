@@ -1,0 +1,100 @@
+dnl Copyright (C) 2011 JoungKyun.Kim <http://oops.org>
+dnl
+dnl This file is part of libkrisp
+dnl
+dnl This program is free software: you can redistribute it and/or modify
+dnl it under the terms of the GNU Lesser General Public License as published
+dnl by the Free Software Foundation, either version 3 of the License, or
+dnl (at your option) any later version.
+dnl
+dnl This program is distributed in the hope that it will be useful,
+dnl but WITHOUT ANY WARRANTY; without even the implied warranty of
+dnl MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+dnl GNU General Public License for more details.
+dnl
+dnl You should have received a copy of the GNU Lesser General Public License
+dnl along with this program.  If not, see <http://www.gnu.org/licenses/>.
+dnl
+dnl $Id: Makefile.am,v 1.6 2011-04-12 16:36:35 oops Exp $
+
+AC_SUBST(KRISP_LDFLAGS)
+AC_SUBST(KRISP_CPPFLAGS)
+
+AC_DEFUN([AX_KRISP@COMPAT_VERSION@],
+[
+	AC_ARG_WITH(krisp,
+		[  --with-krisp@COMPAT_VERSION@=PATH       path of krisp@COMPAT_VERSION@-config [[default: @static_bindir@/krisp@COMPAT_VERSION@-config]]])
+
+	if test "x$with_krisp@COMPAT_VERSION@" != "xno"; then
+		if test "x$with_krisp@COMPAT_VERSION@" != "x"; then
+			if test "x$with_krisp@COMPAT_VERSION@" = "xyes"; then
+				krispconfig="@static_bindir@/krisp@COMPAT_VERSION@-config"
+			else
+				krispconfig="$with_krisp@COMPAT_VERSION@"
+			fi
+		else
+			krispconfig="@static_bindir@/krisp@COMPAT_VERSION@-config"
+		fi
+
+		AC_MSG_CHECKING(for krisp@COMPAT_VERSION@-config path)
+		if test ! -f "$krispconfig" || test ! -x "$krispconfig"; then
+			AC_MSG_ERROR(can't find $krispconfig)
+		else
+			AC_MSG_RESULT([$krispconfig])
+		fi
+
+		#
+		# krisp library check
+		#
+		KRISP_LDFLAGS="`$krispconfig --ldflags`"
+		krisp_OLD_FLAGS="$LDFLAGS"
+		LDFLAGS="$KRISP_LDFLAGS"
+		AC_CHECK_LIB(
+			krisp@COMPAT_VERSION@, ip2long, [
+				AC_DEFINE(
+					[HAVE_LIBKRISP@COMPAT_VERSION@], 1,
+					[Define to 1 if you have the `krisp@COMPAT_VERSION@' library (-lkrisp@COMPAT_VERSION@).]
+				LIBS="`$krispconfig --libs` $LIBS"
+			],[
+				if test $# -gt 0; then
+					AC_MSG_ERROR([Can't not found krisp@COMPAT_VERSION@ library (-lkrisp@COMPAT_VERSION@)])
+				fi
+			]
+		)
+		LDFLAGS="$krisp_OLD_LDFLAGS"
+
+		ret_ldflags=0
+		for check_ldflags in $LDFLAGS
+		do
+			test -z "$KRISP_LDFLAGS" && break
+	
+			if test "$check_ldflags" = "$KRISP_LDFLAGS"; then
+				ret_ldflags=1
+				break
+			fi
+		done
+
+		test $ret_ldflags -eq 0 && LDFLAGS="$KRISP_LDFLAGS $LDFLAGS"
+
+		#
+		# krisp header check
+		#
+		KRISP_INCLUDES="`$krispconfig --includes`"
+
+		ret_cppflags=0
+		for check_cppflags in $CPPFLAGS
+		do
+			test -z "$KRISP_INCLUDES" && break
+
+			if test "$check_cppflags" = "$KRISP_INCLUDES"; then
+				ret_cppflags=1
+				break
+			fi
+		done
+		test $ret_cppflags -eq 0 && CPPFLAGS="$KRISP_INCLUDES $CPPFLAGS"
+		AC_CHECK_HEADERS(krisp@COMPAT_VERSION@.h)
+		if test "$ac_cv_header_krisp@COMPAT_VERSION@_h" != "yes"; then
+			AC_MSG_ERROR([You must need krisp@COMPAT_VERSION@.h header file])
+		fi
+	fi
+])
