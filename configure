@@ -10577,7 +10577,7 @@ DBPATH="$(eval echo ${datadir}/krisp)$COMPAT_VERSION"
 
 
 cat >>confdefs.h <<_ACEOF
-#define DBPATH $DBPATH
+#define DBPATH "$DBPATH"
 _ACEOF
 
 
