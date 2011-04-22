@@ -61,12 +61,11 @@ build_triplet = @build@
 host_triplet = @host@
 DIST_COMMON = README $(am__configure_deps) $(am__dist_doc_DATA_DIST) \
 	$(dist_m4_DATA) $(include_HEADERS) $(srcdir)/Makefile.am \
-	$(srcdir)/Makefile.in $(srcdir)/krdb.h.in \
-	$(srcdir)/krisp-config.h.in $(srcdir)/krispcommon.h.in \
-	$(top_srcdir)/configure $(top_srcdir)/m4/krisp.m4.in INSTALL \
-	acconfig.h tools/config.guess tools/config.rpath \
-	tools/config.sub tools/install-sh tools/ltmain.sh \
-	tools/missing
+	$(srcdir)/Makefile.in $(srcdir)/krisp-config.h.in \
+	$(srcdir)/krispcommon.h.in $(top_srcdir)/configure \
+	$(top_srcdir)/m4/krisp.m4.in INSTALL acconfig.h \
+	tools/config.guess tools/config.rpath tools/config.sub \
+	tools/install-sh tools/ltmain.sh tools/missing
 subdir = .
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/ax_compat_option.m4 \
@@ -79,7 +78,7 @@ am__CONFIG_DISTCLEAN_FILES = config.status config.cache config.log \
  configure.lineno configure.status.lineno
 mkinstalldirs = $(install_sh) -d
 CONFIG_HEADER = krisp-config.h krispcommon.h
-CONFIG_CLEAN_FILES = krdb.h m4/krisp.m4
+CONFIG_CLEAN_FILES = m4/krisp.m4
 am__vpath_adj_setup = srcdirstrip=`echo "$(srcdir)" | sed 's|.|.|g'`;
 am__vpath_adj = case $$p in \
     $(srcdir)/*) f=`echo "$$p" | sed "s|^$$srcdirstrip/||"`;; \
@@ -329,8 +328,6 @@ stamp-h2: $(srcdir)/krispcommon.h.in $(top_builddir)/config.status
 
 distclean-hdr:
 	-rm -f krisp-config.h stamp-h1 krispcommon.h stamp-h2
-krdb.h: $(top_builddir)/config.status $(srcdir)/krdb.h.in
-	cd $(top_builddir) && $(SHELL) ./config.status $@
 m4/krisp.m4: $(top_builddir)/config.status $(top_srcdir)/m4/krisp.m4.in
 	cd $(top_builddir) && $(SHELL) ./config.status $@
 install-libLTLIBRARIES: $(lib_LTLIBRARIES)
@@ -562,7 +559,7 @@ distclean-tags:
 distdir: $(DISTFILES)
 	$(am__remove_distdir)
 	mkdir $(distdir)
-	$(mkdir_p) $(distdir)/. $(distdir)/m4 $(distdir)/scripts $(distdir)/tools
+	$(mkdir_p) $(distdir)/m4 $(distdir)/scripts $(distdir)/tools
 	@srcdirstrip=`echo "$(srcdir)" | sed 's|.|.|g'`; \
 	topsrcdirstrip=`echo "$(top_srcdir)" | sed 's|.|.|g'`; \
 	list='$(DISTFILES)'; for file in $$list; do \
