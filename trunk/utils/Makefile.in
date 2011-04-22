@@ -78,15 +78,13 @@ PROGRAMS = $(bin_PROGRAMS)
 am_krisplookup@COMPAT_VERSION@_OBJECTS = krisplookup.$(OBJEXT)
 krisplookup@COMPAT_VERSION@_OBJECTS =  \
 	$(am_krisplookup@COMPAT_VERSION@_OBJECTS)
-krisplookup@COMPAT_VERSION@_LDADD = $(LDADD)
 krisplookup@COMPAT_VERSION@_DEPENDENCIES =  \
 	../libkrisp@COMPAT_VERSION@.la
 am_krispmkdb@COMPAT_VERSION@_OBJECTS = krispmkdb.$(OBJEXT)
 krispmkdb@COMPAT_VERSION@_OBJECTS =  \
 	$(am_krispmkdb@COMPAT_VERSION@_OBJECTS)
-krispmkdb@COMPAT_VERSION@_LDADD = $(LDADD)
-krispmkdb@COMPAT_VERSION@_DEPENDENCIES =  \
-	../libkrisp@COMPAT_VERSION@.la
+krispmkdb@COMPAT_VERSION@_DEPENDENCIES = ../krdb.o ../krispapi.o \
+	../krisp.o
 DEFAULT_INCLUDES = -I. -I$(srcdir) -I$(top_builddir) -I$(top_builddir)
 depcomp =
 am__depfiles_maybe =
@@ -208,9 +206,10 @@ sysconfdir = @sysconfdir@
 target_alias = @target_alias@
 AM_CFLAGS = -Wall
 AM_CPPFLAGS = -I$(top_srcdir)
-LDADD = ../libkrisp@COMPAT_VERSION@.la
 krisplookup@COMPAT_VERSION@_SOURCES = krisplookup.c
+krisplookup@COMPAT_VERSION@_LDADD = ../libkrisp@COMPAT_VERSION@.la
 krispmkdb@COMPAT_VERSION@_SOURCES = krispmkdb.c
+krispmkdb@COMPAT_VERSION@_LDADD = ../krdb.o ../krispapi.o ../krisp.o
 all: all-am
 
 .SUFFIXES:
