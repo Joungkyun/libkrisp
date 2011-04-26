@@ -1,5 +1,5 @@
 %define _unpackaged_files_terminate_build 0
-%define sqlitepkgname sqlite3
+%define sqlitepkgname sqlite
 #define compat 30
 
 Summary: Korean ISP library
