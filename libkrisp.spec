@@ -38,7 +38,7 @@ libkrisp%{?compat}-devel 패키지는 libkrisp%{?compat} 라이브러리를 이�
 
 %prep
 rm -rf %{buildroot}
-%setup -q
+%setup -q -n libkrisp-%{version}
 
 %build
 %configure %{?compat:--with-compat=%{compat}}
