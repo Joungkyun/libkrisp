@@ -1,15 +1,12 @@
-diff -ruNp libkrisp.org//Makefile.in libkrisp/Makefile.in
---- libkrisp.org//Makefile.in	2011-01-12 18:51:47.000000000 +0900
-+++ libkrisp/Makefile.in	2011-01-12 18:55:21.295399074 +0900
-@@ -96,6 +96,11 @@ data:
- install: install-header install-data install-man
- 	$(MKDIR) $(DESTDIR)$(bindir)
- 	$(MKDIR) $(DESTDIR)$(libdir)/pkgconfig
-+
-+	for i in .libs/lib$(PROG)$(COMPAT).so.$(SONAME_VERSION) .libs/$(PROG)lookup $(PROG)mkdb; do \
-+		/usr/bin/chrpath -d $$i; \
-+	done
-+
- 	$(P_LIBTOOL) $(PROG)-config $(DESTDIR)$(bindir)/$(PROG)$(COMPAT)-config
- 	$(P_LIBTOOL) $(PROG)lookup $(DESTDIR)$(bindir)/$(PROG)lookup$(COMPAT)
- 	$(P_LIBTOOL) $(PROG)mkdb $(DESTDIR)$(bindir)/$(PROG)mkdb$(COMPAT)
+diff -ruNp libkrisp.org//utils/Makefile.in libkrisp/utils/Makefile.in
+--- libkrisp.org//utils/Makefile.in	2011-04-26 15:23:06.306502998 +0900
++++ libkrisp/utils/Makefile.in	2011-04-26 15:35:51.636502998 +0900
+@@ -256,6 +256,8 @@ install-binPROGRAMS: $(bin_PROGRAMS)
+ 	    f=`echo "$$p1" | sed 's,^.*/,,;$(transform);s/$$/$(EXEEXT)/'`; \
+ 	   echo " $(INSTALL_PROGRAM_ENV) $(LIBTOOL) --mode=install $(binPROGRAMS_INSTALL) '$$p' '$(DESTDIR)$(bindir)/$$f'"; \
+ 	   $(INSTALL_PROGRAM_ENV) $(LIBTOOL) --mode=install $(binPROGRAMS_INSTALL) "$$p" "$(DESTDIR)$(bindir)/$$f" || exit 1; \
++	   echo "/usr/bin/chrpath -d '$(DESTDIR)$(bindir)/$$f'"; \
++	   /usr/bin/chrpath -d "$(DESTDIR)$(bindir)/$$f"; \
+ 	  else :; fi; \
+ 	done
+ 
