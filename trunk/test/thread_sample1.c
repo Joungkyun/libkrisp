@@ -2,6 +2,7 @@
  * $Id: thread_sample1.c,v 1.14 2010-09-10 12:44:26 oops Exp $
  */
 
+#include <ipcalc.h>
 #include <krisp.h>
 #include <sys/time.h>
 

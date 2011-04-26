@@ -18,21 +18,44 @@
 
 # $Id: Makefile.am,v 1.6 2011-04-12 16:36:35 oops Exp $
 
+DISTCLEANFILES =
 ACLOCAL_AMFLAGS = -I m4
 
-#EXTRA_DIST = Changes LICENSE debbuild-sh libkrisp.spec \
-#			debian/patches/01-remove-rpath.patch \
-#			debian/control \
-#			debian/compat \
-#			debian/libkrisp-dev.install \
-#			debian/libkrisp1.dirs \
-#			debian/changelog \
-#			debian/copyright \
-#			debian/libkrisp1.install \
-#			debian/krisp-utils.dirs \
-#			debian/rules \
-#			debian/krisp-utils.install \
-#			debian/libkrisp-dev.dirs
+includedir = @includedir@/krisp@COMPAT_VERSION@
+
+EXTRA_DIST = Migration THREADSAFE autogen libkrisp.spec \
+			 contrib/database/README \
+			 contrib/database/geo-krisp.php \
+			 contrib/database/geocity.php \
+			 contrib/database/geoip-geoisp.php \
+			 contrib/database/hostip.php \
+			 contrib/database/krisp-geoip.php \
+			 contrib/database/krisp-geoisp.php \
+			 contrib/database/vaccum.php \
+			 contrib/krnic/README \
+			 contrib/krnic/krisp-data.php \
+			 contrib/krnic/krnic-data.php \
+			 contrib/lib/ValidIP.php \
+			 contrib/lib/fix-eng-gu.php \
+			 database/sqlite.c \
+			 database/sqlite3.c \
+			 db/CurrentVersions \
+			 db/README \
+			 db/krisp.csv \
+			 db/table \
+			 debbuild-sh \
+			 debian/changelog \
+			 debian/compat \
+			 debian/control \
+			 debian/copyright \
+			 debian/krisp.dirs \
+			 debian/krisp.install \
+			 debian/libkrisp-dev.dirs \
+			 debian/libkrisp-dev.install \
+			 debian/libkrisp2.dirs \
+			 debian/libkrisp2.install \
+			 debian/patches/01-remove-rpath.patch \
+			 debian/rules
 
 if ! COMPAT
 docdir = $(datadir)/doc/$(PACKAGE)-$(VERSION)
@@ -44,7 +67,7 @@ dist_m4_DATA = m4/krisp@COMPAT_VERSION@.m4
 
 if COMPAT
 BUILT_SOURCE = m4/krisp@COMPAT_VERSION@.m4
-DISTCLEANFILES = m4/krisp@COMPAT_VERSION@.m4
+DISTCLEANFILES += m4/krisp@COMPAT_VERSION@.m4
 
 m4/krisp@COMPAT_VERSION@.m4:
 	mv m4/krisp.m4 m4/krisp@COMPAT_VERSION@.m4
@@ -62,13 +85,16 @@ SONAME_VERSION  = @SONAME_VERSION@
 AM_CFLAGS = -Wall
 AM_LDFLAGS = -version-info $(SONAME_INFO)
 
-include_HEADERS = krisp.h
-#noinst_HEADERS = common.h
+include_HEADERS = krisp.h krispcommon.h
+noinst_HEADERS = krdb.h krispapi.h krversion.h
+
+BUILT_SOURCES = krispcommon.h
 
 lib_LTLIBRARIES = libkrisp@COMPAT_VERSION@.la
 libkrisp@COMPAT_VERSION@_la_SOURCES = \
 	krdb.c krisp.c krispapi.c
 
+DISTCLEANFILES += *.bz2
 dist-hook:
 	$(PERL) -pi -e \
 			"s/\@PACKAGE_VERSION\@/$(VERSION)/g" \
@@ -77,7 +103,5 @@ dist-hook:
 			"s/\@PACKAGE_DATE\@/$(PACKAGE_DATE)/g" \
 			$(distdir)/$(PACKAGE).spec
 
-if COMPAT
-install-data-hook:
-	mv $(DESTDIR)$(includedir)/krisp.h $(DESTDIR)$(includedir)/krisp@COMPAT_VERSION@.h
-endif
+test-install:
+	$(MAKE) DESTDIR=`pwd`/z install

@@ -3,6 +3,7 @@
  */
 
 #include <krisp.h>
+#include <ipcalc.h>
 
 #ifdef HAVE_GETOPT_H
 #include <getopt.h>
