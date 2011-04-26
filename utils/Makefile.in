@@ -64,8 +64,9 @@ DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/ax_compat_option.m4 \
 	$(top_srcdir)/m4/ax_gcc_visibiliity.m4 \
-	$(top_srcdir)/m4/iconv.m4 $(top_srcdir)/m4/ipcalc.m4 \
-	$(top_srcdir)/m4/sqlite.m4 $(top_srcdir)/configure.ac
+	$(top_srcdir)/m4/ax_static_bindir.m4 $(top_srcdir)/m4/iconv.m4 \
+	$(top_srcdir)/m4/ipcalc.m4 $(top_srcdir)/m4/sqlite.m4 \
+	$(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
 mkinstalldirs = $(install_sh) -d
@@ -202,6 +203,7 @@ prefix = @prefix@
 program_transform_name = @program_transform_name@
 sbindir = @sbindir@
 sharedstatedir = @sharedstatedir@
+static_bindir = @static_bindir@
 sysconfdir = @sysconfdir@
 target_alias = @target_alias@
 AM_CFLAGS = -Wall
