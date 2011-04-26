@@ -48,11 +48,10 @@ rm -rf %{buildroot}
 #
 # create database
 #
-#{__make} data
-pushd db
-[ -f krisp.dat ] && %{__rm} -f krisp.dat
-sqlite3 krisp.dat < table
-popd
+#pushd db
+#[ -f krisp.dat ] && %{__rm} -f krisp.dat
+#sqlite3 krisp.dat < table
+#popd
 
 %install
 %{__make} DESTDIR=%{buildroot} install
@@ -68,11 +67,13 @@ popd
 
 %files
 %defattr(0755,root,root)
+%doc Changes LICENSE README
 %{_bindir}/krisplookup%{?compat}
 %{_bindir}/krispmkdb%{?compat}
 %{_libdir}/libkrisp%{?compat}.so.*
-%attr (0644, root, root) %{_datadir}/krisp%{?compat}/*.dat
-%{?compat:%attr (0644, root, root) %{_mandir}/ko/man1/*.1*}
+#attr (0644, root, root) %{_datadir}/krisp%{?compat}/*.dat
+%{!?compat:%attr(0644,root,root) %{_mandir}/man1/*.1*}
+%{!?compat:%attr(0644,root,root) %{_mandir}/ko/man1/*.1*}
 
 %files devel
 %defattr(0644,root,root,0755)
@@ -80,8 +81,11 @@ popd
 %{_libdir}/*.so
 %{_libdir}/*.a
 %{_libdir}/*.la
-%{_includedir}/*.h
-%{?compat:%{_mandir}/ko/man3/*.3*}
+%{_libdir}/pkgconfig/*.pc
+%{_includedir}/krisp%{?compat}/*.h
+%{!?compat:%{_datadir}/aclocal/*.m4}
+%{!?compat:%{_mandir}/man3/*.3*}
+%{!?compat:%{_mandir}/ko/man3/*.3*}
 
 %changelog
 * @PACKAGE_DATE@ JoungKyun.Kim <http://oops.org> - @PACKAGE_VERSION@-1
