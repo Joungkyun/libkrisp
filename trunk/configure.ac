@@ -93,7 +93,7 @@ AC_TYPE_SIZE_T
 AC_HEADER_TIME
 
 # Checks for library functions.
-AC_FUNC_MALLOC
+#AC_FUNC_MALLOC
 AC_FUNC_STAT
 AC_CHECK_FUNCS([getopt_long])
 
