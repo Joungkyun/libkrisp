@@ -59,13 +59,15 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
+@COMPAT_TRUE@am__append_1 = m4/krisp@COMPAT_VERSION@.m4
 DIST_COMMON = README $(am__configure_deps) $(am__dist_doc_DATA_DIST) \
-	$(dist_m4_DATA) $(include_HEADERS) $(srcdir)/Makefile.am \
-	$(srcdir)/Makefile.in $(srcdir)/krisp-config.h.in \
-	$(srcdir)/krispcommon.h.in $(top_srcdir)/configure \
-	$(top_srcdir)/m4/krisp.m4.in INSTALL acconfig.h \
-	tools/config.guess tools/config.rpath tools/config.sub \
-	tools/install-sh tools/ltmain.sh tools/missing
+	$(dist_m4_DATA) $(include_HEADERS) $(noinst_HEADERS) \
+	$(srcdir)/Makefile.am $(srcdir)/Makefile.in \
+	$(srcdir)/krisp-config.h.in $(srcdir)/krispcommon.h.in \
+	$(top_srcdir)/configure $(top_srcdir)/m4/krisp.m4.in INSTALL \
+	acconfig.h tools/config.guess tools/config.rpath \
+	tools/config.sub tools/install-sh tools/ltmain.sh \
+	tools/missing
 subdir = .
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/ax_compat_option.m4 \
@@ -117,7 +119,7 @@ dist_docDATA_INSTALL = $(INSTALL_DATA)
 dist_m4DATA_INSTALL = $(INSTALL_DATA)
 DATA = $(dist_doc_DATA) $(dist_m4_DATA)
 includeHEADERS_INSTALL = $(INSTALL_HEADER)
-HEADERS = $(include_HEADERS)
+HEADERS = $(include_HEADERS) $(noinst_HEADERS)
 ETAGS = etags
 CTAGS = ctags
 DIST_SUBDIRS = $(SUBDIRS)
@@ -218,7 +220,7 @@ host_alias = @host_alias@
 host_cpu = @host_cpu@
 host_os = @host_os@
 host_vendor = @host_vendor@
-includedir = @includedir@
+includedir = @includedir@/krisp@COMPAT_VERSION@
 infodir = @infodir@
 install_sh = @install_sh@
 libdir = @libdir@
@@ -233,37 +235,58 @@ sbindir = @sbindir@
 sharedstatedir = @sharedstatedir@
 sysconfdir = @sysconfdir@
 target_alias = @target_alias@
+DISTCLEANFILES = $(am__append_1) *.bz2
 ACLOCAL_AMFLAGS = -I m4
+EXTRA_DIST = Migration THREADSAFE autogen libkrisp.spec \
+			 contrib/database/README \
+			 contrib/database/geo-krisp.php \
+			 contrib/database/geocity.php \
+			 contrib/database/geoip-geoisp.php \
+			 contrib/database/hostip.php \
+			 contrib/database/krisp-geoip.php \
+			 contrib/database/krisp-geoisp.php \
+			 contrib/database/vaccum.php \
+			 contrib/krnic/README \
+			 contrib/krnic/krisp-data.php \
+			 contrib/krnic/krnic-data.php \
+			 contrib/lib/ValidIP.php \
+			 contrib/lib/fix-eng-gu.php \
+			 database/sqlite.c \
+			 database/sqlite3.c \
+			 db/CurrentVersions \
+			 db/README \
+			 db/krisp.csv \
+			 db/table \
+			 debbuild-sh \
+			 debian/changelog \
+			 debian/compat \
+			 debian/control \
+			 debian/copyright \
+			 debian/krisp.dirs \
+			 debian/krisp.install \
+			 debian/libkrisp-dev.dirs \
+			 debian/libkrisp-dev.install \
+			 debian/libkrisp2.dirs \
+			 debian/libkrisp2.install \
+			 debian/patches/01-remove-rpath.patch \
+			 debian/rules
 
-#EXTRA_DIST = Changes LICENSE debbuild-sh libkrisp.spec \
-#			debian/patches/01-remove-rpath.patch \
-#			debian/control \
-#			debian/compat \
-#			debian/libkrisp-dev.install \
-#			debian/libkrisp1.dirs \
-#			debian/changelog \
-#			debian/copyright \
-#			debian/libkrisp1.install \
-#			debian/krisp-utils.dirs \
-#			debian/rules \
-#			debian/krisp-utils.install \
-#			debian/libkrisp-dev.dirs
 @COMPAT_FALSE@docdir = $(datadir)/doc/$(PACKAGE)-$(VERSION)
 @COMPAT_FALSE@dist_doc_DATA = Changes README LICENSE
 m4dir = $(datadir)/aclocal
 dist_m4_DATA = m4/krisp@COMPAT_VERSION@.m4
 @COMPAT_TRUE@BUILT_SOURCE = m4/krisp@COMPAT_VERSION@.m4
-@COMPAT_TRUE@DISTCLEANFILES = m4/krisp@COMPAT_VERSION@.m4
 SUBDIRS = . man scripts test utils
 AM_CFLAGS = -Wall
 AM_LDFLAGS = -version-info $(SONAME_INFO)
-include_HEADERS = krisp.h
-#noinst_HEADERS = common.h
+include_HEADERS = krisp.h krispcommon.h
+noinst_HEADERS = krdb.h krispapi.h krversion.h
+BUILT_SOURCES = krispcommon.h
 lib_LTLIBRARIES = libkrisp@COMPAT_VERSION@.la
 libkrisp@COMPAT_VERSION@_la_SOURCES = \
 	krdb.c krisp.c krispapi.c
 
-all: krisp-config.h krispcommon.h
+all: $(BUILT_SOURCES) krisp-config.h krispcommon.h
 	$(MAKE) $(AM_MAKEFLAGS) all-recursive
 
 .SUFFIXES:
@@ -559,7 +582,7 @@ distclean-tags:
 distdir: $(DISTFILES)
 	$(am__remove_distdir)
 	mkdir $(distdir)
-	$(mkdir_p) $(distdir)/m4 $(distdir)/scripts $(distdir)/tools
+	$(mkdir_p) $(distdir)/contrib/database $(distdir)/contrib/krnic $(distdir)/contrib/lib $(distdir)/database $(distdir)/db $(distdir)/debian $(distdir)/debian/patches $(distdir)/m4 $(distdir)/scripts $(distdir)/tools
 	@srcdirstrip=`echo "$(srcdir)" | sed 's|.|.|g'`; \
 	topsrcdirstrip=`echo "$(top_srcdir)" | sed 's|.|.|g'`; \
 	list='$(DISTFILES)'; for file in $$list; do \
@@ -702,7 +725,8 @@ distcleancheck: distclean
 	       $(distcleancheck_listfiles) ; \
 	       exit 1; } >&2
 check-am: all-am
-check: check-recursive
+check: $(BUILT_SOURCES)
+	$(MAKE) $(AM_MAKEFLAGS) check-recursive
 all-am: Makefile $(LTLIBRARIES) $(DATA) $(HEADERS) krisp-config.h \
 		krispcommon.h
 installdirs: installdirs-recursive
@@ -710,7 +734,8 @@ installdirs-am:
 	for dir in "$(DESTDIR)$(libdir)" "$(DESTDIR)$(docdir)" "$(DESTDIR)$(m4dir)" "$(DESTDIR)$(includedir)"; do \
 	  test -z "$$dir" || $(mkdir_p) "$$dir"; \
 	done
-install: install-recursive
+install: $(BUILT_SOURCES)
+	$(MAKE) $(AM_MAKEFLAGS) install-recursive
 install-exec: install-exec-recursive
 install-data: install-data-recursive
 uninstall: uninstall-recursive
@@ -735,7 +760,7 @@ distclean-generic:
 maintainer-clean-generic:
 	@echo "This command is intended for maintainers to use"
 	@echo "it deletes files that may require special tools to rebuild."
-@COMPAT_FALSE@install-data-hook:
+	-test -z "$(BUILT_SOURCES)" || rm -f $(BUILT_SOURCES)
 clean: clean-recursive
 
 clean-am: clean-generic clean-libLTLIBRARIES clean-libtool \
@@ -759,8 +784,6 @@ info-am:
 
 install-data-am: install-dist_docDATA install-dist_m4DATA \
 	install-includeHEADERS
-	@$(NORMAL_INSTALL)
-	$(MAKE) $(AM_MAKEFLAGS) install-data-hook
 
 install-exec-am: install-libLTLIBRARIES
 
@@ -804,15 +827,14 @@ uninstall-info: uninstall-info-recursive
 	distclean-recursive distclean-tags distcleancheck distdir \
 	distuninstallcheck dvi dvi-am html html-am info info-am \
 	install install-am install-data install-data-am \
-	install-data-hook install-dist_docDATA install-dist_m4DATA \
-	install-exec install-exec-am install-includeHEADERS \
-	install-info install-info-am install-libLTLIBRARIES \
-	install-man install-strip installcheck installcheck-am \
-	installdirs installdirs-am maintainer-clean \
-	maintainer-clean-generic maintainer-clean-recursive \
-	mostlyclean mostlyclean-compile mostlyclean-generic \
-	mostlyclean-libtool mostlyclean-recursive pdf pdf-am ps ps-am \
-	tags tags-recursive uninstall uninstall-am \
+	install-dist_docDATA install-dist_m4DATA install-exec \
+	install-exec-am install-includeHEADERS install-info \
+	install-info-am install-libLTLIBRARIES install-man \
+	install-strip installcheck installcheck-am installdirs \
+	installdirs-am maintainer-clean maintainer-clean-generic \
+	maintainer-clean-recursive mostlyclean mostlyclean-compile \
+	mostlyclean-generic mostlyclean-libtool mostlyclean-recursive \
+	pdf pdf-am ps ps-am tags tags-recursive uninstall uninstall-am \
 	uninstall-dist_docDATA uninstall-dist_m4DATA \
 	uninstall-includeHEADERS uninstall-info-am \
 	uninstall-libLTLIBRARIES
@@ -820,7 +842,6 @@ uninstall-info: uninstall-info-recursive
 
 @COMPAT_TRUE@m4/krisp@COMPAT_VERSION@.m4:
 @COMPAT_TRUE@	mv m4/krisp.m4 m4/krisp@COMPAT_VERSION@.m4
-
 dist-hook:
 	$(PERL) -pi -e \
 			"s/\@PACKAGE_VERSION\@/$(VERSION)/g" \
@@ -829,8 +850,8 @@ dist-hook:
 			"s/\@PACKAGE_DATE\@/$(PACKAGE_DATE)/g" \
 			$(distdir)/$(PACKAGE).spec
 
-@COMPAT_TRUE@install-data-hook:
-@COMPAT_TRUE@	mv $(DESTDIR)$(includedir)/krisp.h $(DESTDIR)$(includedir)/krisp@COMPAT_VERSION@.h
+test-install:
+	$(MAKE) DESTDIR=`pwd`/z install
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:

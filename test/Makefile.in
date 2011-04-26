@@ -195,11 +195,11 @@ target_alias = @target_alias@
 AM_CLFAGS = -Wall
 AM_CPPFLAGS = -I$(top_srcdir)
 LDADD = $(top_srcdir)/libkrisp@COMPAT_VERSION@.la
-
-# krispexlookup.c krtest.c thread_sample.c thread_sample1.c thread_sample2.c
 ctests = lookup
 TESTS = $(ctests)
 TESTS_ENVIRONMENT = $(VALGRIND)
+SAMPLESOURCES = krispexlookup krtest thread_sample thread_sample1 thread_sample2
+CLEANFILES = $(SAMPLESOURCES)
 all: all-am
 
 .SUFFIXES:
@@ -440,6 +440,7 @@ install-strip:
 mostlyclean-generic:
 
 clean-generic:
+	-test -z "$(CLEANFILES)" || rm -f $(CLEANFILES)
 
 distclean-generic:
 	-test -z "$(CONFIG_CLEAN_FILES)" || rm -f $(CONFIG_CLEAN_FILES)
@@ -508,6 +509,21 @@ uninstall-am: uninstall-info-am
 	mostlyclean-generic mostlyclean-libtool pdf pdf-am ps ps-am \
 	tags uninstall uninstall-am uninstall-info-am
 
+
+#bin_PROGRAMS = krispexlookup krtest thread_sample \
+#			   thread_sample1 thread_sample2
+#krispexlookup_SOURCES = krispexlookup.c
+#krtest_SOURCES = krtest.c
+#thread_sample_SOURCES = thread_sample.c
+#thread_sample1_SOURCES = thread_sample1.c
+#thread_sample2_SOURCES = thread_sample2.c
+
+sample:
+	for bins in $(SAMPLESOURCES); \
+	do \
+		$(CC) -I.. -L../.libs -o $$bins $$bins.c -lkrisp; \
+		LD_LIBRARY_PATH=../.libs ./$$bins 1; \
+	done
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:

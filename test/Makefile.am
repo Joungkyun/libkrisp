@@ -22,8 +22,26 @@ AM_CLFAGS = -Wall
 AM_CPPFLAGS = -I$(top_srcdir)
 LDADD = $(top_srcdir)/libkrisp@COMPAT_VERSION@.la
 
-# krispexlookup.c krtest.c thread_sample.c thread_sample1.c thread_sample2.c
 ctests = lookup
 TESTS = $(ctests)
 check_PROGRAMS = $(ctests)
 TESTS_ENVIRONMENT = $(VALGRIND)
+
+SAMPLESOURCES = krispexlookup krtest thread_sample thread_sample1 thread_sample2
+
+#bin_PROGRAMS = krispexlookup krtest thread_sample \
+#			   thread_sample1 thread_sample2
+#krispexlookup_SOURCES = krispexlookup.c
+#krtest_SOURCES = krtest.c
+#thread_sample_SOURCES = thread_sample.c
+#thread_sample1_SOURCES = thread_sample1.c
+#thread_sample2_SOURCES = thread_sample2.c
+
+sample:
+	for bins in $(SAMPLESOURCES); \
+	do \
+		$(CC) -I.. -L../.libs -o $$bins $$bins.c -lkrisp; \
+		LD_LIBRARY_PATH=../.libs ./$$bins 1; \
+	done
+
+CLEANFILES = $(SAMPLESOURCES)
