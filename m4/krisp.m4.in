@@ -22,7 +22,7 @@ AC_SUBST(KRISP_CPPFLAGS)
 
 AC_DEFUN([AX_KRISP@COMPAT_VERSION@],
 [
-	AC_ARG_WITH(krisp,
+	AC_ARG_WITH(krisp@COMPAT_VERSION@,
 		[  --with-krisp@COMPAT_VERSION@=PATH       path of krisp@COMPAT_VERSION@-config [[default: @static_bindir@/krisp@COMPAT_VERSION@-config]]])
 
 	if test "x$with_krisp@COMPAT_VERSION@" != "xno"; then
@@ -92,9 +92,9 @@ AC_DEFUN([AX_KRISP@COMPAT_VERSION@],
 			fi
 		done
 		test $ret_cppflags -eq 0 && CPPFLAGS="$KRISP_INCLUDES $CPPFLAGS"
-		AC_CHECK_HEADERS(krisp@COMPAT_VERSION@.h)
-		if test "$ac_cv_header_krisp@COMPAT_VERSION@_h" != "yes"; then
-			AC_MSG_ERROR([You must need krisp@COMPAT_VERSION@.h header file])
+		AC_CHECK_HEADERS(krisp.h)
+		if test "$ac_cv_header_krisp_h" != "yes"; then
+			AC_MSG_ERROR([You must need krisp.h header file])
 		fi
 	fi
 ])
