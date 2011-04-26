@@ -471,7 +471,7 @@ ac_includes_default="\
 # include <unistd.h>
 #endif"
 
-ac_subst_vars='COMPAT_VERSION GCC_MAJOR_VERSION GCC_MINOR_VERSION GCC_PATCH_VERSION IPCALC_LDFLAGS IPCALC_CPPFLAGS SHELL PATH_SEPARATOR PACKAGE_NAME PACKAGE_TARNAME PACKAGE_VERSION PACKAGE_STRING PACKAGE_BUGREPORT exec_prefix prefix program_transform_name bindir sbindir libexecdir datadir sysconfdir sharedstatedir localstatedir libdir includedir oldincludedir infodir mandir build_alias host_alias target_alias DEFS ECHO_C ECHO_N ECHO_T LIBS INSTALL_PROGRAM INSTALL_SCRIPT INSTALL_DATA CYGPATH_W PACKAGE VERSION ACLOCAL AUTOCONF AUTOMAKE AUTOHEADER MAKEINFO install_sh STRIP ac_ct_STRIP INSTALL_STRIP_PROGRAM mkdir_p AWK SET_MAKE am__leading_dot AMTAR am__tar am__untar MAINTAINER_MODE_TRUE MAINTAINER_MODE_FALSE MAINT SONAME_INFO SONAME_VERSION SONAME_MAJOR SONAME_MINOR SONAME_REVISION PERL COMPAT_TRUE COMPAT_FALSE CXX CXXFLAGS LDFLAGS CPPFLAGS ac_ct_CXX EXEEXT OBJEXT CC CFLAGS ac_ct_CC CPP LN_S build build_cpu build_vendor build_os host host_cpu host_vendor host_os ECHO RANLIB ac_ct_RANLIB EGREP LIBTOOL DATE PACKAGE_DATE LIBICONV LTLIBICONV DBPATH LIBOBJS LTLIBOBJS'
+ac_subst_vars='COMPAT_VERSION GCC_MAJOR_VERSION GCC_MINOR_VERSION GCC_PATCH_VERSION static_bindir IPCALC_LDFLAGS IPCALC_CPPFLAGS SHELL PATH_SEPARATOR PACKAGE_NAME PACKAGE_TARNAME PACKAGE_VERSION PACKAGE_STRING PACKAGE_BUGREPORT exec_prefix prefix program_transform_name bindir sbindir libexecdir datadir sysconfdir sharedstatedir localstatedir libdir includedir oldincludedir infodir mandir build_alias host_alias target_alias DEFS ECHO_C ECHO_N ECHO_T LIBS INSTALL_PROGRAM INSTALL_SCRIPT INSTALL_DATA CYGPATH_W PACKAGE VERSION ACLOCAL AUTOCONF AUTOMAKE AUTOHEADER MAKEINFO install_sh STRIP ac_ct_STRIP INSTALL_STRIP_PROGRAM mkdir_p AWK SET_MAKE am__leading_dot AMTAR am__tar am__untar MAINTAINER_MODE_TRUE MAINTAINER_MODE_FALSE MAINT SONAME_INFO SONAME_VERSION SONAME_MAJOR SONAME_MINOR SONAME_REVISION PERL COMPAT_TRUE COMPAT_FALSE CXX CXXFLAGS LDFLAGS CPPFLAGS ac_ct_CXX EXEEXT OBJEXT CC CFLAGS ac_ct_CC CPP LN_S build build_cpu build_vendor build_os host host_cpu host_vendor host_os ECHO RANLIB ac_ct_RANLIB EGREP LIBTOOL DATE PACKAGE_DATE LIBICONV LTLIBICONV DBPATH LIBOBJS LTLIBOBJS'
 ac_subst_files=''
 
 # Initialize some variables set by options.
@@ -11857,6 +11857,30 @@ _ACEOF
 fi
 
 
+
+	if test -n "`echo $bindir | grep exec_prefix`"; then
+		if test "$exec_prefix" = "$prefix"; then
+			if test "$prefix" = "NONE"; then
+				static_bindir="$ac_default_prefix/bin"
+			else
+				static_bindir="$prefix/bin"
+			fi
+		else
+			if test "$exec_prefix" = "NONE"; then
+				if test "$prefix" = "NONE"; then
+					static_bindir="$ac_default_prefix/bin"
+				else
+					static_bindir="$prefix/bin"
+				fi
+			else
+				static_bindir="$exec_prefix/bin"
+			fi
+		fi
+	else
+		static_bindir="$bindir"
+	fi
+
+
                                                                                 ac_config_files="$ac_config_files Makefile man/Makefile scripts/Makefile test/Makefile utils/Makefile scripts/krisp.pc scripts/krisp-config m4/krisp.m4"
 
 cat >confcache <<\_ACEOF
@@ -12466,6 +12490,7 @@ s,@COMPAT_VERSION@,$COMPAT_VERSION,;t t
 s,@GCC_MAJOR_VERSION@,$GCC_MAJOR_VERSION,;t t
 s,@GCC_MINOR_VERSION@,$GCC_MINOR_VERSION,;t t
 s,@GCC_PATCH_VERSION@,$GCC_PATCH_VERSION,;t t
+s,@static_bindir@,$static_bindir,;t t
 s,@IPCALC_LDFLAGS@,$IPCALC_LDFLAGS,;t t
 s,@IPCALC_CPPFLAGS@,$IPCALC_CPPFLAGS,;t t
 s,@SHELL@,$SHELL,;t t
