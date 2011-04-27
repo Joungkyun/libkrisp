@@ -1,5 +1,5 @@
 %define _unpackaged_files_terminate_build 0
-%define sqlitepkgname sqlite
+%define sqlitepkgname sqlite3
 #define compat 30
 
 Summary: Korean ISP library
@@ -38,7 +38,7 @@ libkrisp%{?compat}-devel 패키지는 libkrisp%{?compat} 라이브러리를 이�
 
 %prep
 rm -rf %{buildroot}
-%setup -q -n libkrisp-%{version}
+%setup -q
 
 %build
 %configure %{?compat:--with-compat=%{compat}}
@@ -48,10 +48,11 @@ rm -rf %{buildroot}
 #
 # create database
 #
-#pushd db
-#[ -f krisp.dat ] && %{__rm} -f krisp.dat
-#sqlite3 krisp.dat < table
-#popd
+#{__make} data
+pushd db
+[ -f krisp.dat ] && %{__rm} -f krisp.dat
+sqlite3 krisp.dat < table
+popd
 
 %install
 %{__make} DESTDIR=%{buildroot} install
@@ -67,13 +68,11 @@ rm -rf %{buildroot}
 
 %files
 %defattr(0755,root,root)
-%doc Changes LICENSE README
 %{_bindir}/krisplookup%{?compat}
 %{_bindir}/krispmkdb%{?compat}
 %{_libdir}/libkrisp%{?compat}.so.*
-#attr (0644, root, root) %{_datadir}/krisp%{?compat}/*.dat
-%{!?compat:%attr(0644,root,root) %{_mandir}/man1/*.1*}
-%{!?compat:%attr(0644,root,root) %{_mandir}/ko/man1/*.1*}
+%attr (0644, root, root) %{_datadir}/krisp%{?compat}/*.dat
+%{?compat:%attr (0644, root, root) %{_mandir}/ko/man1/*.1*}
 
 %files devel
 %defattr(0644,root,root,0755)
@@ -81,13 +80,10 @@ rm -rf %{buildroot}
 %{_libdir}/*.so
 %{_libdir}/*.a
 %{_libdir}/*.la
-%{_libdir}/pkgconfig/*.pc
-%{_includedir}/krisp%{?compat}/*.h
-%{!?compat:%{_datadir}/aclocal/*.m4}
-%{!?compat:%{_mandir}/man3/*.3*}
-%{!?compat:%{_mandir}/ko/man3/*.3*}
+%{_includedir}/*.h
+%{?compat:%{_mandir}/ko/man3/*.3*}
 
 %changelog
-* @PACKAGE_DATE@ JoungKyun.Kim <http://oops.org> - @PACKAGE_VERSION@-1
+* Fri Sep 10 2010 JoungKyun.Kim <http://oops.org> - @PACKAGE_VERSION@-1
 - release @PACKAGE_VERSION@
 

@@ -1,5 +1,5 @@
 /*
- * $Id: krisp.c,v 1.107 2011-01-14 05:18:55 oops Exp $
+ * $Id: krisp.c,v 1.105 2010-09-24 08:18:45 oops Exp $
  */
 
 #include <stdio.h>
@@ -7,29 +7,17 @@
 #include <string.h>
 #include <sys/stat.h>
 
-#include <krispapi.h>
-#include <krversion.h>
+#include <krisp.h>
 
-KRISP_API char * krisp_version (void) { // {{{
+char * krisp_version (void) { // {{{
 	return KRISP_VERSION;
 } // }}}
 
-KRISP_API char * krisp_uversion (void) { // {{{
+char * krisp_uversion (void) { // {{{
 	return KRISP_UVERSION;
 } // }}}
 
-KRISP_API void kr_close (KR_API **db) { // {{{
-	if ( *db == NULL )
-		return;
-
-	krisp_mutex_destroy (*db);
-
-	kr_dbClose (*db);
-	free (*db);
-	*db = NULL;
-} // }}}
-
-bool _kr_open (KR_API **db, char *file, char *err, bool safe) { // {{{
+KR_LOCAL_API bool _kr_open (KR_API **db, char *file, char *err, bool safe) { // {{{
 	struct stat		f;
 
 	memset (err, 0, 1);
@@ -40,18 +28,19 @@ bool _kr_open (KR_API **db, char *file, char *err, bool safe) { // {{{
 		return false;
 	}
 
-	SAFECPY_256 ((*db)->database, (file == NULL ) ? DEFAULT_DATABASE : file);
+	SAFECPY_256 ((*db)->database, (file == NULL ) ? DBPATH : file);
 
 	f.st_size = 0;
 	if ( stat ((*db)->database, &f) == -1 ) {
 		sprintf (err, "kr_open:: Can't find database (%s)", (*db)->database);
 		kr_close (db);
+		free (*db);
 		return false;
 	}
 
 	if ( f.st_size < 1 ) {
 		sprintf (err, "kr_open:: %s size is zero", (*db)->database);
-		kr_close (db);
+		kr_close (*db);
 		return false;
 	}
 
@@ -59,7 +48,7 @@ bool _kr_open (KR_API **db, char *file, char *err, bool safe) { // {{{
 	(*db)->db_time_stamp = f.st_mtime;
 	(*db)->db_stamp_checked = time (NULL);
 
-#ifdef HAVE_LIBPTHREAD
+#ifdef HAVE_PTHREAD_H
 	(*db)->threadsafe = safe;
 	if ( (*db)->threadsafe == true )
 		pthread_mutex_init (&((*db)->mutex), NULL);
@@ -75,18 +64,29 @@ bool _kr_open (KR_API **db, char *file, char *err, bool safe) { // {{{
 	return true;
 } // }}}
 
-KRISP_API bool kr_open_safe (KR_API **db, char *file, char *err) { // {{{
+bool kr_open_safe (KR_API **db, char *file, char *err) { // {{{
 	return _kr_open (db, file, err, true);
 } // }}}
 
-KRISP_API bool kr_open (KR_API **db, char *file, char *err) { // {{{
+bool kr_open (KR_API **db, char *file, char *err) { // {{{
 	return _kr_open (db, file, err, false);
+} // }}}
+
+void kr_close (KR_API **db) { // {{{
+	if ( *db == NULL )
+		return;
+
+	krisp_mutex_destroy (*db);
+
+	kr_dbClose (*db);
+	free (*db);
+	*db = NULL;
 } // }}}
 
 /*
  * if return 1, db error
  */
-KRISP_API int kr_search (KRNET_API *isp, KR_API *db) { // {{{
+int kr_search (KRNET_API *isp, KR_API *db) { // {{{
 	RAW_KRNET_API	raw;
 	int				r;
 	char			err[1024];
@@ -198,7 +198,7 @@ goWrongData:
 /*
  * if return 1, db error
  */
-KRISP_API int kr_search_ex (KRNET_API_EX *raw, KR_API *db) { // {{{
+int kr_search_ex (KRNET_API_EX *raw, KR_API *db) { // {{{
 	int		r;
 	char	err[1024];
 
