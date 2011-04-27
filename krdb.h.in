@@ -1,0 +1,32 @@
+/*
+ * $Id: krdb.h.in,v 1.6.2.1 2010-06-05 10:56:25 oops Exp $
+ */
+
+#ifndef KRDB_H
+#define KRDB_H
+
+#define DBROOT "@dbpath@"
+#define DBPATH DBROOT "/krisp.dat"
+#define DBHPATH DBROOT "/krisp-userdb.dat"
+
+#if defined(HAVE_LIBSQLITE3)
+void kr_dbError (sqlite3 *, char *);
+#else
+void kr_dbError (KR_API *);
+#endif
+int kr_dbFree (KR_API *);
+int kr_dbConnect (KR_API *, char *);
+int kr_dbQuery (KR_API *, char *, int);
+int kr_dbFetch (KR_API *, int);
+void kr_dbClose (KR_API *);
+
+#endif
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * c-basic-offset: 4
+ * End:
+ * vim600: noet sw=4 ts=4 fdm=marker
+ * vim<600: noet sw=4 ts=4
+ */

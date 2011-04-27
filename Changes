@@ -1,138 +1,228 @@
 Changelog
 
-$Id: Changes,v 1.135 2011-01-14 05:08:35 oops Exp $
+$Id: Changes,v 1.80.2.6 2010-06-06 18:35:07 oops Exp $
 
-* 3.1.3
-Fri, Apr 22 2011 JoungKyun.Kim <http://oops.org>
-	- changed build environment with automake
-	- revert gcc visibility
+* 2.1.5
 
-
-* 3.1.2
-Fri, Jan 14 2011 JoungKyun.Kim <http://oops.org>
-	- release 3.1.2
-	- fixed segfault cause of miss casting
-
-Tue, Jan 12 2011 JoungKyun.Kim <http://oops.org>
-	- add english man pages
-	- debianized
-
-Mon, Nov  8 2010 JoungKyun.Kim <http://oops.org>
-	- fixed build environments on other OS (ulong type, make command)
-	- 3.1.2 dev branch start
+Mon, Jun 07 2010 JoungKyun.Kim <http://oops.org>
+	- fixed '-version-info' warning on compile time
+	- fixed wrong longip type (char(10) -> unsigned integer)
 
 
-* 3.1.1
-Mon, Sep 27 2010 JoungKyun.Kim <http://oops.org>
-	- release 3.1.1
+* 2.1.4
 
-Fri, Sep 24 2010 JoungKyun.Kim <http://oops.org>
-	- add journal_mode=OFF option on sqlite3 database handle
-	- add _REENTRANT compile flag
-	- changed default value of db_time_stamp_interval from 3600 sec to 0 sec
-
-Mon, Sep 20 2010 JoungKyun.Kim <http://oops.org>
-	- initialize db handler to NULL when database connect failed on kr_open
+Sat, Jun 05 2010 JoungKyun.Kim <http://oops.org>
+	- refixed wrong nation information from 2.1.3
+	  back ported lookup algorithm from 3.x.
+	  don't search netmask table any more.
+	- update 2010/06 data
+	- release 2.1.4
 
 
-* 3.1.0
-Fri, Sep 10 2010 JoungKyun.Kim <http://oops.org>
-	- changed kr_close api proto type
-	  kr_close (KR_API *) => kr_close (KR_API **)
-	- reconnect database when changed mtime of database
-	  add 4 members in KR_NET struct
-	  database
-	  db_time_stamp_interval
-	  db_time_stamp
-	  db_stamp_checked
+* 2.1.3
+
+Sat, Apr 10 2010 JoungKyun.Kim <http://oops.org>
+	- fixed wrong nation information
+	- release 2.1.3
 
 
-* 3.0.3
+* 2.1.2
 
-Fri, Sep 10 2010 JoungKyun.Kim <http://oops.org>
-	- fixed segfault kr_search(_ex) when KR_NET structure is null
+Tue, Dec 29 2009 JoungKyun.Kim <http://oops.org>
+	- add iconv on krisplookup
+	- update 200912 data
+	- release 2.1.2
 
-Thu, Aug 12 2010 JoungKyun.Kim <http://oops.org>
-	- fixed typo
+Sun, Jun 15 2008 JoungKyun.Kim <http://oops.org>
+	- change nation detected algorithm
 
-
-* 3.0.2
-
-Sun, Aug  8 2010 JoungKyun.Kim <http://oops.org>
-	- release 3.0.2
-	- link with libipcalc
-	- remove ip2long, netcalc that forked libipcalc
-	- add --with-compat build option for makeing compat library
-	- add krisp.pc that is pkg-config configuration file
+Sat, Mar 15 2008 JoungKyun.Kim <http://oops.org>
+	- rewrite code of get raw isp data information with dom
 
 
-* 3.0.1
+* 2.1.1
 
-Tue, Aug  3 2010 JoungKyun.Kim <http://oops.org>
-	- release 3.0.1
-	- moved header files to %includedir/krisp
-	- removed dependency library on --libs and, add --link for dependency
-	  library on krisp-config
+Sat, Mar  8 2008 JoungKyun.Kim <http://oops.org>
+	- release 2.1.1
+
+Fri, Mar  7 2008 JoungKyun.Kim <http://oops.org>
+	- fixed print wrong isp informatin cause of wrong caculation
+	- support verbose mode
+	  krisplookup: with -v option
+	  use extern short verbose on library
+	- add i and n option on krisplookup
+	  -i: print only isp code
+	  -n: print only country code
+	- 20080306 database update
+
+Thu, Jan 10 2008 JoungKyun.Kim <http://oops.org>
+	- fixed krisp_mksql : check failed original data form
+
+Fri, Jan  5 2007 JoungKyun.Kim <http://oops.org>
+	- add contrib scripts
+	- update hostip.php
+
+Thu, Dec  7 2006 JoungKyun.Kim <http://oops.org>
+	- start 2.1.1
+	- fixed compile error with gcc3
 
 
-* 3.0.0
+* 2.1.0
 
-Fri, Jul 16 2010 JoungKyun.Kim <http://oops.org>
-	- release 3.0.0
-	- update database on july
+Fri, Dec  1 2006 JoungKyun.Kim <http://oops.org>
+	- release 2.1.0
+	- add region filed on userdb
+	- update database 20061130
+	- fixed segfault
 
-Fri, Jul  2 2010 JoungKyun.Kim <http://oops.org>
-	- enhanced build environments
+Wed, Nov 29 2006 JoungKyun.Kim <http://oops.org>
+	- support user database
+	  see also contrib/userdb/README
+	- support hostip database
+	  see also contrib/hostip/README
+	- upgrade soname version
 
-Wed, Jun 30 2010 JoungKyun.Kim <http://oops.org>
-	- add kr_long2ip_r api for thread safe
-	- changed mutex lock per db constructor
+Tue, Nov 21 2006 JoungKyun.Kim <http://oops.org>
+	- support print csv format on krisp_mksql
 
-Tue, Jun 29 2010 JoungKyun.Kim <http://oops.org>
-	- rewrite _kr_valid_ip_address and change proto type
+Fri, Oct 13 2006 JoungKyun.Kim <http://oops.org>
+    - init GeoIPDBFileName after memory free
+	- added gregion
 
-Sun, Jun 27 2010 JoungKyun.Kim <http://oops.org>
-	- initialize verbose member of KRNET_API(_ex) on kr_search(_ex) API
 
-Fri, Jun 25 2010 JoungKyun.Kim <http://oops.org>
-	- rename internal api name
-	- make local symbol
-	- fix wrong caculation of netcalc when use FQDN instead of IP address
+* 2.0.2
 
-Thu, Jun 24 2010 JoungKyun.Kim <http://oops.org>
-	- support multiple build (make -j4)
-	- fixed dl link error
+Wed, Sep 13 2006 JoungKyun.Kim <http://oops.org>
+	- disable geoip city search if unless set global variable geocity set 1
+	- add geoip database open type
+	  short geocity_type = GEOIP_INDEX_CACHE | GEOIP_CHECK_CACHE;
+	  short geoisp_type = GEOIP_INDEX_CACHE | GEOIP_CHECK_CACHE;
+	  short geo_type = GEOIP_MEMORY_CACHE | GEOIP_CHECK_CACHE;
+	- fixed compile error when not include geoip option
+	- update db on 20060912
 
-Fri, Jun 18 2010 JoungKyun.Kim <http://oops.org>
-	- fixed sqlite3_open_v2 compatibility problems under sqlite 3.5.0
-	- add bool type to change some APIs and variables and structure members
-	- don't call kr_close api any more when failed kr_open
 
-Wed, Jun 16 2010 JoungKyun.Kim <http://oops.org>
-	- changed proto type of kr_open
-	- add err member on kr_search/kr_search_ex for thread safe
+* 2.0.1
 
-Mon, Jun 14 2010 JoungKyun.Kim <http://oops.org>
-	- add thread safe
+Sat, Sep 09 2006 JoungKyun.Kim <http://oops.org>
+	- fixed memroy leak of GeoIPCity and GeoIPISP
+	- change dabase open type
 
-Thu, Jun 10 2010 JoungKyun.Kim <http://oops.org>
-	- add database file check on kr_open
 
-Wed, Jun  9 2010 JoungKyun.Kim <http://oops.org>
-	- fixed segfault on kr_open
+* 2.0.0
 
-Tue, Jun  8 2010 JoungKyun.Kim <http://oops.org>
-	- init verbose member of KR_API to 0 on kr_open
-	- add dummy member array size on RAW_KRNET_API
-	- changed frontend api from function to define
+Thu, Sep 07 2006 JoungKyun.Kim <http://oops.org>
+	- support GeoIPISP
 
-Sat, May 22 2010 JoungKyun.Kim <http://oops.org>
-	- changed query algoritm
-	- changed database structure
-	- support internal geoip/geoipisp database
-	  Don't need geoip library any more
-	  Support convert scripts
-	- update SONAME to 2.0.0
-	  changed usage of almost APIs
+Mon, Sep 04 2006 JoungKyun.Kim <http://oops.org>
+	- skip release 1.0.6
+	- support GeoIPCity extension
+	- kr_open API support GEOIP handler
 
+
+* 1.0.6
+
+Thu, Aug 17 2006 JoungKyun.Kim <http://oops.org>
+	- update url of original data on krnic
+
+Wed, Jun 21 2006 JoungKyun.Kim <http://oops.org>
+	- fixed typo of krisp.c
+	- fixed print miss information with private ip address
+
+
+* 1.0.5
+
+Wed, Jun 21 2006 JoungKyun.Kim <http://oops.org>
+	- update man page
+	- update krisp_mksql.php
+	- changed name of isp structure member
+
+
+* 1.0.4
+
+Tue, Jun 20 2006 JoungKyun.Kim <http://oops.org>
+	- add KR_API
+	- add KRNET_API
+	- allocate memory with malloc on KR_API structure
+	- update database krnic 20060620
+	- fixed problem db->gi value init
+
+
+* 1.0.3
+
+Sun, Jun 19 2006 JoungKyun.Kim <http://oops.org>
+	- update soname revision to 2
+	- manipulated geoip null data
+	- update database krnic 20060612
+	- announced 1.0.x stable version
+
+Fri, Jun 16 2006 JoungKyun.Kim <http://oops.org>
+	- changed dynamic linked krisplookup and krispmkdb
+
+Thu, Jun 15 2006 JoungKyun.Kim <http://oops.org>
+	- fixed GeoIP memory leak
+
+
+* 1.0.2
+
+Tue, Jun 13 2006 JoungKyun.Kim <http://oops.org>
+	- increase ip variable of netinfos structures that protect overflows
+
+
+* 1.0.1
+
+Tue, Jun 13 2006 JoungKyun.Kim <http://oops.org>
+	- include GeoIP handler in db_argument structure
+
+Mon, Jun 12 2006 JoungKyun.Kim <http://oops.org>
+	- fixed segfault on special ip block
+	- coordinate krisplookup and geoipo
+
+
+* 1.0.0
+
+Mon, Jun 12 2006 JoungKyun.Kim <http://oops.org>
+	- major update to 1.0.0
+	- add man page
+	- add db open exception
+	- change search api name to kr_search
+
+
+* 0.0.3
+
+Mon, Jun 12 2006 JoungKyun.Kim <http://oops.org>
+	- moved geoip header file to krisp.h
+	- fixed reallcation failed problem
+	- added getopt krisplookup and krispmkdb
+	- changed geoip declare method
+	- changed proto type of search api
+	- chagend output format of krisplookup
+
+Sun, Jun 11 2006 JoungKyun.Kim <http://oops.org>
+	- add krisp_mksql.php contrib php script
+	- add db sql file
+	- add origianl db format file
+	- add database creating utility
+
+Sat, Jun 10 2006 JountKyun.Kim <http://oops.org>
+	- fixed can't get kroea isp information
+	- fixed 64bit link error
+	- added print_version api
+
+Fri, Jun  9 2006 JoungKyun.Kim <http://oops.org>
+	- support 64bit architecture
+	- fixed sqlite header location
+
+
+* 0.0.2
+
+Fri, Jun  9 2006 JoungKyun.Kim <http://oops.org>
+	- fixed libtool problems
+	- fixed memory leak
+
+
+* 0.0.1
+
+Fri, Jun  9 2006 JoungKyun.Kim <http://oops.org>
+	- first release 0.0.1
 
