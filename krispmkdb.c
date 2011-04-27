@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include <krispapi.h>
+#include <krisp.h>
 #include <krdb.h>
 
 #ifdef HAVE_GETOPT_H

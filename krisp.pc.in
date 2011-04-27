@@ -3,10 +3,11 @@
 prefix=@prefix@
 exec_prefix=@exec_prefix@
 libdir=@libdir@
-includedir=@includedir@/krisp@COMPAT_VERSION@
+includedir=@includedir@
+defs="@KR_DEFS@"
 
 Name: libkrisp@COMPAT_VERSION@
 Description: Korean ISP library
 Version: @PACKAGE_VERSION@
-Libs: -L${libdir} -lkrisp@COMPAT_VERSION@
-Cflags: -I${includedir} @CFLAGS@
+Libs: -L${libdir} -l@PACKAGE_NAME@@COMPAT_VERSION@
+Cflags: ${defs} -I${includedir} @CFLAGS@

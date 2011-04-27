@@ -1,5 +1,5 @@
 /*
- * $Id: sqlite3.c,v 1.15 2010-09-24 07:18:52 oops Exp $
+ * $Id: sqlite3.c,v 1.14 2010-09-10 12:44:26 oops Exp $
  *
  * libkrisp sqlite3 frontend API
  */
@@ -10,7 +10,7 @@
 
 #define L strlen
 
-void kr_dbError (KR_API *db) {
+KR_LOCAL_API void kr_dbError (KR_API *db) {
 	if ( ! sqlite3_errcode (db->c) )
 		return;
 
@@ -18,11 +18,11 @@ void kr_dbError (KR_API *db) {
 	sprintf (db->err, "%s (Table: %s)", sqlite3_errmsg (db->c), db->table);
 }
 
-void kr_dbErrorClear (KR_API *db) {
+KR_LOCAL_API void kr_dbErrorClear (KR_API *db) {
 	memset (db->err, 0, 1024);
 }
 
-int kr_dbFree (KR_API *db) {
+KR_LOCAL_API int kr_dbFree (KR_API *db) {
 	int i;
 
 	if ( db->verbose )
@@ -39,7 +39,7 @@ int kr_dbFree (KR_API *db) {
 	return 0;
 }
 
-bool kr_dbConnect (KR_API *db) {
+KR_LOCAL_API bool kr_dbConnect (KR_API *db) {
 	char * errmsg;
 
 #if SQLITE_VERSION_NUMBER >= 3005000
@@ -64,7 +64,7 @@ bool kr_dbConnect (KR_API *db) {
 	sqlite3_busy_timeout (db->c, 500);
 	sqlite3_exec (
 		db->c,
-		"PRAGMA synchronous=OFF; PRAGMA count_changes=OFF; PRAGMA temp_store=memory; journal_mode=OFF",
+		"PRAGMA synchronous=OFF; PRAGMA count_changes=OFF; PRAGMA temp_store=memory;",
 		NULL, NULL, &errmsg
 	);
 	sqlite3_free (errmsg);
@@ -72,7 +72,7 @@ bool kr_dbConnect (KR_API *db) {
 	return true;
 }
 
-int kr_dbQuery (KR_API *db, char * sql) {
+KR_LOCAL_API int kr_dbQuery (KR_API *db, char * sql) {
 	db->final = 0;
 	db->rows  = 0;
 	db->cols  = 0;
@@ -93,7 +93,7 @@ int kr_dbQuery (KR_API *db, char * sql) {
 	return 0;
 }
 
-int kr_dbFetch (KR_API *db) {
+KR_LOCAL_API int kr_dbFetch (KR_API *db) {
 	int i;
 	char *colname;
 	char *rowdata;
@@ -148,7 +148,7 @@ finalize:
 	return 0;
 }
 
-int kr_dbExecute (KR_API *db, char *sql) {
+KR_LOCAL_API int kr_dbExecute (KR_API *db, char *sql) {
 	short r;
 
 	if ( kr_dbQuery (db, sql) )
@@ -161,7 +161,7 @@ int kr_dbExecute (KR_API *db, char *sql) {
 	return 0;
 }
 
-void kr_dbFinalize (KR_API *db) {
+KR_LOCAL_API void kr_dbFinalize (KR_API *db) {
 	if ( db->verbose )
 		fprintf (stderr, "DEBUG: **** db finalize\n");
 	if ( db->vm ) {
@@ -173,7 +173,7 @@ void kr_dbFinalize (KR_API *db) {
 	db->vm = NULL;
 }
 
-void kr_dbClose (KR_API *db) {
+KR_LOCAL_API void kr_dbClose (KR_API *db) {
 	if ( db->verbose )
 		fprintf (stderr, "DEBUG: **** db close\n");
 
