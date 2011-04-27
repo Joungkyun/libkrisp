@@ -1,178 +1,63 @@
-.TH KR_OPEN 3 "11 Jan 2011"
-
-.SH NAME
-kr_open \- open libkrisp database
-
-.SH SYNOPSIS
-.BI "#include <krisp.h>"
+.TH KR_OPEN 1 "12 Jun 2006"
+.UC 4
+.SH 이름
+kr_open - libkrisp 의 database 를 연다.
+.SH 사용법
+.I #include <krips.h>
 .br
-.BI "typedef struct " db_argument " {"
-.br
-.BI "    char            " err[1024] ";"
-.br
-.BI "    char            " database[256] ";"
-.br
-.BI "#ifdef HAVE_PTHREAD_H"
-.br
-.BI "    pthread_mutex_t " mutex ";"
-.br
-.BI "#endif"
-.br
-.BI "#if defined(HAVE_LIBSQLITE3)"
-.br
-.BI "    sqlite3 *       " c ";      // db resource"
-.br
-.BI "    sqlite3_stmt *  " vm ";     // sqlite vm"
-.br
-.BI "#else"
-.br
-.BI "    sqlite *        " c ";      // db resource"
-.br
-.BI "    sqlite_vm *     " vm ";     // sqlite vm"
-.br
-.BI "#endif"
-.br
-.BI "    const char **   " rowdata ";"
-.br
-.BI "    const char **   " colname ";"
-.br
-.BI "    char *          " table ";"
-.br
-.BI "    char *          " old_table ";"
-.br
-.BI "#if defined(HAVE_LIBSQLITE)"
-.br
-.BI "    char *          " dberr ";  // vm error message"
-.br
-.BI "#endif"
-.br
-.BI "    int             " rows ";   // vm rows"
-.br
-.BI "    int             " cols ";   // number of columns"
-.br
-.BI " "
-.br
-.BI "    time_t          " db_time_stamp "; // database mtime stamp"
-.br
-.BI "    time_t          " db_stamp_checked "; // record db mtime check time"
-.br
-.BI "    //db mtime stamp check interval. If value is 0, don't check
-.br
-.BI "    time_t          " db_time_stamp_interval ";"
-.br
-.BI " "
-.br
-.BI "    short           " verbose ";"
-.br
-.BI "#ifdef HAVE_PTHREAD_H"
-.br
-.BI "    short           " threadsafe ";"
-.br
-.BI "#endif"
-.br
-.BI "    short           " r ";      // execute result code"
-.br
-.BI "    short           " final ";  // force finalize"
-.br
-.BI "} " KR_API ";"
+.I int kr_open (struct db_argument *db, char *path)
+.SH 설명
+kr_open() 함수는 libkrisp 를 링크하여 databse 파일을 열기 위해 사용한다.
+kr_open() 함수의 argument 는 database 연결에 사용되는 db_argument structure 와
+database 파일의 경로를 지정을 한다.
 .PP
-.BI "bool kr_open (KR_API **" db ", char *" path ", char *" err ")"
-.br
-.BI "bool kr_open_safe (KR_API **" db ", char *" path ", char *" err ")"
+db_argument structure 는 krispcommon.h 에 정의가 되어 있으며, kr_open 을 호출하기
+전에 다음과 같이 정의 되어 있어야 하며, db error 를 처리하기 위하여 전역 변수로
+char dberr[] 이 정의 되어져야 한다. (예제를 참고한다.)
 .PP
-
-.SH DESCRIPTION
-.BI kr_open
-api used to open database handle.
-.BI kr_open
-api has three arguments. First argument is
-.BI KR_API
-structure which is used database connection, second is
-sqlite database file path. Third argument has error messages
-when
-.BI kr_open
-api is failed.
-.PP
-
-.BI KR_API
-structure is defined on krispcommon.h, and used as follows.
-.PP
-.BI "KR_API *" db ";"
+.I struct db_argument db;
 .br
-.BI "char *" err[1024] ";"
+.I if ( kr_open (&db, NULL) ) {
 .br
-.BI "if ( kr_open (&" db ", NULL, " err ") == false ) {"
+.I ..
 .br
-.BI "    .."
-.br
-.BI "}"
+.I }
 .PP
-If you call
-.BI kr_open_safe
-api instead of
-.BI kr_open,
-thread lock is create on calling
-.BI kr_search
-api. For this issue, see also thread lock documents
-of libkrisp source code.
-.PP
-
-.SH "RETURN VALUE"
-On success, return true, otherwise return false.
-
-.SH EXAMPLE
+.SH 반환값
+성공시에 0 을 반환하며, 실패시에 1 을 반환한다.
+.SH 예제
 .nf
 #include <krisp.h>
+extern char dberr[1024];
 
 int main (void) {
-    KR_API * db;
-    KRNET_API isp;
-    char * addr = "kns.kornet.net";
-    char * database = NULL;
-    char err[1024];
+    struct db_argument db;
+    struct netinfos isp;
+    char *ip = "168.126.63.1";
 
-    if ( kr_open (&db, database, err) == false ) {
-        fprintf (stderr, "ERROR Connect: %s\\n", err);
+    if ( kr_open (&db) ) {
+        fprintf (stderr, "ERROR Connect: %s\\n", dberr);
         return 1;
     }
 
-    // If you want to change check interval of database file
-    // modification, uncomment next line. (default is 3600)
-    //db->db_time_stamp_interval = 86400;
+    strcpy (isp.ip, ip);
+    kr_search (&isp, &db, NULL);
 
-    isp.verbose = false;
-    safecpy_256 (isp.ip, addr);
-    if ( kr_search (&isp, db) ) {
-        printf ("ERROR: %s\\n", isp.err);
-        kr_close (&db);
-        return 1;
-    }
+	kr_close (&db);
 
-    kr_close (&db);
-
-    /*
-     * kr_long2ip is returned in a statically allocated buffer, which
-     * subsequent calls will overwrite.
-     */
-    printf ("%-15s %-15s %-20s", ip, isp.ip, isp.icode);
-    printf ("%-15s ", kr_long2ip (isp.start));
-    printf ("%-15s %s", kr_long2ip (isp.end), isp.iname);
+    printf ("%-15s %-15s %-20s %-15s %-15s %s\\n",
+            ip, isp.ip, isp.serv, isp.network, isp.broadcast, isp.org);
 
     return 0;
 }
 .fi
+.SH 저자
+김정균
+.SH 버그 리포트
+<http://www.oops.org> 의 QnA 게시판을 이용한다.
+.SH 저작권
+Copyright (c) 2006 OOPS Development Organization
 
-.SH AUTHORS
-JoungKyun.Kim <http://oops.org>
-
-.SH BUGS
-Report to QnA bulletin board of http://oops.org
-
-.SH COPYRIGHT
-Copyright (c) 2011 JoungKyun.Kim <http://oops.org>
-
-This api is follows
-.BI LGPL 2.1
-
-.SH "SEE ALSO"
-kr_close(3), kr_search(3), kr_long2ip(3)
+이 프로그램은 LGPL 을 따르며, 사용시의 어떠한 문제에 대하여 보증하지 않는다.
+.SH "참고"
+krispmkdb(1), krispmkdb(1), krisp_version(3), kr_close(3), kr_search(3)
