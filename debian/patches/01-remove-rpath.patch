@@ -5,8 +5,8 @@ diff -urNp libkrisp.org/Makefile.in libkrisp/Makefile.in
  	    f=$(am__strip_dir) \
  	    echo " $(LIBTOOL) --mode=install $(libLTLIBRARIES_INSTALL) $(INSTALL_STRIP_FLAG) '$$p' '$(DESTDIR)$(libdir)/$$f'"; \
  	    $(LIBTOOL) --mode=install $(libLTLIBRARIES_INSTALL) $(INSTALL_STRIP_FLAG) "$$p" "$(DESTDIR)$(libdir)/$$f"; \
-+	    echo "/usr/bin/chrpath -d '$(DESTDIR)$(libdir)/$$f'"; \
-+		/usr/bin/chrpath -d "$(DESTDIR)$(libdir)/$$f"; \
++	    echo "/usr/bin/chrpath -d '$(DESTDIR)$(libdir)/libkrisp.so.$(SONAME_VERSION)'"; \
++		/usr/bin/chrpath -d "$(DESTDIR)$(libdir)/libkrisp.so.$(SONAME_VERSION)"; \
  	  else :; fi; \
  	done
  
