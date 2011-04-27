@@ -1,118 +1,90 @@
-.TH KR_SEARCH 3 "11 Jan 2011"
+.TH SEARCH 1 "12 Jun 2006"
+.UC 4
 
-.SH NAME
-kr_search \- Search information of krisp database about given ip address.
+.SH 이름
+kr_search - libkrisp database 에서 IP 에 대한 정보를 검색하여 반환한다.
 
-.SH SYNOPSIS
-.BI "#include <krisp.h>"
+.SH 사용법
+.I #include <krips.h>
 .br
-.BI "typedef struct " netinfos " {"
-.br
-.BI "    char            " err[1024] "; // get error messages"
-.br
-.BI "    char            " ip[256] ";   // given address"
-.br
-.BI "    char            " icode[64] "; // ISP code"
-.br
-.BI "    char            " iname[64] "; // ISP full name"
-.br
-.BI "    char            " ccode[4] ";  // NATION code"
-.br
-.BI "    char            " cname[64] "; // NATION full name"
-.br
-.BI "    ulong           " netmask ";   // network mask of range"
-.br
-.BI "    ulong           " start ";     // start of range"
-.br
-.BI "    ulong           " end ";       // end of range"
-.br
-.BI "    bool            " verbose ";   // verbose option"
-.br
-.BI "} " KRNET_API ";"
-.br
-.BI "int kr_search (KRNET_API *" isp ", KR_API *" db ");"
+.I int kr_search (KRNET_API *isp, KR_API *db);
 
-.SH DESCRIPTION
-.BI kr_search
-api searches information about given ip or domain name. Basically
-.BI kr_search
-API searches on krisp table of database.
-.PP
-If you want to other table name, you can use
-.BI kr_search_ex
-api. see also `man 3 kr_search_ex`.
+.SH 설명
+kr_search() 함수는 주어진 ip 또는 호스트이름에 대한 정보를 검색한다.
+libkrisp 가 GeoIP 를 link 하고 있을 경우, GeoIP database 를 검색을 하려면,
+db_argument structure 의 gi 변수에 GeoIP_new 를 선언해 주고, 검색을 하지
+않으려면, NULL 을 지정을 한다. GeoIP link 가 되어 있지 않을 경우에도,
+gi 변수에 대해서 NULL 로 초기화를 해 주어야만 한다.
 
 .PP
-Before call the
-.BI kr_search
-api, ip member of
-.BI KRNET_API
-struct is must initialized.
-.PP
-.BI "strcpy (" isp.ip ", " ipaddress ");"
+.I #ifdef HAVE_LIBGEOIP
 .br
-.BI "kr_search (&" isp ", " db ");"
+.I db->gi = GeoIP_new (GEOIP_MEMORY_CACHE);
+.br
+.I #else
+.br
+.I db->gi = NULL;
+.br
+.I #endif
+.br
+.I kr_search (&isp, db);
 
 
-.SH "RETURN VALUE"
-.PP
-On success, return 
-.BI 0 
-and otherwise return 
-.BI 1. 
-No search result is regared as success. Only DB error 
-is regarded as failure.
+.SH 반환값
+성공시에 0을 반환하며, 실패시에 1을 반환한다. 검색 결과가 없는 것은 성공으로
+간주를 한다.
 
-.SH EXAMPLE
+.SH 예제
 .nf
 #include <krisp.h>
+extern char dberr[1024];
 
 int main (void) {
-    KR_API * db;
+    KR_API db;
     KRNET_API isp;
-    char * addr = "kns.kornet.net";
-    char * database = NULL;
-    char err[1024];
+    char *ip = "168.126.63.1";
 
-    if ( kr_open (&db, database, err) == false ) {
-        fprintf (stderr, "ERROR Connect: %s\\n", err);
+	db = (KR_API *) malloc (sizeof (KR_API));
+
+    if ( kr_open (db) ) {
+        fprintf (stderr, "ERROR Connect: %s\\n", dberr);
+		free (db);
         return 1;
     }
 
-    isp.verbose = false;
-    // defined safecpy_256 in krispapi.h
-    safecpy_256 (isp.ip, addr);
-    if ( kr_search (&isp, db) ) {
-        printf ("ERROR: %s\\n", isp.err);
-        kr_close (&db);
-        return 1;
-    }
+#ifdef HAVE_LIBGEOIP
+    db->gi = GeoIP_new (GEOIP_MEMORY_CACHE);
+#else
+	db->gi = NULL;
+#endif
 
-    kr_close (&db);
+    strcpy (isp.ip, ip);
+    kr_search (&isp, db);
 
-    /*
-     * kr_long2ip is returned in a statically allocated buffer, which
-     * subsequent calls will overwrite.
-     */
-    printf ("%-15s %-15s %-20s", ip, isp.ip, isp.icode);
-    printf ("%-15s ", kr_long2ip (isp.start));
-    printf ("%-15s %s", kr_long2ip (isp.end), isp.iname);
+	kr_close (db);
+	free (db);
+
+    printf ("%-15s %-15s %-20s %-15s %-15s %s\\n",
+            ip, isp.ip, isp.icode, isp.network, isp.broadcast, isp.iname);
+
+#ifdef HAVE_LIBGEOIP
+    printf ("NATION : %s (%s)\\n", isp.gname, isp.gcode);
+#endif
 
     return 0;
 }
 .fi
 
-.SH AUTHORS
-JoungKyun.Kim <http://oops.org>
+.SH 저자
+김정균
 
-.SH BUGS
-Report to QnA bulletin board of http://oops.org
+.SH 버그 리포트
+<http://www.oops.org> 의 QnA 게시판을 이용한다.
 
-.SH COPYRIGHT
-Copyright (c) 2011 JoungKyun.Kim <http://oops.org>
+.SH 저작권
+Copyright (c) 2006 OOPS Development Organization
 
-This api is follows
-.BI LGPL 2.1
+이 프로그램은 LGPL 을 따르며, 사용시의 어떠한 문제에 대하여 보증하지 않는다.
 
-.SH "SEE ALSO"
-kr_open(3), kr_close(3), kr_search_ex(3), kr_long2ip(3)
+.SH "참고"
+krispmkdb(1), krispmkdb(1), krisp_version(3), kr_close(3), kr_search(3)
