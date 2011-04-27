@@ -2,7 +2,6 @@
  * $Id: krtest.c,v 1.19 2010-09-10 12:44:26 oops Exp $
  */
 
-#include <ipcalc.h>
 #include <krisp.h>
 #include <sys/time.h>
 

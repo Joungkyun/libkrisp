@@ -1,372 +1,357 @@
 #!/usr/bin/php
 <?php
+/*
+ * $Id: nwpc_parse.php,v 1.5 2010-08-27 16:19:05 oops Exp $
+ * Requirement
+ *
+ * over PHP5
+ * GeoIP
+ * GeoIP Pear (http://pear.php.net/package/Net_GeoIP/) or
+ * GeoIP php extension (http://cvs.oops.org/index.cgi/mod_geoip/?cvsroot=OOPS-PHP)
+ */
 
-define (IPCHACKER, true);
+define (_ADDR, 0);
+define (_NAME, 1);
+define (_CLASS, 2);
+define (_START, 3);
+define (_END, 4);
 
-define (START, 0);
-define (END, 1);
-define (REGION, 2);
-define (CITY, 3);
-define (NAME, 4);
+define (F_CLASS, 0);
+define (F_START, 1);
+define (F_END, 2);
+define (F_CITY, 3);
+define (F_REGION, 4);
+define (F_NAME, 5);
 
-Class NWPCB {
-	private $SAVE = './nwpc.csv';
-	private $fips;
-	private $src = './PCBangIPlist.txt';
-	private $nwzformat = false;
-	private $nwzdebug = false;
-	private $stderr = null;
-	private $fp = null;
+define (O_START, 0);
+define (O_END, 1);
+define (O_NAME, 2);
+define (O_CITY, 3);
+define (O_REGION, 4);
+define (O_CLASS, 5);
 
-	private $geoip = false;
-	private $gi = null;
+$SAVE = './nwpc.csv-' . date ('Ymd');
 
-	function __construct ($argc, $argv) { // {{{
-		if ( file_exists ('../lib/fix-eng-gu.php') ) {
-			require_once '../lib/fix-eng-gu.php';
-		}
+function addr_parser ($str) {
+	unset ($_s);
+	unset ($_t);
+	$_s[] = '/^"/';
+	$_t[] = '';
+	$_s[] = '/^(서울|부산|대구|광주|인천|대전|울산)(.*)/';
+	$_t[] = '\\1 \\2';
+	$_s[] = '/^(경기|강원|충남|충북|경남|경북|전남|전북|제주)(...+(시|군)).*/';
+	$_t[] = '\\1 \\2';
 
-		$this->SAVE .= '-' . date ('Ymd');
+	$p = preg_replace ($_s, $_t, $str);
+	return $p;
+}
 
-		$this->stderr = fopen ('php://stderr', 'w');
+function _ip2long ($ip) {
+	return sprintf ('%u', ip2long ($ip));
+}
 
-		// GeoIP function init
-		if ( ! extension_loaded ('geoip') ) {
-			if ( version_compare (PHP_VERSION, '5.3.0') < 0 )
-				dl ('geoip.so');
+function rvk_class ($class, $n=0) {
+	unset ($_s);
+	unset ($_t);
 
-			if ( function_exists ('GeoIP_open') ) {
-				$geoip_t = GEOIP_INDEX_CACHE | GEOIP_CHECK_CACHE;
-				$this->gi    = GeoIP_open ($_geoip_t);
-				$this->geoip = true; // extension
-			} else {
-				@include_once 'Net/GeoIP.php';
-
-				if ( ! class_exists ('Net_GeoIP') ) {
-					error_log ('ERROR: This system don\'t support GeoIP extension or Pear', 0);
-					error_log ('       Get php extension on http://cvs.oops.org/index.cgi/mod_geoip/?cvsroot=OOPS-PHP or', 0);
-					error_log ('       Get php pear on http://pear.php.net/package/Net_GeoIP/', 0);
-					exit (1);
-				}
-
-				$this->gi = Net_GeoIP::getInstance ('/usr/share/GeoIP/GeoIP.dat', Net_GeoIP::MEMORY_CACHE);
+	$p = explode ('.', $class);
+	foreach ($p as $v) {
+		if ( $n ) {
+			switch ( strlen (trim ($v)) ) {
+				case 2:
+					$v = '0' . trim ($v);
+					break;
+				case 1:
+					$v = '00' . trim ($v);
+					break;
 			}
 		} else {
-			$this->geoip = 1;
-			$geoip_t = GEOIP_INDEX_CACHE | GEOIP_CHECK_CACHE;
-			$this->gi = GeoIP_open ($_geoip_t);
+			$v = preg_replace ('/^[0]+/', '', trim ($v));
+			if ( ! trim ($v) )
+				$v = 0;
 		}
+		$_p .= $v . '.';
+	}
 
-		if ( file_exists ('/usr/local/src/cvs/php/pear_krisp/v1/KRISP/georegion.php') ) {
-			require_once '/usr/local/src/cvs/php/pear_krisp/v1/KRISP/georegion.php';
-			$this->fips = $FIPS_K;
+	$_p = preg_replace ('/\.$/', '', $_p);
+
+	return $_p;
+}
+
+function fix_strint ($d, $n = 0) {
+	if ( $n ) {
+		switch ( strlen (trim ($d)) ) {
+			case 2:
+				$d = '0' . trim ($d);
+				break;
+			case 1:
+				$d = '00' . trim ($d);
+				break;
 		}
+	} else {
+		$d = preg_replace ('/^0+/', '', trim ($d));
+		if ( ! trim ($d) )
+			$d = 0;
+	}
 
-		if ( trim ($argv[1]) && file_exists ($argv[1]) ) {
-			$this->src = $argv[1];
-		}
+	return $d;
+}
 
-		if ( ! file_exists ($this->src) ) {
-			error_log ("ERROR: {$this->src} not found", 0);
+function fix_city ($c) {
+	global $FIPS_K;
+	$c = preg_replace ('/(시|군)$/', '', $c);
+	$_c = $FIPS_K['cityMap'][$c];
+	$_c = fixgu ($_c ? $_c : $c);
+
+	return $_c;
+}
+
+function fix_region ($_r) {
+	global $FIPS_K;
+	$key = array_search ($_r, $FIPS_K['short']);
+	return $key ? $key : $_r;
+}
+
+function _file_init ($f) {
+	global $stderr;
+
+	$_l = file ($f);
+	$_s = count ($_l);
+
+	if ( $_s < 1 ) {
+		error_log ("ERROR: no data", 0);
+		exit (1);
+	}
+
+	$_l = preg_replace ('/[\r\n]/', '', $_l);
+
+	error_log ("* Read line", 0);
+	for ( $i=0; $i<$_s; $i++ ) {
+		// change utf8 format
+		$_l[$i] = iconv ('cp949', 'utf8', $_l[$i]);
+		$_component = explode ('|', trim ($_l[$i]));
+
+		$_r[$i]  = rvk_class ($_component[_CLASS]) . '|';
+		$_r[$i] .= fix_strint ($_component[_START]) . '|';
+		$_r[$i] .= fix_strint ($_component[_END]) . '|';
+
+		$_component[_ADDR]  = addr_parser (trim ($_component[_ADDR]));
+		$_region = preg_split ('/[ ]+/', $_component[_ADDR]);
+		$_r[$i]  .= $_region[1] . '|';
+		$_r[$i]  .= $_region[0] . '|';
+		$_r[$i]  .= trim ($_component[_NAME]);
+
+		fprintf ($stderr, "  ==> %d\r", $i);
+	}
+	fprintf ($stderr, "%20s\r* Sort data start\n", ' ');
+
+	natsort ($_r);
+	fprintf ($stderr, "%20\r", ' ');
+
+	return $_r;
+}
+
+function test_checker ($target) {
+	if ( ! is_array ($target) )
+		return TRUE;
+
+	foreach ( $target as $v ) {
+		if ( preg_match ('/테스트/', $v) )
+			return FALSE;
+	}
+
+	return TRUE;
+}
+
+function fixgu ($city) {
+	global $fix_eng_gu;
+
+	if ( ! is_array ($fix_eng_gu) || ! count ($fix_eng_gu) )
+		return $city;
+
+	return $fix_eng_gu[$city] ? $fix_eng_gu[$city] : $city;
+}
+
+if ( file_exists ('../lib/fix-eng-gu.php') ) {
+	require_once '../lib/fix-eng-gu.php';
+}
+
+$_geoip = 0;
+if ( ! extension_loaded ('geoip') ) {
+	if ( version_compare (PHP_VERSION, '5.3.0') < 0 )
+		dl ('geoip.so');
+
+	if ( function_exists ('GeoIP_open') ) {
+		$geoip_t = GEOIP_INDEX_CACHE | GEOIP_CHECK_CACHE;
+		$gi      = GeoIP_open ($_geoip_t);
+		$_geoip = 1; // extension
+	} else {
+		$_geoip = 0; // pear
+		@include_once 'Net/GeoIP.php';
+
+		if ( ! class_exists ('Net_GeoIP') ) {
+			error_log ('ERROR: This system don\'t support GeoIP extension or Pear', 0);
+			error_log ('       Get php extension on http://cvs.oops.org/index.cgi/mod_geoip/?cvsroot=OOPS-PHP or', 0);
+			error_log ('       Get php pear on http://pear.php.net/package/Net_GeoIP/', 0);
 			exit (1);
 		}
 
-		error_log ("* Source file results: {$this->src}", 0);
-		error_log ("* Save data results: {$this->SAVE}", 0);
+		$gi = Net_GeoIP::getInstance ('/usr/share/GeoIP/GeoIP.dat', Net_GeoIP::MEMORY_CACHE);
+	}
+} else {
+	$_geoip = 1;
+	$geoip_t = GEOIP_INDEX_CACHE | GEOIP_CHECK_CACHE;
+	$gi      = GeoIP_open ($_geoip_t);
+}
 
-		if ( ($argc == 3 || $argc == 4) && $argv[2] == 'nwz' )
-			$this->nwzformat = true;
+if ( file_exists ('/usr/local/src/cvs/php/pear_krisp/v1/KRISP/georegion.php') ) {
+	require_once '/usr/local/src/cvs/php/pear_krisp/v1/KRISP/georegion.php';
+}
 
-		$this->nwzdebug = ($argc == 4) ? 1 : 0;
+if ( trim ($argv[1]) && file_exists ($argv[1]) ) {
+    $_file = $argv[1];
+} else {
+	$_file = './PCBangIPlist.txt';
 
-		$this->fp = fopen ($this->SAVE, 'wb');
-		if ( ! is_resource ($this->fp) ) {
-			fprintf ($this->stderr, "ERROR: %s open failed\n", $this->SAVE);
-			exit (1);
-		}
-	} // }}}
+	if ( ! file_exists ($_file) ) {
+		error_log ("ERROR: $_file not found", 0);
+		exit (1);
+	}
+}
 
-	function ip2long ($ip) { // {{{
-		return sprintf ('%u', ip2long ($ip));
-	} // }}}
+error_log ("* Save file results: {$SAVE}", 0);
 
-	function addr_parser ($str) { // {{{
-		unset ($_s);
-		unset ($_t);
-		$_s[] = '/^"/';
-		$_t[] = '';
-		$_s[] = '/^(서울|부산|대구|광주|인천|대전|울산)(.*)/';
-		$_t[] = '\\1 \\2';
-		$_s[] = '/^(경기|강원|충남|충북|경남|경북|전남|전북|제주)(...+(시|군)).*/';
-		$_t[] = '\\1 \\2';
+$nwzformat = 0;
+if ( ($argc == 3 || $argc == 4) && $argv[2] == 'nwz' )
+	$nwzformat = 1;
 
-		$p = preg_replace ($_s, $_t, $str);
-		return $p;
-	} // }}}
+$nwzdebug = ($argc == 4) ? 1 : 0;
 
-	function fix_ip (&$ip) { // {{{
-		$p = explode ('.', $ip);
-		foreach ( $p as $v )
-			$r[] = sprintf ('%d', trim ($v));
+$stderr = fopen ('php://stderr', 'w');
+$line = _file_init ($_file);
 
-		$ip = join ('.', $r);
-	} // }}}
+$fp = fopen ($SAVE, 'wb');
+if ( ! is_resource ($fp) ) {
+	fprintf ("ERROR: %s open failed\n", $SAVE);
+	fclose ($stderr);
+	exit (1);
+}
 
-	function fix_city ($c) { // {{{
-		$c = preg_replace ('/(시|군)$/', '', $c);
-		$_c = $this->fips['cityMap'][$c];
-		$_c = fixgu ($_c ? $_c : $c); 
+error_log ("* Start line parse", 0);
+$i = 0;
+foreach ( $line as $v ) {
+	fprintf ($stderr, "  ==> %d\r", ++$i);
 
-		return $_c;
-	} // }}}
+	$l = explode ('|', trim ($v));
 
-	function fix_region ($_r) { // {{{
-		$key = array_search ($_r, $this->fips['short']);
-		return $key ? $key : $_r;
-	} // }}}
+	if ( test_checker (array ($l[F_NAME], $l[F_REGION])) === FALSE )
+		continue;
 
-	function fixgu ($city) { // {{{
-		global $fix_eng_gu;
+	for ( $j=0; $j<5; $j++ )
+		$l[$j] = trim ($l[$j]);
 
-		if ( ! is_array ($fix_eng_gu) || ! count ($fix_eng_gu) )
-			return $city;
+	$_start = $l[F_CLASS] . '.' . $l[F_START];
+	$_end   = $l[F_CLASS] . '.' . $l[F_END];
 
-		return $fix_eng_gu[$city] ? $fix_eng_gu[$city] : $city;
-	} // }}}
+	if ( $_geoip ) {
+		$_gir = GeoIP_id_by_name ($gi, $l[F_CLASS] . '.0');
+		$gir = $_gir['code'];
+	} else
+		$gir = $gi->lookupCountryCode ($l[F_CLASS] . '.0');
 
-	function init_src () { // {{{
-		$fp = fopen ($this->src, 'rb');
-		if ( ! is_resource ($fp) ) {
-			fprintf ($this->stderr, "Source file %s is not found\n", $this->src);
-			exit (1);
-		}
+	if ( $gir != 'KR' )
+		continue;
 
-		error_log ("* Read line", 0);
-		$i = 1;
-		while ( ($buf = fgets ($fp, '1024')) ) {
-			// change utf8 format
-			$buf = iconv ('cp949', 'utf-8', trim ($buf));
+	if ( ! is_array ($old) ) {
+		$old = array ($l[F_START], $l[F_END], $l[F_NAME], $l[F_CITY], $l[F_REGION], $l[F_CLASS]);
+		continue;
+	}
 
-			if ( preg_match ('/테스트|test/', $buf) ) {
-				fprintf ($this->stderr, "  ==> %d\r", $i++);
-				continue;
-			}
+	if ( $old[O_CLASS] == $l[F_CLASS] && $old[O_NAME] == $l[F_NAME] ) {
+		if ( $l[F_START] < $old[O_START] )
+			$old[O_START] = $l[F_START];
 
-			$component = explode ('|', $buf);
-			/*
-			 * component array
-			 * 0 - PCBang address
-			 * 1 - PCBang name
-			 * 2 - class of ip range ( a.b.c )
-			 * 3 - start ip of ip range ( d )
-			 * 4 - end ip of ip range ( e )
-			 */
+		if ( $l[F_END] > $old[O_END] )
+			$old[O_END] = $l[F_END];
 
-			$this->fix_ip ($component[2]);
-			$b[0] = $this->ip2long ($component[2] . '.' . $component[3]);
-			$b[1] = $this->ip2long ($component[2] . '.' . $component[4]);
-			$component[0] = $this->addr_parser ($component[0]);
-			$region = preg_split ('/[ ]+/', $component[0]);
-			$b[2] = $region[1];
-			$b[3] = $region[0];
-			$b[4] = trim ($component[1]);
+		continue;
+	} 
 
-			$r[] = join ('|', $b);
-			fprintf ($this->stderr, "  ==> %d\r", $i++);
-		}
-		fprintf ($this->stderr, "%20s\r* Sort data start\n", ' ');
-		natsort ($r);
+	$o_start = $old[O_CLASS] . '.' . $old[O_START];
+	$o_end   = $old[O_CLASS] . '.' . $old[O_END];
+	#printf ("%s|%s|%s|%s|%s\n", $o_start, $o_end, $old[O_NAME], $old[O_CITY], $old[O_REGION]);
+	$nu = _ip2long ($o_end) - _ip2long ($o_start);
+	if ( $nwzdebug )
+		$nup = sprintf ("%-3d\t", $nu);
 
-		return $r;
-	} // }}}
-
-	function confirm_ip ($ip) { // {{{
-		if ( ! is_numeric ($ip) )
-			$ip = $this->ip2long ($ip);
-
-		// 1.0.0.0 <-> 255.255.255.255
-		if ( $ip >= 16777216 && $ip <= 4294967295 )
-			return true;
-
-		return false;
-	} // }}}
-
-	function check_ip ($ip) { // {{{
-		if ( $this->confirm_ip ($ip) == false )
-			return false;
-
-		if ( is_numeric ($ip) )
-			$ip = long2ip ($ip);
-
-		if ( $this->geoip ) {
-			$_gir = GeoIP_id_by_name ($this->gi, $ip);
-			$gir = $_gir['code'];
-		} else
-			$gir = $this->gi->lookupCountryCode ($ip);
-
-		if ( $gir != 'KR' )
-			return false;
-
-		return true;
-	} // }}}
-
-	function parse_write ($d) { // {{{
-		if ( $this->nwzdebug )
-			$nup = sprintf ("%-3d\t", $d[END] - $d[START]);
-
-		if ( $this->nwzformat ) {
+	if ( $nu > 1 ) {
+		if ( $nwzformat ) {
 			$DATA = sprintf (
 				"%s%s\t%s\t%s|%s|%s\n",
 				$nup,
-				$d[START],
-				$d[END],
-				$d[NAME],
-				$d[CITY],
-				$d[REGION]
+				_ip2long ($o_start),
+				_ip2long ($o_end),
+				$old[O_NAME],
+				$old[O_CITY],
+				$old[O_REGION]
 			);
 		} else {
 			$DATA = sprintf (
 				"%s%s\t%s\t%s|%s\n",
 				$nup,
-				$d[START],
-				$d[END],
-				$d[CITY],
-				$d[REGION]
+				_ip2long ($o_start),
+				_ip2long ($o_end),
+				$old[O_CITY],
+				$old[O_REGION]
 			);
 		}
-
-		fwrite ($this->fp, $DATA, strlen ($DATA));
-	} // }}}
-
-	function duplicated_msg ($old, $cur) { // {{{
-		fprintf ($this->stderr, "ERROR: duplicated ..\n");
-		fprintf ($this->stderr, "       $old\n");
-		fprintf ($this->stderr, "       $cur\n");
-	} // }}}
-
-	function parse () { // {{{
-		// 시작/마지막 IP를 '|'로 구분해서 소트함
-		$lines = $this->init_src();
-
-		$c = array (0, 0, 0, 0, 0);
-
-		error_log ("* Start line parse", 0);
-		$oldline = '';
-		$i = 0;
-		foreach ( $lines as $line ) {
-			fprintf ($this->stderr, "  ==> %d\r", ++$i);
-
-			$cur = explode ('|', $line);
-			// 한국 IP가 아니면 무시
-			if ( ! $this->check_ip ($cur[START]) || ! $this->check_ip ($cur[END]) )
-				continue;
-
-			if ( ! $oldline ) {
-				$oldline = $line;
-				continue;
-			}
-
-			//echo "$oldline\n";
-			//echo "$line";
-			//sleep (1);
-			if ( $oldline == $line ) {
-				//echo " .. skip\n\n";
-				continue;
-			} else {
-				//echo "\n\n";
-			}
-
-			$old = explode ('|', $oldline);
-
-			$oname = $old[REGION].$old[CITY].$old[NAME];
-			$cname = $cur[REGION].$cur[CITY].$cur[NAME];
-
-			if ( $oname == $cname && ($old[END] + 1) == $cur[START] ) {
-				$old[END] = $cur[END];
-				continue;
-			}
-
-
-			// 아래 경우 외에 더 있을까? 소트가 되었으니 없을 것 같은데.. T.T
-			// 중복이 될 경우, 작은 range에 우선권을 준다.
-
-			// old ------
-			// cur ------
-			if ( $old[START] == $cur[START] && $old[END] == $cur[END] ) {
-				$c[0]++;
-				// 이건 위에서 처리 했는데.. 명시적으로 나둔다.
-				if ( $oname == $cname )
-					continue;
-
-				$this->duplicated_msg ($oldline, $line);
-				exit (1);
-			}
-			// old ---
-			// cur ------
-			else if ( $old[START] == $cur[START] && $old[END] < $cur[END] ) {
-				$c[1]++;
-				if ( $oname == $cname )
-					continue;
-
-				$this->duplicated_msg ($oldline, $line);
-				$write = $cur;
-				$old[START] = $cur[END] + 1;
-			}
-			// old ------
-			// cur   ---
-			else if ( $old[START] < $cur[START] && $old[END] > $cur[END] ) {
-				$c[2]++;
-				if ( $oname == $cname )
-					continue;
-
-				$this->duplicated_msg ($oldline, $line);
-				$write = $old;
-				$write[END] = $cur[START] - 1;
-				$this->parse_write ($write);
-				$write = $cur;
-				$old[START] = $cur[END] + 1;
-			}
-			// old ------ or -------
-			// cur   ----      -------
-			else if ( $old[START] < $cur[START] && $old[END] >= $cur[START] ) {
-				$c[3]++;
-				if ( $oname == $cname ) {
-					$old[END] = $cur[END];
-					$oldline = join ('|', $old);
-					continue;
-				}
-
-				$this->duplicated_msg ($oldline, $line);
-				$write = $old;
-				$write[END] = $cur[START] - 1;
-				$old = $cur;
-			}
-			else {
-				$c[4]++;
-				// 마지막이 겹칠 경우가 누락되어 있으니 처리 하자!
-				$write = $old;
-				$old = $cur;
-			}
-			$oldline = join ('|', $old);
-			$this->parse_write ($write);
-		}
-
-		if ( $oldline ) {
-			$old = explode ('|', $oldline);
-			$this->parse_write ($old);
-		}
-
-		print_r ($c);
-	} // }}}
-
-	function __destruct () { // {{{
-		if ( is_resource ($this->fp) )
-			fclose ($this->fp);
-		if ( is_resource ($this->stderr) )
-			fclose ($this->stderr);
-	} // }}}
+		fwrite ($fp, $DATA, strlen ($DATA));
+	}
+	/*
+	printf ("%s|KR|Korea, Republic of|||%s|%s|1\n",
+			_ip2long ($old[O_CLASS].".0"), fix_city ($old[O_CITY]), fix_region ($old[O_REGION]));
+	 */
+	$old = array ($l[F_START], $l[F_END], $l[F_NAME], $l[F_CITY], $l[F_REGION], $l[F_CLASS]);
 }
 
-$pcb = new NWPCB ($argc, $argv);
-$pcb->parse ();
+$o_start = $old[O_CLASS] . '.' . $old[O_START];
+$o_end   = $old[O_CLASS] . '.' . $old[O_END];
+$nu = _ip2long ($o_end) - _ip2long ($o_start);
+if ( $nwzdebug )
+	$nup = sprintf ("%-3d\t", $nu);
+
+if ( $nwzformat ) {
+	$DATA = sprintf (
+		"%s%s\t%s\t%s|%s|%s\n",
+		$nup,
+		_ip2long ($o_start),
+		_ip2long ($o_end),
+		$old[O_NAME],
+		$old[O_CITY],
+		$old[O_REGION]
+	);
+} else {
+	$DATA = sprintf (
+		"%s%s\t%s\t%s|%s\n",
+		$nup,
+		_ip2long ($o_start),
+		_ip2long ($o_end),
+		$old[O_CITY],
+		$old[O_REGION]
+	);
+}
+fwrite ($fp, $DATA, strlen ($DATA));
+
+fclose ($fp);
+fclose ($stderr);
+
+exit (0);
+/*
+ * Local variables:
+ * tab-width: 4
+ * c-basic-offset: 4
+ * End:
+ * vim600: noet sw=4 ts=4 fdm=marker
+ * vim<600: noet sw=4 ts=4
+ */
 ?>
