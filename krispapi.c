@@ -1,5 +1,5 @@
 /*
- * $Id: krispapi.c,v 1.21 2010-09-10 12:44:25 oops Exp $
+ * $Id: krispapi.c,v 1.20 2010-09-10 09:07:09 oops Exp $
  */
 
 #include <stdio.h>
@@ -8,117 +8,7 @@
 
 #include <krispapi.h>
 
-int chartoint (char c) { // {{{
-	if (c > 47 && c < 58)
-		return c - 48;
-
-	return -1;
-} // }}}
-
-ulong strtolong (char * s) { // {{{
-	int		len, i = 0, minus = 0, bufno = 0;
-	ulong	x = 1, res = 0;
-
-	/* removed blank charactor */
-	len = strlen (s);
-
-	/* minus value check */
-	if ( s[0] == '-' ) minus = 1;
-
-	for ( i = len - 1; i > -1; i-- ) {
-		bufno = chartoint (s[i]);
-
-		if ( bufno == 0 ) {
-			x *= 10;
-			continue;
-		}
-
-		if ( bufno > 0 ) {
-			res += bufno * x;
-			x *= 10;
-		}
-	}
-
-	// buffer overflow
-	if (minus) res *= -2;
-
-	return res;
-} // }}}
-
-KRISP_API void krisp_safecpy (char * stor, char * str, int size) { // {{{
-	size--;
-	if ( strlen (str) > size ) {
-		memcpy (stor, str, size);
-	} else {
-		size = strlen (str);
-		memcpy (stor, str, size);
-	}
-	stor[size] = 0;
-} // }}}
-
-void krisp_mutex_lock (KR_API * db) { // {{{
-#ifdef HAVE_LIBPTHREAD
-	if ( ! db->threadsafe )
-		return;
-
-	if ( db->verbose )
-		fprintf (stderr, "DEBUG: Thread Mutex is locked\n");
-	pthread_mutex_lock (&(db->mutex));
-#endif
-
-	return;
-} // }}}
-
-void krisp_mutex_unlock (KR_API * db) { // {{{
-#ifdef HAVE_LIBPTHREAD
-	if ( ! db->threadsafe )
-		return;
-
-	pthread_mutex_unlock (&(db->mutex));
-	if ( db->verbose )
-		fprintf (stderr, "DEBUG: Thread Mutex is unlocked\n");
-#endif
-
-	return;
-} // }}}
-
-void krisp_mutex_destroy (KR_API * db) { // {{{
-#ifdef HAVE_LIBPTHREAD
-	if ( ! db->threadsafe )
-		return;
-
-	pthread_mutex_destroy (&(db->mutex));
-	if ( db->verbose )
-		fprintf (stderr, "DEBUG: Thread Mutex destory\n");
-#endif
-
-	return;
-} // }}}
-
-bool check_database_mtime (KR_API *db) { // {{{
-	struct stat	f;
-	time_t		current;
-
-	if ( db->db_time_stamp_interval < 1 )
-		return false;
-
-	current = time (NULL);
-	if ( (current - db->db_stamp_checked) < db->db_time_stamp_interval )
-		return false;
-
-	if ( stat (db->database, &f) == -1 )
-		return false;
-
-	if ( db->db_time_stamp == f.st_mtime )
-		return false;
-
-	db->db_time_stamp = f.st_mtime;
-	db->db_stamp_checked = current;
-
-	return true;
-} // }}}
-
-KRISP_API void initStruct (KRNET_API * n) { // {{{
+void initStruct (KRNET_API * n) { // {{{
 	memset (n->err, 0, 1);
 	n->netmask = 0;
 	n->start   = 0;
@@ -129,7 +19,7 @@ KRISP_API void initStruct (KRNET_API * n) { // {{{
 	strcpy (n->cname, "N/A");
 } // }}}
 
-KRISP_API void initRawStruct (RAW_KRNET_API * n, bool mfree) { // {{{
+void initRawStruct (RAW_KRNET_API * n, bool mfree) { // {{{
 	memset (n->err, 0, 1);
 	//memset (n->ip, 0, 1);
 	n->start = 0;
@@ -143,14 +33,14 @@ KRISP_API void initRawStruct (RAW_KRNET_API * n, bool mfree) { // {{{
 	n->dummydata = NULL;
 } // }}}
 
-void kr_noneData (KRNET_API * n) { // {{{
+KR_LOCAL_API void kr_noneData (KRNET_API * n) { // {{{
 	strcpy (n->icode, "--");
 	strcpy (n->iname, "N/A");
 	strcpy (n->ccode, "--");
 	strcpy (n->cname, "N/A");
 } // }}}
 
-int getISPinfo (KR_API * db, RAW_KRNET_API * n) { // {{{
+KR_LOCAL_API int getISPinfo (KR_API * db, RAW_KRNET_API * n) { // {{{
 	ulong	longip;
 	char	sql[128] = { 0, };
 	int		r;
@@ -209,7 +99,7 @@ int getISPinfo (KR_API * db, RAW_KRNET_API * n) { // {{{
 	return 0;
 } // }}}
 
-short parseDummyData (char *** d, char * s, char delemeter) { // {{{
+KR_LOCAL_API short parseDummyData (char *** d, char * s, char delemeter) { // {{{
 	char *	buf;
 	int		rlen;
 	short	len = 0, i;
@@ -253,6 +143,93 @@ short parseDummyData (char *** d, char * s, char delemeter) { // {{{
 	(*d)[--len] = s;
 
 	return (short) rlen;
+} // }}}
+
+KR_LOCAL_API int chartoint (char c) { // {{{
+	if (c > 47 && c < 58)
+		return c - 48;
+
+	return -1;
+} // }}}
+
+KR_LOCAL_API ulong strtolong (char * s) { // {{{
+	int		len, i = 0, minus = 0, bufno = 0;
+	ulong	x = 1, res = 0;
+
+	/* removed blank charactor */
+	len = strlen (s);
+
+	/* minus value check */
+	if ( s[0] == '-' ) minus = 1;
+
+	for ( i = len - 1; i > -1; i-- ) {
+		bufno = chartoint (s[i]);
+
+		if ( bufno == 0 ) {
+			x *= 10;
+			continue;
+		}
+
+		if ( bufno > 0 ) {
+			res += bufno * x;
+			x *= 10;
+		}
+	}
+
+	// buffer overflow
+	if (minus) res *= -2;
+
+	return res;
+} // }}}
+
+void _safecpy (char * stor, char * str, int size) { // {{{
+	size--;
+	if ( strlen (str) > size ) {
+		memcpy (stor, str, size);
+	} else {
+		size = strlen (str);
+		memcpy (stor, str, size);
+	}
+	stor[size] = 0;
+} // }}}
+
+KR_LOCAL_API void krisp_mutex_lock (KR_API * db) { // {{{
+#ifdef HAVE_PTHREAD_H
+	if ( ! db->threadsafe )
+		return;
+
+	if ( db->verbose )
+		fprintf (stderr, "DEBUG: Thread Mutex is locked\n");
+	pthread_mutex_lock (&(db->mutex));
+#endif
+
+	return;
+} // }}}
+
+KR_LOCAL_API void krisp_mutex_unlock (KR_API * db) { // {{{
+#ifdef HAVE_PTHREAD_H
+	if ( ! db->threadsafe )
+		return;
+
+	pthread_mutex_unlock (&(db->mutex));
+	if ( db->verbose )
+		fprintf (stderr, "DEBUG: Thread Mutex is unlocked\n");
+#endif
+
+	return;
+} // }}}
+
+KR_LOCAL_API void krisp_mutex_destroy (KR_API * db) { // {{{
+#ifdef HAVE_PTHREAD_H
+	if ( ! db->threadsafe )
+		return;
+
+	pthread_mutex_destroy (&(db->mutex));
+	if ( db->verbose )
+		fprintf (stderr, "DEBUG: Thread Mutex destory\n");
+#endif
+
+	return;
 } // }}}
 
 /*

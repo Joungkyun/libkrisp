@@ -1,4 +1,4 @@
-$Id: README,v 1.23 2010-09-24 08:18:45 oops Exp $
+$Id: README,v 1.20 2010-09-10 08:55:21 oops Exp $
 
 libkrisp - Korea ISP library
 
@@ -14,6 +14,9 @@ library 를 사용하기 위해서는 sqlite library 가 필요하며, sqlite2 �
 
 간단한 사용법은 아래와 같다. (자세한 사항은 'man 3 kr_search' 를 참고한다.)
 
+주의할 것은, 빌드 시에, HAVE_LIBSQLITE3/HAVE_LIBSQLITE2 와 HAVE_PTHREAD_H 상
+수를 정의해 주어야 한다. 만사가 귀찮다면 -DHAVE_CONFIG_H 를 정의해 주는 방법
+도 있다.
 
 #include <krisp.h>
 
@@ -36,11 +39,11 @@ int main (void) {
     SAFECPY_256 (isp.ip, addr);
     if ( kr_search (&isp, db) ) {
         printf ("ERROR: %s\n", isp.err);
-        kr_close (&db);
+        kr_close (db);
         return 1;
     }
 
-    kr_close (&db);
+    kr_close (db);
 
     /*
      * kr_long2ip is returned in a statically allocated buffer, which
@@ -52,21 +55,4 @@ int main (void) {
 
     return 0;
 }
-
-
-libkrisp 3.1 부터는 database 의 변경 사항을 감시하는 기능이 추가가 되었다. 기
-본적으로는 체크를 하지 않으며, open 후에 KR_API의 db_time_stamp_interval 값을
-지정하면, 지정한 초 마다 database의 mtime을 검사하여 open시의 값과 틀릴 경우,
-DB 핸들을 닫았다가 다시 열게 된다. 검사 간격을 조정하고 싶다면 다음과 같이 코
-드를 작성할 수 있다.
-
-    if ( kr_open (&db, database, err)) == false ) {
-        fprintf (stderr, "ERROR Connect: %s\n", err);
-        return 1;
-    }
-
-    // increased database mtime check interval to 1d.
-    // default is 0 seconds (Don't check).
-    db->db_time_stamp_interval = 86400;
-
 

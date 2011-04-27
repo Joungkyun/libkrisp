@@ -1,9 +1,13 @@
 /*
- * $Id: thread_sample2.c,v 1.16 2010-09-10 12:44:26 oops Exp $
+ * $Id: thread_sample2.c,v 1.14 2010-09-10 09:10:50 oops Exp $
  */
 
-#include <ipcalc.h>
 #include <krisp.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
+#include <time.h>
+
 #include <sys/time.h>
 
 #ifdef HAVE_GETOPT_H
@@ -51,7 +55,7 @@ void * thread_main (void * arg) { // {{{
 	/* database open */
 	if ( kr_open (&db, NULL, err) == false ) {
 		fprintf (stderr, "ERROR Connect: %s\n", err);
-		kr_close (&db);
+		kr_close (db);
 		pthread_exit ((void *) 0);
 	}
 
@@ -63,7 +67,7 @@ void * thread_main (void * arg) { // {{{
 	} else
 		printf ("--> Thread %d : %15s => %s\n", tno, isp.ip, isp.icode);
 
-	kr_close (&db);
+	kr_close (db);
 	pthread_exit ((void *) 0);
 } // }}}
 

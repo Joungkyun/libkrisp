@@ -1,9 +1,11 @@
 /*
- * $Id: krispexlookup.c,v 1.8 2010-09-10 13:23:24 oops Exp $
+ * $Id: krispexlookup.c,v 1.5 2010-09-10 08:55:21 oops Exp $
  */
 
 #include <krisp.h>
-#include <ipcalc.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
 
 #ifdef HAVE_GETOPT_H
 #include <getopt.h>
@@ -145,8 +147,6 @@ int main (int argc, char ** argv) {
 		return 1;
 	}
 
-	db->db_time_stamp_interval = 0;
-
 	isp.verbose = verbose;
 	ip = argv[optind];
 
@@ -154,7 +154,7 @@ int main (int argc, char ** argv) {
 	db->table = "krisp";
 	if ( kr_search_ex (&isp, db) ) {
 		fprintf (stderr, "ERROR: %s\n", isp.err);
-		kr_close (&db);
+		kr_close (db);
 		return 1;
 	}
 
@@ -243,7 +243,7 @@ noconvert:
 	initStruct_ex (&isp, true);
 
 	/* database close */
-	kr_close (&db);
+	kr_close (db);
 
 	return 0;
 }

@@ -1,24 +1,22 @@
-.TH KR_CLOSE 3 "11 Jan 2011"
-
-.SH NAME
-kr_close \- close libkrisp database and free memory
-.SH SYNOPSIS
+.TH KR_CLOSE 3 "21 Nay 2010"
+.UC 4
+.SH 이름
+kr_close - libkrisp 의 database handle을 종료하고 memory를 해제한다.
+.SH 사용법
 .BI "#include <krisp.h>"
 .br
-.BI "void kr_close (KR_API **" db ");"
-
-.SH DESCRIPTION
+.BI "void kr_close (KR_API *" db ");"
+.SH 설명
 .BI kr_close
-api close db handle that opened by
+API는 libkrisp 를 링크하여
 .BI kr_open
-api and free memory.
+API에 의해 열려진 db handler 를 종료하고, memory를 해제한다.
+.BI kr_open
+API로 열려진
 .BI KR_API
-structure that opened by kr_open is must free by
-.BI kr_close
-api.
+structure는 이 API를 이용하여 꼭 종료가 되어야 한다.
 .PP
-
-.SH EXAMPLE
+.SH 예제
 .nf
 #include <krisp.h>
 
@@ -39,11 +37,11 @@ int main (void) {
     safecpy_256 (isp.ip, addr);
     if ( kr_search (&isp, db) ) {
         printf ("ERROR: %s\\n", isp.err);
-        kr_close (&db);
+        kr_close (db);
         return 1;
     }
 
-    kr_close (&db);
+    kr_close (db);
 
     /*
      * kr_long2ip is returned in a statically allocated buffer, which
@@ -56,18 +54,15 @@ int main (void) {
     return 0;
 }
 .fi
+.SH 저자
+김정균
+.SH 버그 리포트
+<http://oops.org> 의 QnA 게시판을 이용한다.
+.SH 저작권
+Copyright (c) 2010 JoungKyun.Kim <http://oops.org>
 
-.SH AUTHORS
-JoungKyun.Kim <http://oops.org>
-
-.SH BUGS
-Report to QnA bulletin board of http://oops.org
-
-.SH COPYRIGHT
-Copyright (c) 2011 JoungKyun.Kim <http://oops.org>
-
-This api is follows
-.BI LGPL 2.1
-
-.SH "SEE ALSO"
+이 API는
+.BI LGPL
+을 따르며, 사용시의 어떠한 문제에 대하여 보증하지 않는다.
+.SH "참고"
 kr_open(3), kr_search(3), kr_long2ip(3)
