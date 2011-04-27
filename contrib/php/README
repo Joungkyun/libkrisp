@@ -1,0 +1,30 @@
+$Id: README,v 1.2 2006-06-20 07:53:17 oops Exp $
+
+class.krisp.php library 는 김칠봉님 (sna2<at>linuxchannel.net) 이 만드신 것을
+sqlite db 를 사용하도록 변경한 버전이다. 원본 코드는
+
+http://ftp.linuxchannel.net/devel/php_krispnet/
+
+에서 확인을 할 수 있다.
+
+이 코드는 sqlite2 만 현재 지원을 한다.
+또한, 이 코드에는 db 를 갱신하는 유틸리티가 포함이 되어 있다. db 를 갱신하는
+과정은 다음과 같다.
+
+./get-domestic-ip > iplist-$(date +%Y%m%d).txt
+./mknetmask.php iplist-$(date +%Y%m%d).txt
+
+의 과정으로 현재 디렉토리에, krisp-sqlite.dat 이 생성이 된다. sqlite3 용 db
+는 이렇게 만들어진 db 를 sqlite3 으로 변환을 하면 된다.
+
+sqlite krisp-sqlite.dat .dump | sqlite3 krisp-sqlite3.dat
+
+명령을 실행하면 된다.
+
+다른 DB 를 위해서는 다음의 스크립트를 이용한다.
+
+krisp_mksql.php sql > krisp.sql
+
+이 명령으로 db schema file 을 생성할 수 있다. 생성된 파일에서, 각 DB 에 맞게
+create table 명령 구문만 수정해서 사용을 할 수 있다.
+
