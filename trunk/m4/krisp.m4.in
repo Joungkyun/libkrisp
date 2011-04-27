@@ -54,6 +54,7 @@ AC_DEFUN([AX_KRISP@COMPAT_VERSION@],
 				AC_DEFINE(
 					[HAVE_LIBKRISP@COMPAT_VERSION@], 1,
 					[Define to 1 if you have the `krisp@COMPAT_VERSION@' library (-lkrisp@COMPAT_VERSION@).]
+				)
 				LIBS="`$krispconfig --libs` $LIBS"
 			],[
 				if test $# -gt 0; then
