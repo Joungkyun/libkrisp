@@ -1,274 +1,391 @@
 /*
- * $Id: krisp.c,v 1.107 2011-01-14 05:18:55 oops Exp $
+ * $Id: krisp.c,v 1.65.2.1 2010-06-05 10:56:25 oops Exp $
  */
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <sys/stat.h>
 
-#include <krispapi.h>
-#include <krversion.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <netdb.h>
 
-KRISP_API char * krisp_version (void) { // {{{
+#ifdef HAVE_LIBGEOIP
+#define GEOCITYVAR
+#endif
+
+#include <krispcommon.h>
+#include <krdb.h>
+#include <krisp.h>
+
+#ifdef HAVE_LIBGEOIP
+/* set 1, search GeoIPCity database if enabled search GeoIPCity */
+short geocity      = 0;
+short geocity_type = GEOIP_INDEX_CACHE | GEOIP_CHECK_CACHE;
+short geoisp_type  = GEOIP_INDEX_CACHE | GEOIP_CHECK_CACHE;
+short geo_type     = GEOIP_MEMORY_CACHE | GEOIP_CHECK_CACHE;
+#endif
+
+short verbose      = 0;
+
+char *krisp_version (void) { // {{{
 	return KRISP_VERSION;
 } // }}}
 
-KRISP_API char * krisp_uversion (void) { // {{{
+char *krisp_uversion (void) { // {{{
 	return KRISP_UVERSION;
 } // }}}
 
-KRISP_API void kr_close (KR_API **db) { // {{{
-	if ( *db == NULL )
-		return;
-
-	krisp_mutex_destroy (*db);
-
-	kr_dbClose (*db);
-	free (*db);
-	*db = NULL;
-} // }}}
-
-bool _kr_open (KR_API **db, char *file, char *err, bool safe) { // {{{
-	struct stat		f;
-
-	memset (err, 0, 1);
-
-	*db = (KR_API *) malloc (sizeof (KR_API));
-	if ( *db == NULL ) {
-		SAFECPY_1024 (err, "kr_open:: failed memory allocation");
-		return false;
-	}
-
-	SAFECPY_256 ((*db)->database, (file == NULL ) ? DEFAULT_DATABASE : file);
-
-	f.st_size = 0;
-	if ( stat ((*db)->database, &f) == -1 ) {
-		sprintf (err, "kr_open:: Can't find database (%s)", (*db)->database);
-		kr_close (db);
-		return false;
-	}
-
-	if ( f.st_size < 1 ) {
-		sprintf (err, "kr_open:: %s size is zero", (*db)->database);
-		kr_close (db);
-		return false;
-	}
-
-	(*db)->db_time_stamp_interval = 0;
-	(*db)->db_time_stamp = f.st_mtime;
-	(*db)->db_stamp_checked = time (NULL);
-
-#ifdef HAVE_LIBPTHREAD
-	(*db)->threadsafe = safe;
-	if ( (*db)->threadsafe == true )
-		pthread_mutex_init (&((*db)->mutex), NULL);
-#endif
-	(*db)->verbose = false;
-
-	if ( kr_dbConnect (*db) == false ) {
-		SAFECPY_1024 (err, (*db)->err);
-		kr_close (db);
-		return false;
-	}
-
-	return true;
-} // }}}
-
-KRISP_API bool kr_open_safe (KR_API **db, char *file, char *err) { // {{{
-	return _kr_open (db, file, err, true);
-} // }}}
-
-KRISP_API bool kr_open (KR_API **db, char *file, char *err) { // {{{
-	return _kr_open (db, file, err, false);
-} // }}}
-
-/*
- * if return 1, db error
- */
-KRISP_API int kr_search (KRNET_API *isp, KR_API *db) { // {{{
-	RAW_KRNET_API	raw;
-	int				r;
-	char			err[1024];
-
-	if ( db == NULL ) {
-		SAFECPY_1024 (isp->err, "kr_search:: KR_API *db is null");
+int kr_open (KR_API *db, char *file) { // {{{
+	if ( kr_dbConnect (db, file) ) {
 		return 1;
 	}
 
-	if ( isp->verbose != 0 && isp->verbose != 1 )
-		isp->verbose = 0;
-	db->verbose = isp->verbose;
-	raw.verbose = isp->verbose;
-
-	krisp_mutex_lock (db);
-
-	// check database mtime
-	if ( isp->verbose )
-		fprintf (stderr, "DEBUG: Check changed %s\n", db->database);
-
-	if ( check_database_mtime (db) == true ) {
-		kr_dbClose (db);
-
-		if ( isp->verbose )
-			fprintf (stderr, "DEBUG: *** db reconnect\n");
-
-		if ( kr_dbConnect (db) == false ) {
-			SAFECPY_1024 (isp->err, db->err);
-			return 1;
-		}
-	}
-
-	db->table = "krisp";
-
-	memset (raw.ip, 0, 1);
-	initRawStruct (&raw, false);
-	initStruct (isp);
-
-	if ( valid_ip_address (isp->ip, err) ) {
-		SAFECPY_1024 (isp->err, err);
-		krisp_mutex_unlock (db);
-		return 0;
-	}
-
-	strcpy (raw.ip, isp->ip);
-	if ( (r = getISPinfo (db, &raw)) != 0 ) {
-		// SQL error
-		if ( r == -1 ) {
-			SAFECPY_1024 (isp->err, db->err);
-			krisp_mutex_unlock (db);
-			return 1;
-		}
-
-		goto jumpNet;
-	}
-
-	isp->start = raw.start;
-	isp->end   = raw.end;
-	isp->netmask = guess_netmask (raw.start, raw.end);
-
-	if ( isp->verbose ) {
-		char sip[16] = { 0, };
-		fprintf (stderr, "DEBUG: IP    => %-15s (%lu)\n", isp->ip, ip2long (isp->ip));
-		fprintf (stderr, "DEBUG: START => %-15s (%lu)\n", long2ip_r (isp->start, sip), isp->start);
-		fprintf (stderr, "DEBUG: END   => %-15s (%lu)\n", long2ip_r (isp->end, sip), isp->end);
-		fprintf (stderr, "DEBUG: MASK  => %-15s (%lu)\n", long2ip_r (isp->netmask, sip), isp->netmask);
-	}
-
-jumpNet:
-
-	/*
-	 * Parsing data
-	 */
-	raw.size = parseDummyData (&raw.dummy, raw.dummydata, 0);
-
-	if ( raw.size < 3 )
-		goto goWrongData;
-
-	// ISPCODE|ISPNAME
-	strcpy (isp->ccode, (strlen (raw.dummy[0]) == 0) ? "--" : raw.dummy[0]);
-	strcpy (isp->cname, (strlen (raw.dummy[1]) == 0) ? "N/A" : raw.dummy[1]);
-	strcpy (isp->iname, (strlen (raw.dummy[3]) == 0) ? "N/A" : raw.dummy[3]);
-	if ( strlen (raw.dummy[2]) )
-		strcpy (isp->icode, raw.dummy[2]);
-	else {
-		if ( strcmp (isp->iname, "N/A") == 0 )
-			strcpy (isp->icode, "--");
-		else
-			strcpy (isp->icode, isp->iname);
-	}
-
-goWrongData:
-
-	if ( isp->verbose ) {
-		fprintf (stderr, "DEBUG: TABLE  => %s\n", db->table);
-		fprintf (stderr, "DEBUG: DATA   => %s\n", raw.dummydata);
-		fprintf (stderr, "DEBUG: ISP    => %s (%s)\n", isp->iname, isp->icode);
-		fprintf (stderr, "DEBUG: NATION => %s (%s)\n", isp->cname, isp->ccode);
-	}
-
-	// second argues is set ture, free dummy member
-	initRawStruct (&raw, true);
-
-	krisp_mutex_unlock (db);
+	db->gi = krGeoIP_open (db);
 
 	return 0;
 } // }}}
 
-/*
- * if return 1, db error
- */
-KRISP_API int kr_search_ex (KRNET_API_EX *raw, KR_API *db) { // {{{
-	int		r;
-	char	err[1024];
+int getISPinfo (KR_API *db, char *key, KRNET_API *n) { // {{{
+	char sql[128] = { 0, };
+	int r, i;
 
-	if ( db == NULL ) {
-		SAFECPY_1024 (raw->err, "kr_search:: KR_API *db is null");
+	sprintf (sql, "SELECT * FROM isp WHERE longip <= '%s' ORDER By longip DESC LIMIT 1", key);
+
+	if ( verbose )
+		printf ("DEBUG: %s\n", sql);
+
+	if  ( kr_dbQuery (db, sql, DBTYPE_KRISP) )
 		return 1;
-	}
 
-	if ( raw->verbose != 0 && raw->verbose != 1 )
-		raw->verbose = 0;
-	db->verbose = raw->verbose;
-
-	krisp_mutex_lock (db);
-
-	// check database mtime
-	if ( raw->verbose )
-		fprintf (stderr, "DEBUG: Check changed %s\n", db->database);
-
-	if ( check_database_mtime (db) == true ) {
-		kr_dbClose (db);
-
-		if ( raw->verbose )
-			fprintf (stderr, "DEBUG: ** db reconnec\n");
-
-		if ( kr_dbConnect (db) == false ) {
-			SAFECPY_1024 (raw->err, db->err);
-			return 1;
+	db->rows = 0;
+	db->cols = 0;
+	while ( ! (r = kr_dbFetch (db, DBTYPE_KRISP) ) ) {
+		for ( i=0; i<db->cols; i++ ) {
+			switch (i) {
+				case 0 :
+					//strcpy (n->key, db->rowdata[i]);
+					break;
+				case 1 :
+					strcpy (n->network, db->rowdata[i]);
+					if ( verbose )
+						printf ("DEBUG:   network   => %s\n", n->network);
+					break;
+				case 2 :
+					strcpy (n->broadcast, db->rowdata[i]);
+					if ( verbose )
+						printf ("DEBUG:   broadcast => %s\n", n->broadcast);
+					break;
+				case 3 :
+					strcpy (n->netmask, db->rowdata[i]);
+					if ( verbose )
+						printf ("DEBUG:   netmask   => %s\n", n->netmask);
+					break;
+				case 4 :
+					strcpy (n->iname, db->rowdata[i]);
+					if ( verbose )
+						printf ("DEBUG:   isp name  => %s\n", n->iname);
+					break;
+				case 5 :
+					strcpy (n->icode, db->rowdata[i]);
+					if ( verbose )
+						printf ("DEBUG:   isp code  => %s\n", n->icode);
+					break;
+			}
 		}
-	}
-
-	initRawStruct (raw, false);
-
-	if ( valid_ip_address (raw->ip, err) ) {
-		SAFECPY_1024 (raw->err, err);
-		db->table = "krisp";
-		krisp_mutex_unlock (db);
-		return 0;
-	}
-
-	if ( (r = getISPinfo (db, raw)) != 0 ) {
-		// SQL error
-		if ( r == -1 ) {
-			SAFECPY_1024 (raw->err, db->err);
-			db->table = "krisp";
-			krisp_mutex_unlock (db);
-			return 1;
-		}
-	}
-
-	if ( raw->verbose ) {
-		ulong netmask = guess_netmask (raw->start, raw->end);
-		char sip[16] = { 0, };
-		fprintf (stderr, "DEBUG: IP    => %-15s (%lu)\n", raw->ip, ip2long (raw->ip));
-		fprintf (stderr, "DEBUG: START => %-15s (%lu)\n", long2ip_r (raw->start, sip), raw->start);
-		fprintf (stderr, "DEBUG: END   => %-15s (%lu)\n", long2ip_r (raw->end, sip), raw->end);
-		fprintf (stderr, "DEBUG: MASK  => %-15s (%lu)\n", long2ip_r (netmask, sip), netmask);
+		kr_dbFree (db);
 	}
 
 	/*
-	 * Parsing data
+	 * -1 => SQL Error
+	 *  1 => No result (this case is regard on success)
 	 */
-	raw->size = parseDummyData (&(raw->dummy), raw->dummydata, 0);
+	if ( r == -1 )
+		return 1;
 
-	if ( raw->verbose ) {
-		fprintf (stderr, "DEBUG: TABLE  => %s\n", db->table);
-		fprintf (stderr, "DEBUG: DATA   => %s\n", raw->dummydata);
+	return 0;
+} // }}}
+
+int getHostIP (KR_API *db, char *ip, USERDB *h) { // {{{
+	char sql[64] = { 0, };
+	char net[16] = { 0, };
+	int r;
+	struct cinfo cp;
+	char *city;
+	char *reg;
+
+	memset (h->ccode, 0, sizeof (h->ccode));
+	memset (h->cname, 0, sizeof (h->cname));
+	memset (h->icode, 0, sizeof (h->icode));
+	memset (h->iname, 0, sizeof (h->iname));
+	memset (h->city, 0, sizeof (h->city));
+	memset (h->region, 0, sizeof (h->region));
+	h->flag = 0;
+
+	if ( db->h == NULL )
+		return 1;
+
+	cp.ip = ip2long (ip);
+	cp.mask = ip2long ("255.255.255.0");
+	cp.network = cp.ip & cp.mask;
+	sprintf (net, "%lu", cp.network);
+
+	sprintf (sql, "SELECT * FROM userdb WHERE longip = '%s'", net);
+
+	if ( kr_dbQuery (db, sql, DBTYPE_USERDB) )
+		return 1;
+
+	db->rows = 0;
+	db->cols = 0;
+	while ( ! (r = kr_dbFetch (db, DBTYPE_USERDB)) ) {
+		for ( r=0; r<db->cols; r++ ) {
+			switch (r) {
+				case 1 :
+					strcpy (h->ccode, db->rowdata[r] ? db->rowdata[r] : "");
+					break;
+				case 2 :
+					strcpy (h->cname, db->rowdata[r] ? db->rowdata[r] : "");
+					break;
+				case 3 :
+					strcpy (h->icode, db->rowdata[r] ? db->rowdata[r] : "");
+					break;
+				case 4 :
+					strcpy (h->iname, db->rowdata[r] ? db->rowdata[r] : "");
+					break;
+				case 5 :
+					strcpy (h->city, db->rowdata[r] ? db->rowdata[r] : "");
+					break;
+				case 6 :
+					strcpy (h->region, db->rowdata[r] ? db->rowdata[r] : "");
+					break;
+				case 7 :
+					h->flag = (! strncmp (db->rowdata[r], "0", 1) ) ? 0 : 1;
+					break;
+				default:
+					continue;
+			}
+		}
+		kr_dbFree (db);
 	}
 
-	db->table = "krisp";
-	krisp_mutex_unlock (db);
+	if ( ! strlen (h->icode) && strlen (h->iname) )
+		strcpy (h->icode, h->iname);
+
+	if ( strlen (h->city) ) {
+		city = (char *) strdup (h->city);
+		if ( (reg = strchr (city, ',')) != NULL ) {
+			strcpy (h->region, reg + 1);
+			city[reg - city] = 0;
+			strcpy (h->city, city);
+		}
+		free (city);
+	}
+
+	if ( r == -1 )
+		return 1;
+
+	return 0;
+} // }}}
+
+void kr_close (KR_API *db) { // {{{
+#ifdef HAVE_LIBGEOIP
+	if ( db->gi != NULL ) {
+		int i;
+		if ( db->gi->gid != NULL ) {
+			GeoIP_delete (db->gi->gid);
+
+			if ( db->gi->gic != NULL )
+				GeoIP_delete (db->gi->gic);
+
+			if ( db->gi->gip != NULL )
+				GeoIP_delete (db->gi->gip);
+
+			free (db->gi);
+
+			for ( i = 1; i <= 11 ; i++ )
+				free (GeoIPDBFileName[i]);
+			free (GeoIPDBFileName);
+			GeoIPDBFileName = NULL;
+		}
+	}
+#endif
+
+	kr_dbClose (db);
+} // }}}
+
+void initStruct (KRNET_API *n) { // {{{
+	strcpy (n->key, "");
+	strcpy (n->network, "");
+	strcpy (n->broadcast, "");
+	strcpy (n->netmask, "");
+	strcpy (n->icode, "--");
+	strcpy (n->iname, "N/A");
+	strcpy (n->ccode, "--");
+	strcpy (n->cname, "N/A");
+	strcpy (n->city, "N/A");
+	strcpy (n->region, "N/A");
+} // }}}
+
+int kr_search (KRNET_API *isp, KR_API *db) { // {{{
+	int r = 0;
+	struct cinfo cp;
+
+	struct hostent *hp;
+	struct in_addr s;
+
+	USERDB h;
+
+	initStruct (isp);
+
+	hp = gethostbyname(isp->ip);
+
+	if ( hp && *(hp->h_addr_list) ) {
+		memcpy(&s.s_addr, *(hp->h_addr_list), sizeof(s.s_addr));
+		strcpy (isp->ip, inet_ntoa (s));
+	}
+
+	if ( inet_addr (isp->ip) == -1 )
+		return 0;
+
+	cp.ip = ip2long (isp->ip);
+	sprintf (isp->key, "%lu", cp.ip);
+
+	if ( (r = getISPinfo (db, isp->key, isp)) )
+		goto geoip_section;
+
+	if ( verbose )
+		printf ("DEBUG: => %s, %15s, %15s, %15s\n",
+				isp->key, isp->ip, isp->network, isp->broadcast);
+
+	/*
+	 * if ip is bigger than broadcast, this is miss match
+	 */
+	if ( cp.ip > ip2long (isp->broadcast) ) {
+		initStruct (isp);
+		sprintf (isp->key, "%lu", cp.ip);
+		r = 1;
+		goto geoip_section;
+	}
+
+	strcpy (isp->ccode, "KR");
+	strcpy (isp->cname, "Korea, Republic of");
+
+geoip_section:
+#ifdef HAVE_LIBGEOIP // {{{
+	if ( db->gi != NULL ) {
+		int country_id = 0;
+
+		if ( db->gi->gid == NULL )
+			goto geoispend;
+
+		if ( ! strcmp (isp->ccode, "KR") )
+			goto geoispend;
+
+		country_id = GeoIP_id_by_name (db->gi->gid, isp->ip);
+		strcpy (isp->ccode,
+				GeoIP_country_code[country_id] ? GeoIP_country_code[country_id] : "--");
+		strcpy (isp->cname,
+				GeoIP_country_name[country_id] ? GeoIP_country_name[country_id] : "N/A");
+geoispend:
+
+		/* check city information
+		 * GEOIP_CITY_EDITION_REV0 2
+		 * GEOIP_CITY_EDITION_REV1 6
+		 */
+		if ( db->gi->gic == NULL )
+			goto geocityend;
+
+		if ( GeoIP_db_avail (GEOIP_CITY_EDITION_REV0) || GeoIP_db_avail (GEOIP_CITY_EDITION_REV1) ) {
+			GeoIPRecord *gir;
+			gir = GeoIP_record_by_name (db->gi->gic, isp->ip);
+
+			if ( gir != NULL && gir->city )
+				strcpy (isp->city, strlen (gir->city) ? gir->city : "N/A");
+			else
+				strcpy (isp->city, "N/A");
+
+			if ( gir != NULL && gir->region )
+				strcpy (isp->region, strlen (gir->region) ? gir->region : "N/A");
+			else
+				strcpy (isp->region, "N/A");
+
+			if ( gir != NULL )
+				GeoIPRecord_delete (gir);
+		}
+	}
+geocityend:
+#endif // }}}
+
+	if ( r == 1 || ! strcmp (isp->icode, "--") ) {
+#ifdef HAVE_LIBGEOIP // {{{
+		if ( GeoIP_db_avail (GEOIP_ISP_EDITION) ) {
+			const char * g_isp;
+			g_isp = GeoIP_org_by_name(db->gi->gip, isp->ip);
+			if ( g_isp == NULL ) {
+				strcpy (isp->icode, "--");
+				strcpy (isp->iname, "N/A");
+			} else {
+				strcpy (isp->icode, strlen (g_isp) ? g_isp : "--");
+				strcpy (isp->iname, strlen (g_isp) ? g_isp : "N/A");
+				free ((char *) g_isp);
+			}
+		} else {
+#endif // }}}
+			strcpy (isp->icode, "--");
+			strcpy (isp->iname, "N/A");
+#ifdef HAVE_LIBGEOIP // {{{
+		}
+#endif // }}}
+	}
+
+	// get HostIP {{{
+	getHostIP (db, isp->ip, &h);
+
+	if ( h.flag ) {
+		if ( strlen (h.ccode) )
+			strcpy (isp->ccode, h.ccode);
+
+		if ( strlen (h.cname) )
+			strcpy (isp->cname, h.cname);
+
+		if ( strlen (h.icode) )
+			strcpy (isp->icode, h.icode);
+
+		if ( strlen (h.iname) ) {
+			if ( ! strcmp (isp->icode, "--") )
+				strcpy (isp->icode, h.iname);
+
+			strcpy (isp->iname, h.iname);
+		}
+
+		if ( strlen (h.city) ) {
+			strcpy (isp->city, h.city);
+			strcpy (isp->region, strlen (h.region) ? h.region : "N/A");
+		}
+	} else {
+		if ( ! strcmp (isp->ccode, "--") && strlen (h.ccode) )
+			strcpy (isp->ccode, h.ccode);
+
+		if ( ! strcmp (isp->cname, "N/A") && strlen (h.cname) )
+			strcpy (isp->cname, h.cname);
+
+		if ( ! strcmp (isp->icode, "--") && strlen (h.icode) )
+			strcpy (isp->icode, h.icode);
+
+		if ( ! strcmp (isp->iname, "N/A") && strlen (h.iname) ) {
+			if ( ! strcmp (isp->icode, "--") )
+				strcpy (isp->icode, h.iname);
+
+			strcpy (isp->iname, h.iname);
+		}
+
+		if ( ! strcmp (isp->city, "N/A") && strlen (h.city) ) {
+			strcpy (isp->city, h.city);
+			strcpy (isp->region, strlen (h.region) ? h.region : "N/A");
+		}
+	} // }}}
+
 	return 0;
 } // }}}
 

@@ -1,8 +1,10 @@
 /*
- * $Id: krdb.c,v 1.16 2010-06-24 17:24:34 oops Exp $
+ * $Id: krdb.c,v 1.13.2.2 2010-06-05 11:43:58 oops Exp $
  */
 
-#include <krispapi.h>
+#define DBERRVAR
+
+#include <krispcommon.h>
 
 #if defined(HAVE_LIBSQLITE3)
 #include <sqlite3.h>
@@ -12,46 +14,52 @@
 
 #include <krdb.h>
 
+char dberr[1024];
+
 #if defined(HAVE_LIBSQLITE3)
 #include <database/sqlite3.c>
 #else
 #include <database/sqlite.c>
 #endif
 
-char * kr_dbQuote_f (char * v) { // {{{
-	int		no = 0;
-	size_t	t, l, start;
-	size_t	len;
-	char *	buf;
+GeoIPvar * krGeoIP_open (KR_API *db) {
+	GeoIPvar * p;
 
-	if ( v == NULL )
-		return "";
+#ifndef HAVE_LIBGEOIP
+	return NULL;
+#else
+	if ( (p = (GeoIPvar *) malloc (sizeof (GeoIPvar)) ) == NULL )
+		return NULL;
 
-	len = strlen (v);
-	for ( t=0; t<len; t++ ) {
-		if ( v[t] == 0x27 )
-			no++;
+	p->gid = GeoIP_new (geo_type);
+
+	/*
+	 * check city information
+	 * GEOIP_CITY_EDITION_REV0 2
+	 * GEOIP_CITY_EDITION_REV1 6
+	 */
+	if ( p->gid != NULL ) {
+		_GeoIP_setup_dbfilename ();
+		p->gic = NULL;
+		p->gip = NULL;
+
+		if ( geocity && GeoIP_db_avail (GEOIP_CITY_EDITION_REV0) )
+			p->gic = GeoIP_open_type (GEOIP_CITY_EDITION_REV0, geocity_type);
+		else if ( geocity && GeoIP_db_avail (GEOIP_CITY_EDITION_REV1) )
+			p->gic = GeoIP_open_type (GEOIP_CITY_EDITION_REV1, geocity_type);
+
+		if ( GeoIP_db_avail (GEOIP_ISP_EDITION) )
+			p->gip = GeoIP_open_type (GEOIP_ISP_EDITION, geoisp_type);
+	} else {
+		p->gic = NULL;
+		p->gip = NULL;
+		free (p);
+		p = NULL;
 	}
 
-	t = len + no + 1;
-	buf = (char *) malloc (sizeof (char) * t);
-	memset (buf, 0, t);
-
-	l = 0;
-	start = 0;
-	for ( t=0; t<len; t++ ) {
-		if ( v[t] == '\'' ) {
-			memcpy (buf + start, v + l, t - l);
-			start += t - l;
-			memset (buf + start++, '\'', 1);
-			memset (buf + start++, '\'', 1);
-			l = t + 1;
-		}
-	}
-	memcpy (buf + start, v + l, strlen (v + l));
-
-	return buf;
-} // }}}
+	return p;
+#endif
+}
 
 /*
  * Local variables:
