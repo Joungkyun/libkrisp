@@ -46,7 +46,10 @@ AC_DEFUN([AX_KRISP@COMPAT_VERSION@],
 		#
 		# krisp library check
 		#
-		KRISP_LDFLAGS="`$krispconfig --ldflags`"
+		KRISP_LDFLAGS="`$krispconfig --ldflags 2> /dev/null`"
+		if test "x$KRISP_LDFLAGS" = "x"; then
+			KRISP_LDFLAGS="`$krispconfig --libs | sed 's/[[[:space:]]]*-l.*//g'`"
+		fi
 		krisp_OLD_FLAGS="$LDFLAGS"
 		LDFLAGS="$KRISP_LDFLAGS"
 		AC_CHECK_LIB(
@@ -55,7 +58,7 @@ AC_DEFUN([AX_KRISP@COMPAT_VERSION@],
 					[HAVE_LIBKRISP@COMPAT_VERSION@], 1,
 					[Define to 1 if you have the `krisp@COMPAT_VERSION@' library (-lkrisp@COMPAT_VERSION@).]
 				)
-				LIBS="`$krispconfig --libs` $LIBS"
+				LIBS="`$krispconfig --libs 2> /dev/null` $LIBS"
 			],[
 				if test $# -gt 0; then
 					AC_MSG_ERROR([Can't not found krisp@COMPAT_VERSION@ library (-lkrisp@COMPAT_VERSION@)])
@@ -80,7 +83,10 @@ AC_DEFUN([AX_KRISP@COMPAT_VERSION@],
 		#
 		# krisp header check
 		#
-		KRISP_INCLUDES="`$krispconfig --includes`"
+		KRISP_INCLUDES="`$krispconfig --includes 2> /dev/null`"
+		if test "x$KRISP_INCLUDES" = "x"; then
+			KRISP_INCLUDES="`$krispconfig --defs 2> /dev/null | sed 's/[[ ]]*-D[[^ ]]*//g'`"
+		fi
 
 		ret_cppflags=0
 		for check_cppflags in $CPPFLAGS
