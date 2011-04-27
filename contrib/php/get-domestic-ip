@@ -1,0 +1,40 @@
+#!/usr/bin/php
+<?
+#
+# $Id: get-domestic-ip,v 1.1.1.1 2006-06-08 19:31:53 oops Exp $
+#
+# get Korea ISP information to text format
+#
+$list = file_get_contents ("http://member.nic.or.kr/link/ISPAllocation.jsp");
+#$list = file_get_contents ("list.txt");
+
+# remove carage return
+$_src[] = "/\r/";
+$_des[] = '';
+
+# removed html code
+$_src[] = '/<[^>]+>/';
+$_des[] = '';
+
+# remove header
+$_src[] = '/.*배정일자/s';
+$_des[] = '';
+
+$_src[] = "/^\s*&nbsp;\s*/m";
+$_des[] = '';
+$_src[] = '/^\s*([0-9])/m';
+$_des[] = '\\1';
+$list = trim (preg_replace ($_src, $_des, $list));
+
+$p = explode ("\n", $list);
+
+foreach ($p as $v) :
+	$v = trim ($v);
+	if ( preg_match ('/^[0-9]+$/', $v) ) :
+		printf ("%s\n", $v);
+	else :
+		printf ("%s\t", $v);
+	endif;
+endforeach;
+
+?>
