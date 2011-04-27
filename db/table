@@ -1,11 +1,41 @@
-CREATE TABLE krisp
+
+krisp.dat
+---------
+
+
+CREATE TABLE netmask
 (
-    start unsigned integer NOT NULL DEFAULT '0',
-    end unsigned integer NOT NULL DEFAULT '0',
-    data varchar,
-    PRIMARY KEY (start DESC),
-    UNIQUE (end)
+	no integer NOT NULL DEFAULT '0',
+	net integer NOT NULL DEFAULT '0',
+	subnet char(15) NOT NULL DEFAULT '0.0.0.0',
+	PRIMARY KEY (no)
 );
 
-.sep "\t"
-.imp krisp.csv krisp
+CREATE TABLE isp
+(
+	longip char(10) NOT NULL DEFAULT '0',
+	network char(15) NOT NULL DEFAULT '0.0.0.0',
+	broadcast char(15) NOT NULL DEFAULT '0.0.0.0',
+	netmask char(15) NOT NULL DEFAULT '0.0.0.0',
+	organization varchar,
+	servicename varchar,
+	PRIMARY KEY (longip)
+);
+
+
+
+krisp-userdb.dat
+----------------
+
+CREATE TABLE userdb
+(
+	longip integer unsigned NOT NULL PRIMARY KEY,
+	country_code char(2) NOT NULL DEFAULT '',
+	country varchar(64) NOT NULL DEFAULT '',
+	isp_code char(64) NOT NULL DEFAULT '',
+	isp char(64) NOT NULL DEFAULT '',
+	city varchar(64) NOT NULL DEFAULT '',
+	region varchar(4) NOT NULL DEFAULT '',
+	flag int NOT NULL DEFAULT '0'
+);
+
