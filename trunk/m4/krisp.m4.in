@@ -50,7 +50,7 @@ AC_DEFUN([AX_KRISP@COMPAT_VERSION@],
 		krisp_OLD_FLAGS="$LDFLAGS"
 		LDFLAGS="$KRISP_LDFLAGS"
 		AC_CHECK_LIB(
-			krisp@COMPAT_VERSION@, ip2long, [
+			krisp@COMPAT_VERSION@, kr_open, [
 				AC_DEFINE(
 					[HAVE_LIBKRISP@COMPAT_VERSION@], 1,
 					[Define to 1 if you have the `krisp@COMPAT_VERSION@' library (-lkrisp@COMPAT_VERSION@).]
