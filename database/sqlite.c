@@ -1,7 +1,5 @@
 /*
- * $Id: sqlite.c,v 1.9 2010-09-10 12:44:25 oops Exp $
- *
- * libkrisp sqlite2 frontend API
+ * $Id: sqlite.c,v 1.5 2006-11-28 19:39:08 oops Exp $
  */
 
 #include <sys/types.h>
@@ -9,54 +7,68 @@
 #include <unistd.h>
 
 void kr_dbError (KR_API *db) {
-	memset (db->err, 0, 1024);
-	if ( db->dberr != NULL )
-		sprintf (db->err, "%s (Table: %s)", db->dberr, db->table);
-		//strcpy (db->err, db->dberr);
-	sqlite_freemem (db->dberr);
-}
-
-void kr_dbErrorClear (KR_API *db) {
-	memset (db->err, 0, 1024);
+	memset (dberr, 0, 1024);
+	if ( db->err != NULL )
+		strcpy (dberr, db->err);
+	sqlite_freemem (db->err);
 }
 
 int kr_dbFree (KR_API *db) {
 	return 0;
 }
 
-bool kr_dbConnect (KR_API *db) {
-	db->c = sqlite_open (db->database, 0644, &db->dberr);
+int kr_dbConnect (KR_API *db, char *file) {
+	struct stat f;
+	char _file[255];
+	int l;
+
+	db->c = sqlite_open ((file != NULL) ? file : DBPATH, 0644, &db->err);
 
 	if ( db->c == NULL ) {
 		kr_dbError (db);
-		return false;
+		return -1;
 	}
 
-	return true;
+	/* userdb database connect */
+	if ( file != NULL ) {
+		if ( (l = strlen (file) + 7) >= 255 )
+			return 0;
+
+		sprintf (_file, "%s-userdb", file);
+	} else
+		strcpy (_file, DBHPATH);
+
+	f.st_size = 0;
+	if ( stat (_file, &f) == 0 )
+		db->h = sqlite_open (_file, 0644, &db->err);
+	else
+		db->h = NULL;
+
+	return 0;
 }
 
-int kr_dbQuery (KR_API *db, char * sql) {
-	db->final = 0;
-	db->rows  = 0;
-	db->cols  = 0;
-	db->r = sqlite_compile (db->c, sql, NULL, &db->vm, &db->dberr);
+int kr_dbQuery (KR_API *db, char * sql, int t) {
+	sqlite *c;
+
+	switch (t) {
+		case DBTYPE_USERDB :
+			c = db->h;
+			break;
+		default:
+			 c = db->c;
+	}
+
+	db->r = sqlite_compile (c, sql, NULL, &db->vm, &db->err);
 
 	if ( db->r != SQLITE_OK ) {
 		kr_dbError (db);
-		kr_dbFinalize (db);
 		return 1;
 	}
 
 	return 0;
 }
 
-int kr_dbFetch (KR_API *db) {
-	if ( db->final ) {
-		db->final = 0;
-		db->r = SQLITE_OK;
-		goto finalize;
-	}
-
+int kr_dbFetch (KR_API *db, int t) {
 	db->r = sqlite_step (db->vm, &db->cols, &db->rowdata, &db->colname);
 
 	switch (db->r) {
@@ -68,8 +80,10 @@ int kr_dbFetch (KR_API *db) {
 		case SQLITE_MISUSE:
 		case SQLITE_DONE:
 		default:
-finalize:
-			kr_dbFinalize (db);
+			if ( db->vm )
+				db->r = sqlite_finalize (db->vm, &db->err);
+
+			db->vm = NULL;
 
 			if ( db->r != SQLITE_OK ) {
 				kr_dbError (db);
@@ -82,30 +96,12 @@ finalize:
 	return 0;
 }
 
-int kr_dbExecute (KR_API *db, char *sql) {
-	short r;
-
-	if ( kr_dbQuery (db, sql) )
-		return 1;
-
-	while ( ! (r = kr_dbFetch (db)) ) { } // empty actions
-	if ( r == -1 )
-		return 1;
-
-	return 0;
-}
-
-void kr_dbFinalize (KR_API *db) {
-	if ( db->vm )
-		db->r = sqlite_finalize (db->vm, &db->dberr);
-
-	db->vm = NULL;
-}
-
 void kr_dbClose (KR_API *db) {
 	if ( db->c != NULL )
 		sqlite_close (db->c);
-	memset (db->err, 0, 1024);
+
+	if ( db->h != NULL )
+		sqlite_close (db->h);
 }
 
 /*

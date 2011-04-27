@@ -1,0 +1,41 @@
+KRISP user database Documentation
+---------------------------------
+
+krisp 2.1.0 부터는 기존의 데이터의 부정확성을 처리하기 위해  userdb 를 지원한다.
+
+user database 는 krisp.dat 과 동일 디렉토리에 위치해야 하며, krisp-userdb.dat 또
+는 krisp.dat-userdb 의 이름을 가져야 한다.
+
+kr_open 에서 기본위치가 아닌 다른 위치 또는, 다른 이름의 database 를 지정할 경우
+에는 지정한 database 가 존재하는 위치에 "지정한 이름-userdb" 로 만들어야 한다.
+
+
+user database 의 schema 는 다음과 같다.
+
+CREATE TABLE userdb
+(
+  longip integer unsigned NOT NULL PRIMARY KEY, long ip format (c class network)
+  country_code char(2) NOT NULL DEFAULT '',     국가 코드
+  country varchar(64) NOT NULL DEFAULT '',      국가명
+  isp_code char(64) NOT NULL DEFAULT '',        ISP 코드
+  isp char(64) NOT NULL DEFAULT '',             ISP명
+  city varchar(64) NOT NULL DEFAULT '',         도시명
+  region varchar(4) NOT NULL DEFAULT '',        지역명
+  flag int NOT NULL DEFAULT '0'                 강제 출력 플래그
+);
+
+longip 는 C class 단위로 넣어 주어야 하며, C class 의 network 즉 마지막 자리는 0
+이어야 한다. (예를 들어 211.24.31.0) longip 를 구현하는 것은 php 의 경우,
+
+
+<?
+echo ip2long ("10.0.0.1")."\n";
+?>
+
+과 같이 값을 구할 수 있다.
+
+userdb 의 flag 값은 기존의 data 와 어떻게 조합을 할 지를 결정을 할 수 있다. 0으로
+지정이 될 경우에는 기존의 database 에 값이 존재하지 않을 경우만 userdb 의 값을 반
+환하도록 된다.  1 로 지정을 할 경우에는, userdb 에 값이 존재할 경우 무조건 userdb
+의 값이 반환이 된다.
+
