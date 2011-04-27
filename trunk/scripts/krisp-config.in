@@ -86,6 +86,9 @@ while test $# -gt 0; do
 		--includedir)
 			echo "${includedir}"
 			;;
+		--defs)
+			echo "${includedir}"
+			;;
 		--libdir)
 			echo "${libdir}"
 			;;
