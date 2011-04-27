@@ -1,9 +1,13 @@
 /*
- * $Id: thread_sample.c,v 1.18 2010-09-10 12:44:26 oops Exp $
+ * $Id: thread_sample.c,v 1.10 2010-08-07 17:24:02 oops Exp $
  */
 
-#include <ipcalc.h>
 #include <krisp.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
+#include <time.h>
+
 #include <sys/time.h>
 
 #ifdef HAVE_GETOPT_H
@@ -24,7 +28,7 @@ ulong prand (void);
 
 int main (void) { // {{{
 	int			i = 0, r;
-	long		status;
+	int			status;
 	KR_API *	db;
 	tArg *		kr;
 	char		err[1024];
@@ -32,7 +36,7 @@ int main (void) { // {{{
 	/* database open */
 	if ( kr_open_safe (&db, NULL, err) == false ) {
 		fprintf (stderr, "ERROR Connect: %s\n", err);
-		kr_close (&db);
+		kr_close (db);
 		return 1;
 	}
 
@@ -48,12 +52,12 @@ int main (void) { // {{{
 	for ( i=0; i<THREAD_SIZE; i++ ) {
 		r = pthread_join (threads[i], (void **) &status);
 		if ( r == 0 )
-			printf ("Completed join with thread %d status=%d\n", i, (int) status);
+			printf("Completed join with thread %d status= %d\n",i, status);
 		else
-			printf ("ERROR; return code from pthread_join() is %d, thread %d\n", r, i);
+			printf("ERROR; return code from pthread_join() is %d, thread %d\n", r, i);
 	}
 
-	kr_close (&db);
+	kr_close (db);
 
 	return 0;
 } // }}}

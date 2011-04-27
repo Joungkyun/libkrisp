@@ -1,60 +1,6 @@
 Changelog
 
-$Id: Changes,v 1.135 2011-01-14 05:08:35 oops Exp $
-
-* 3.1.3
-Fri, Apr 22 2011 JoungKyun.Kim <http://oops.org>
-	- changed build environment with automake
-	- revert gcc visibility
-
-
-* 3.1.2
-Fri, Jan 14 2011 JoungKyun.Kim <http://oops.org>
-	- release 3.1.2
-	- fixed segfault cause of miss casting
-
-Tue, Jan 12 2011 JoungKyun.Kim <http://oops.org>
-	- add english man pages
-	- debianized
-
-Mon, Nov  8 2010 JoungKyun.Kim <http://oops.org>
-	- fixed build environments on other OS (ulong type, make command)
-	- 3.1.2 dev branch start
-
-
-* 3.1.1
-Mon, Sep 27 2010 JoungKyun.Kim <http://oops.org>
-	- release 3.1.1
-
-Fri, Sep 24 2010 JoungKyun.Kim <http://oops.org>
-	- add journal_mode=OFF option on sqlite3 database handle
-	- add _REENTRANT compile flag
-	- changed default value of db_time_stamp_interval from 3600 sec to 0 sec
-
-Mon, Sep 20 2010 JoungKyun.Kim <http://oops.org>
-	- initialize db handler to NULL when database connect failed on kr_open
-
-
-* 3.1.0
-Fri, Sep 10 2010 JoungKyun.Kim <http://oops.org>
-	- changed kr_close api proto type
-	  kr_close (KR_API *) => kr_close (KR_API **)
-	- reconnect database when changed mtime of database
-	  add 4 members in KR_NET struct
-	  database
-	  db_time_stamp_interval
-	  db_time_stamp
-	  db_stamp_checked
-
-
-* 3.0.3
-
-Fri, Sep 10 2010 JoungKyun.Kim <http://oops.org>
-	- fixed segfault kr_search(_ex) when KR_NET structure is null
-
-Thu, Aug 12 2010 JoungKyun.Kim <http://oops.org>
-	- fixed typo
-
+$Id: Changes,v 1.114 2010-08-07 19:06:21 oops Exp $
 
 * 3.0.2
 
