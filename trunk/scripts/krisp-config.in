@@ -108,13 +108,13 @@ while test $# -gt 0; do
 			echo "-L$libdir"
 			;;
 		--libs)
-			echo "-lkrisp ${dependency_libs}"
+			echo "-lkrisp ${LIBS}"
 			;;
 		--includes)
 			echo "-I$includedir"
 			;;
 		--link-ld)
-			echo "-L$libdir -lkrisp ${dependency_libs}"
+			echo "-L$libdir -lkrisp ${LIBS}"
 			;;
 		--link-libtool)
 			echo $la_file
