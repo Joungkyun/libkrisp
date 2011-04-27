@@ -1,5 +1,5 @@
-diff -ruNp libkrisp.org//utils/Makefile.in libkrisp/utils/Makefile.in
---- libkrisp.org//utils/Makefile.in	2011-04-26 15:23:06.306502998 +0900
+diff -ruNp libkrisp.org/utils/Makefile.in libkrisp/utils/Makefile.in
+--- libkrisp.org/utils/Makefile.in	2011-04-26 15:23:06.306502998 +0900
 +++ libkrisp/utils/Makefile.in	2011-04-26 15:35:51.636502998 +0900
 @@ -256,6 +256,8 @@ install-binPROGRAMS: $(bin_PROGRAMS)
  	    f=`echo "$$p1" | sed 's,^.*/,,;$(transform);s/$$/$(EXEEXT)/'`; \
