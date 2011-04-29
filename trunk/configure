@@ -471,7 +471,7 @@ ac_includes_default="\
 # include <unistd.h>
 #endif"
 
-ac_subst_vars='COMPAT_VERSION GCC_MAJOR_VERSION GCC_MINOR_VERSION GCC_PATCH_VERSION static_bindir IPCALC_LDFLAGS IPCALC_CPPFLAGS SHELL PATH_SEPARATOR PACKAGE_NAME PACKAGE_TARNAME PACKAGE_VERSION PACKAGE_STRING PACKAGE_BUGREPORT exec_prefix prefix program_transform_name bindir sbindir libexecdir datadir sysconfdir sharedstatedir localstatedir libdir includedir oldincludedir infodir mandir build_alias host_alias target_alias DEFS ECHO_C ECHO_N ECHO_T LIBS INSTALL_PROGRAM INSTALL_SCRIPT INSTALL_DATA CYGPATH_W PACKAGE VERSION ACLOCAL AUTOCONF AUTOMAKE AUTOHEADER MAKEINFO install_sh STRIP ac_ct_STRIP INSTALL_STRIP_PROGRAM mkdir_p AWK SET_MAKE am__leading_dot AMTAR am__tar am__untar MAINTAINER_MODE_TRUE MAINTAINER_MODE_FALSE MAINT SONAME_INFO SONAME_VERSION SONAME_MAJOR SONAME_MINOR SONAME_REVISION PERL COMPAT_TRUE COMPAT_FALSE CXX CXXFLAGS LDFLAGS CPPFLAGS ac_ct_CXX EXEEXT OBJEXT CC CFLAGS ac_ct_CC CPP LN_S build build_cpu build_vendor build_os host host_cpu host_vendor host_os ECHO RANLIB ac_ct_RANLIB EGREP LIBTOOL DATE PACKAGE_DATE LIBICONV LTLIBICONV DBPATH LIBOBJS LTLIBOBJS'
+ac_subst_vars='COMPAT_VERSION GCC_MAJOR_VERSION GCC_MINOR_VERSION GCC_PATCH_VERSION static_bindir SHELL PATH_SEPARATOR PACKAGE_NAME PACKAGE_TARNAME PACKAGE_VERSION PACKAGE_STRING PACKAGE_BUGREPORT exec_prefix prefix program_transform_name bindir sbindir libexecdir datadir sysconfdir sharedstatedir localstatedir libdir includedir oldincludedir infodir mandir build_alias host_alias target_alias DEFS ECHO_C ECHO_N ECHO_T LIBS INSTALL_PROGRAM INSTALL_SCRIPT INSTALL_DATA CYGPATH_W PACKAGE VERSION ACLOCAL AUTOCONF AUTOMAKE AUTOHEADER MAKEINFO install_sh STRIP ac_ct_STRIP INSTALL_STRIP_PROGRAM mkdir_p AWK SET_MAKE am__leading_dot AMTAR am__tar am__untar MAINTAINER_MODE_TRUE MAINTAINER_MODE_FALSE MAINT SONAME_INFO SONAME_VERSION SONAME_MAJOR SONAME_MINOR SONAME_REVISION PERL COMPAT_TRUE COMPAT_FALSE CXX CXXFLAGS LDFLAGS CPPFLAGS ac_ct_CXX EXEEXT OBJEXT CC CFLAGS ac_ct_CC CPP LN_S build build_cpu build_vendor build_os host host_cpu host_vendor host_os ECHO RANLIB ac_ct_RANLIB EGREP LIBTOOL DATE PACKAGE_DATE LIBICONV LTLIBICONV DBPATH LIBOBJS LTLIBOBJS'
 ac_subst_files=''
 
 # Initialize some variables set by options.
@@ -9853,6 +9853,48 @@ _ACEOF
   fi
 
 
+	ax_ipcalc_argc=2
+	ipcalc_check_failed=0
+
+	if test $ax_ipcalc_argc -gt 0; then
+		ax_ipcalc_first_arg=libtool
+		ax_ipcalc_second_arg=1
+	fi
+
+	if test $ax_ipcalc_argc -gt 0; then
+		if test $ax_ipcalc_argc -eq 2; then
+			if test "$ax_ipcalc_first_arg" = "libtool"; then
+				ipcalc_ld_mode="libtool"
+			elif test "$ax_ipcalc_first_arg" = "ld"; then
+				ipcalc_ld_mode="ld"
+			else
+				{ { echo "$as_me:$LINENO: error: Unsupported link type on AX IPCALC macro" >&5
+echo "$as_me: error: Unsupported link type on AX IPCALC macro" >&2;}
+   { (exit 1); exit 1; }; }
+			fi
+
+			if test $ax_ipcalc_second_arg -eq 1; then
+				ipcalc_check_failed=1
+			fi
+		elif test $ax_ipcalc_argc -eq 1; then
+			if test "$ax_ipcalc_first_arg" = "libtool"; then
+				ipcalc_ld_mode="libtool"
+			elif test "$ax_ipcalc_first_arg" = "ld"; then
+				ipcalc_ld_mode="ld"
+			elif test $ax_ipcalc_first_arg -eq 1 || test $ax_ipcalc_first_arg -eq 0 ; then
+				ipcalc_check_failed=$ax_ipcalc_first_arg
+			else
+				{ { echo "$as_me:$LINENO: error: Unsupported argument value on AX IPCALC macro" >&5
+echo "$as_me: error: Unsupported argument value on AX IPCALC macro" >&2;}
+   { (exit 1); exit 1; }; }
+			fi
+		else
+			{ { echo "$as_me:$LINENO: error: So many arguments on AX IPCALC macro" >&5
+echo "$as_me: error: So many arguments on AX IPCALC macro" >&2;}
+   { (exit 1); exit 1; }; }
+		fi
+	fi
+
 
 # Check whether --with-ipcalc or --without-ipcalc was given.
 if test "${with_ipcalc+set}" = set; then
@@ -9861,44 +9903,84 @@ if test "${with_ipcalc+set}" = set; then
 fi;
 
 	if test "x$with_ipcalc" != "xno"; then
-		if test "x$with_ipcalc" != "x"; then
-			if test "x$with_ipcalc" = "xyes"; then
-				ipcalcconfig="/usr/bin/ipcalc-config"
-			else
-				ipcalcconfig="$with_ipcalc"
-			fi
-		else
-			ipcalcconfig="/usr/bin/ipcalc-config"
-		fi
 
-		echo "$as_me:$LINENO: checking for ipcalc-config path" >&5
+	if test "x$with_ipcalc" != "x"; then
+		if test "x$with_ipcalc" = "xyes"; then
+			ipcalcconfig="/usr/bin/ipcalc-config"
+		else
+			ipcalcconfig="$with_ipcalc"
+		fi
+	else
+		ipcalcconfig="/usr/bin/ipcalc-config"
+	fi
+
+	echo "$as_me:$LINENO: checking for ipcalc-config path" >&5
 echo $ECHO_N "checking for ipcalc-config path... $ECHO_C" >&6
-		if test ! -f "$ipcalcconfig" || test ! -x "$ipcalcconfig"; then
+	if test ! -f "$ipcalcconfig" || test ! -x "$ipcalcconfig"; then
+		if test $ipcalc_check_failed -eq 1; then
 			{ { echo "$as_me:$LINENO: error: can't find $ipcalcconfig" >&5
 echo "$as_me: error: can't find $ipcalcconfig" >&2;}
    { (exit 1); exit 1; }; }
 		else
-			echo "$as_me:$LINENO: result: $ipcalcconfig" >&5
+			ipcalcconfig=
+			echo "$as_me:$LINENO: result: not found" >&5
+echo "${ECHO_T}not found" >&6
+		fi
+	else
+		echo "$as_me:$LINENO: result: $ipcalcconfig" >&5
 echo "${ECHO_T}$ipcalcconfig" >&6
-		fi
+	fi
 
-		#
-		# ipcalc library check
-		#
-		IPCALC_LDFLAGS="`$ipcalcconfig --ldflags 2> /dev/null`"
-		if test -z "$IPCALC_LDFLAGS"; then
-			tmp_IPCALC_LDFALGS="`$ipcalcconfig --libs 2> /dev/null`"
-			for tmp_ip_ld in $tmp_IPCALC_LDFALGS
-			do
-				echo "$tmp_ip_ld" | grep -- "-L" >& /dev/null
-				test $? -ne 0 && continue
-				IPCALC_LDFLAGS="$IPCALC_LDFLAGS $tmp_ip_ld"
-			done
-		fi
 
-		ipcalc_OLD_FLAGS="$LDFLAGS"
-		LDFLAGS="$IPCALC_LDFLAGS"
-		echo "$as_me:$LINENO: checking for ip2long in -lipcalc" >&5
+		if test "$ipcalc_ld_mode" = "libtool"; then
+
+	#
+	# ipcalc library check
+	#
+	echo "$as_me:$LINENO: checking for ip2long in -lipcalc" >&5
+echo $ECHO_N "checking for ip2long in -lipcalc... $ECHO_C" >&6
+
+	IPCALC_LIBS="`$ipcalcconfig --link-libtool 2> /dev/null`"
+	if test -z "$IPCALC_LDFLAGS"; then
+		IPCALC_LIBS="`$ipcalcconfig --libs 2> /dev/null`"
+	fi
+
+	if test "x$IPCALC_LIBS" = "x"; then
+		echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6
+		if test $ipcalc_check_failed -eq 1; then
+			{ { echo "$as_me:$LINENO: error: Can't not found ipcalc libtool library (libipcalc.la)" >&5
+echo "$as_me: error: Can't not found ipcalc libtool library (libipcalc.la)" >&2;}
+   { (exit 1); exit 1; }; }
+		fi
+	else
+		echo "$as_me:$LINENO: result: yes" >&5
+echo "${ECHO_T}yes" >&6
+		LIBS="$IPCALC_LIBS $LIBS"
+
+cat >>confdefs.h <<\_ACEOF
+#define HAVE_LIBIPCALC 1
+_ACEOF
+
+	fi
+
+		else
+
+	#
+	# ipcalc library check
+	#
+	IPCALC_LDFLAGS="`$ipcalcconfig --ldflags 2> /dev/null`"
+
+	#
+	# for compatibility
+	#
+	if test -z "$IPCALC_LDFLAGS"; then
+		IPCALC_LDFLAGS="`$ipcalcconfig --libs 2> /dev/null | sed 's/[[:space:]]*-l.*//g'`"
+	fi
+
+	ipcalc_OLD_LDFLAGS="$LDFLAGS"
+	LDFLAGS="$IPCALC_LDFLAGS"
+	echo "$as_me:$LINENO: checking for ip2long in -lipcalc" >&5
 echo $ECHO_N "checking for ip2long in -lipcalc... $ECHO_C" >&6
 if test "${ac_cv_lib_ipcalc_ip2long+set}" = set; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
@@ -9969,49 +10051,55 @@ cat >>confdefs.h <<\_ACEOF
 #define HAVE_LIBIPCALC 1
 _ACEOF
 
-			LIBS="`$ipcalcconfig --libs` $LIBS"
+			LIBS="`$ipcalcconfig --libs 2> /dev/null` $LIBS"
+
 else
 
-			{ { echo "$as_me:$LINENO: error: Can't not found ipcalc library (-lipcalc)" >&5
-echo "$as_me: error: Can't not found ipcalc library (-lipcalc)" >&2;}
+			if test $ipcalc_check_failed -eq 1; then
+				{ { echo "$as_me:$LINENO: error: Can't not found \`ipcalc' library (-lipcalc)" >&5
+echo "$as_me: error: Can't not found \`ipcalc' library (-lipcalc)" >&2;}
    { (exit 1); exit 1; }; }
+			fi
+
 
 fi
 
-		LDFLAGS="$ipcalc_OLD_LDFLAGS"
+	LDFLAGS="$ipcalc_OLD_LDFLAGS"
 
-		ret_ldflags=0
-		for check_ldflags in $LDFLAGS
-		do
-			test -z "$IPCALC_LDFLAGS" && break
+	ret_ldflags=0
+	for check_ldflags in $LDFLAGS
+	do
+		test -z "$IPCALC_LDFLAGS" && break
 
-			if test "$check_ldflags" = "$IPCALC_LDFLAGS"; then
-				ret_ldflags=1
-				break
-			fi
-		done
+		if test "$check_ldflags" = "$IPCALC_LDFLAGS"; then
+			ret_ldflags=1
+			break
+		fi
+	done
 
-		test $ret_ldflags -eq 0 && LDFLAGS="$IPCALC_LDFLAGS $LDFLAGS"
+	test $ret_ldflags -eq 0 && LDFLAGS="$IPCALC_LDFLAGS $LDFLAGS"
 
-		#
-		# ipcalc header check
-		#
-		IPCALC_INCLUDES="`$ipcalcconfig --includes 2> /dev/null`"
-		if test -z "$IPCALC_INCLUDES"; then
-			IPCALC_INCLUDES="`$ipcalcconfig --defs 2> /dev/null`"
 		fi
 
-		ret_cppflags=0
-		for check_cppflags in $CPPFLAGS
-		do
-			test -z "$IPCALC_INCLUDES" && break
+	#
+	# ipcalc header check
+	#
+	IPCALC_INCLUDES="`$ipcalcconfig --includes 2> /dev/null`"
+	if test -z "$IPCALC_INCLUDES"; then
+		IPCALC_INCLUDES="`$ipcalcconfig --defs 2> /dev/null | sed 's/[ ]*-D[^ ]*//g'`"
+	fi
 
-			if test "$check_cppflags" = "$IPCALC_INCLUDES"; then
-				ret_cppflags=1
-				break
-			fi
-		done
-		test $ret_cppflags -eq 0 && CPPFLAGS="$IPCALC_INCLUDES $CPPFLAGS"
+	ret_cppflags=0
+	for check_cppflags in $CPPFLAGS
+	do
+		test -z "$IPCALC_INCLUDES" && break
+
+		if test "$check_cppflags" = "$IPCALC_INCLUDES"; then
+			ret_cppflags=1
+			break
+		fi
+	done
+	test $ret_cppflags -eq 0 && CPPFLAGS="$IPCALC_INCLUDES $CPPFLAGS"
 
 for ac_header in ipcalc.h
 do
@@ -10162,6 +10250,18 @@ fi
 
 done
 
+	if test "$ac_cv_header_ipcalc_h" != "yes"; then
+		{ { echo "$as_me:$LINENO: error: You must need ipcalc.h header file" >&5
+echo "$as_me: error: You must need ipcalc.h header file" >&2;}
+   { (exit 1); exit 1; }; }
+	fi
+
+	else
+		if test $ipcalc_check_failed -eq 1; then
+			{ { echo "$as_me:$LINENO: error: --without-ipcalc doesn't permit" >&5
+echo "$as_me: error: --without-ipcalc doesn't permit" >&2;}
+   { (exit 1); exit 1; }; }
+		fi
 	fi
 
 
@@ -10625,8 +10725,6 @@ _ACEOF
 fi
 
 if test "x$ac_cv_lib_pthread_pthread_create" != "x"; then
-	#AC_DEFINE([HAVE_PTHREAD], 1, [Define to 1 if you have the `pthread'.])
-	#KR_DEFS="$KR_DEFS -DHAVE_PTHREAD_H"
 	CPPFLAGS="$CPPFLAGS -D_REENTRANT"
 fi
 
@@ -12321,8 +12419,6 @@ s,@GCC_MAJOR_VERSION@,$GCC_MAJOR_VERSION,;t t
 s,@GCC_MINOR_VERSION@,$GCC_MINOR_VERSION,;t t
 s,@GCC_PATCH_VERSION@,$GCC_PATCH_VERSION,;t t
 s,@static_bindir@,$static_bindir,;t t
-s,@IPCALC_LDFLAGS@,$IPCALC_LDFLAGS,;t t
-s,@IPCALC_CPPFLAGS@,$IPCALC_CPPFLAGS,;t t
 s,@SHELL@,$SHELL,;t t
 s,@PATH_SEPARATOR@,$PATH_SEPARATOR,;t t
 s,@PACKAGE_NAME@,$PACKAGE_NAME,;t t
