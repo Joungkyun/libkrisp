@@ -62,13 +62,11 @@ PACKAGE_DATE=$($DATE +"%a %b %d %Y")
 AC_CHECK_LIB(dl, dlopen,,)
 
 AM_ICONV
-AX_IPCALC
+AX_IPCALC(libtool, 1)
 AX_SQLITE
 
 AC_CHECK_LIB(pthread, pthread_create,,,)
 if test "x$ac_cv_lib_pthread_pthread_create" != "x"; then
-	#AC_DEFINE([HAVE_PTHREAD], 1, [Define to 1 if you have the `pthread'.])
-	#KR_DEFS="$KR_DEFS -DHAVE_PTHREAD_H"
 	CPPFLAGS="$CPPFLAGS -D_REENTRANT"
 fi
 

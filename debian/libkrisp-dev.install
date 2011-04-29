@@ -4,4 +4,5 @@ usr/lib/lib*.a
 usr/lib/lib*.so
 usr/lib/pkgconfig/*
 usr/lib/*.la
+usr/share/aclocal/*.m4
 usr/share/man/man3/*.3*
