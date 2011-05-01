@@ -11,6 +11,10 @@
  * KRISP user level function prototype
  */
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /*
  * Init information structure
  */
@@ -50,6 +54,11 @@ extern void krisp_safecpy (char *, char *, int);
 #define SAFECPY_256(dest, src) krisp_safecpy(dest, src, 256)
 #define SAFECPY_512(dest, src) krisp_safecpy(dest, src, 512)
 #define SAFECPY_1024(dest, src) krisp_safecpy(dest, src, 1024)
+
+#ifdef __cplusplus
+};
+#endif
+
 #endif
 
 /*

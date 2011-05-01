@@ -66,6 +66,10 @@
 #define set_false(x) (x = false)
 #define switch_bool(x) ((x == true) ? false : true)
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef struct db_argument {
 	char 			err[1024];
 	char			database[256];
@@ -134,6 +138,11 @@ struct cinfo {
 	ulong	network;
 	ulong	bcast;
 };
+
+#ifdef __cplusplus
+};
+#endif
+
 #endif
 
 /*
