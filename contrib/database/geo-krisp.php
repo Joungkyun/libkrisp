@@ -1,7 +1,7 @@
 #!/usr/bin/php
 <?php
 #
-# $Id: geo-krisp.php,v 1.1 2010-06-07 11:31:27 oops Exp $
+# $Id$
 #
 # convert GeoIP database to KRISP database
 #

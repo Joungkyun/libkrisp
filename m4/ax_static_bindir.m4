@@ -32,7 +32,7 @@ dnl POSSIBILITY OF SUCH DAMAGE.
 dnl ----------------------------------------------------------------------------
 dnl  This file is part of olibc.
 dnl
-dnl  $Id: ax_static_bindir.m4,v 1.1 2011-04-12 17:00:15 oops Exp $
+dnl  $Id$
 dnl 
 
 AC_SUBST(static_bindir)

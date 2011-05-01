@@ -1,7 +1,7 @@
 #!/usr/bin/php
 <?php
 #
-# $Id: vaccum.php,v 1.3 2011-03-07 15:42:24 oops Exp $
+# $Id$
 #
 # Vaccum the data
 #

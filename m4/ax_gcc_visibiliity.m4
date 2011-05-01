@@ -32,7 +32,7 @@ dnl POSSIBILITY OF SUCH DAMAGE.
 dnl ----------------------------------------------------------------------------
 dnl  This file is part of olibc.
 dnl
-dnl  $Id: ax_gcc_visibiliity.m4,v 1.2 2011-04-13 09:55:49 oops Exp $
+dnl  $Id$
 dnl
 
 AC_SUBST(GCC_MAJOR_VERSION)

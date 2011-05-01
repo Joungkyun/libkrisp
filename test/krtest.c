@@ -1,5 +1,5 @@
 /*
- * $Id: krtest.c,v 1.19 2010-09-10 12:44:26 oops Exp $
+ * $Id$
  */
 
 #include <ipcalc.h>

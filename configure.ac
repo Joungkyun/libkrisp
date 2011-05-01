@@ -1,7 +1,7 @@
 # Process this file with autoconf to produce a configure script.
 # Configure template for krisp library
 #
-# $Id: configure.ac,v 1.48 2010-11-08 06:08:11 oops Exp $
+# $Id$
 
 #
 AC_PREREQ(2.59)

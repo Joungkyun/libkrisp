@@ -16,7 +16,7 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# $Id: Makefile.am,v 1.6 2011-04-12 16:36:35 oops Exp $
+# $Id$
 
 AM_CFLAGS = -Wall
 AM_CPPFLAGS = -I$(top_srcdir)

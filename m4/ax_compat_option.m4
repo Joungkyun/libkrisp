@@ -32,7 +32,7 @@ dnl POSSIBILITY OF SUCH DAMAGE.
 dnl ----------------------------------------------------------------------------
 dnl  This file is part of olibc.
 dnl
-dnl  $Id: ax_compat_option.m4,v 1.1 2011-04-12 15:19:18 oops Exp $
+dnl  $Id$
 dnl 
 
 AC_SUBST(COMPAT_VERSION)

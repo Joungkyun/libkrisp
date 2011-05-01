@@ -1,5 +1,5 @@
 /*
- * $Id: krispmkdb.c,v 1.22 2010-09-10 12:44:25 oops Exp $
+ * $Id$
  */
 #include <stdio.h>
 #include <stdlib.h>

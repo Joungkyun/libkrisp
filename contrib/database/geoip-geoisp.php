@@ -1,7 +1,7 @@
 #!/usr/bin/php
 <?php
 #
-# $Id: geoip-geoisp.php,v 1.2 2010-08-11 20:05:07 oops Exp $
+# $Id$
 #
 # merge GEOIP database and GeoISP database
 #

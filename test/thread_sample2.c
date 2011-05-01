@@ -1,5 +1,5 @@
 /*
- * $Id: thread_sample2.c,v 1.16 2010-09-10 12:44:26 oops Exp $
+ * $Id$
  */
 
 #include <ipcalc.h>

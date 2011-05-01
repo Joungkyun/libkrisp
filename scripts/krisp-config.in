@@ -1,5 +1,5 @@
 #!/bin/sh
-# $Id: krisp-config.in,v 1.11 2010-08-07 18:07:15 oops Exp $
+# $Id$
 
 prog="libkrisp@COMPAT_VERSION@"
 prefix="@prefix@"

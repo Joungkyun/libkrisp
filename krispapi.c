@@ -1,5 +1,5 @@
 /*
- * $Id: krispapi.c,v 1.21 2010-09-10 12:44:25 oops Exp $
+ * $Id$
  */
 
 #include <stdio.h>
