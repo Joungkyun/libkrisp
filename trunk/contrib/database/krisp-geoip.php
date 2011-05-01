@@ -1,7 +1,7 @@
 #!/usr/bin/php
 <?php
 #
-# $Id: krisp-geoip.php,v 1.2 2010-08-11 20:05:07 oops Exp $
+# $Id$
 #
 # Merge KRISP data and GeoIP CSV format
 #

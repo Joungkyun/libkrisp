@@ -1,5 +1,5 @@
 /*
- * $Id: krisp.h,v 1.30 2010-09-10 11:09:14 oops Exp $
+ * $Id$
  */
 
 #ifndef KR_ISP_H

@@ -1,5 +1,5 @@
 /*
- * $Id: krdb.h.in,v 1.12 2010-09-10 12:44:25 oops Exp $
+ * $Id$
  */
 
 #ifndef KRDB_H

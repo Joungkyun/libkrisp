@@ -1,5 +1,5 @@
 /*
- * $Id: krispexlookup.c,v 1.8 2010-09-10 13:23:24 oops Exp $
+ * $Id$
  */
 
 #include <krisp.h>

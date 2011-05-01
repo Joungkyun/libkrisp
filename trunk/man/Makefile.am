@@ -16,7 +16,7 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# $Id: Makefile.am,v 1.6 2011-04-12 16:36:35 oops Exp $
+# $Id$
 
 if ! COMPAT
 EXTRA_DIST = ko/kr_open.3 ko/kr_close.3 ko/kr_search_ex.3 ko/kr_search.3 \

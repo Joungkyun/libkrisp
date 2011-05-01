@@ -2,7 +2,7 @@
 <?php
 /*
  *
- * $Id: krnic-data.php,v 1.3 2010-08-04 03:38:32 oops Exp $
+ * $Id$
  *
  * get KRNIC's Korea IP and ISP information
  *

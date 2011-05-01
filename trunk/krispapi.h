@@ -1,5 +1,5 @@
 /*
- * $Id: krispapi.h,v 1.12 2010-11-08 06:15:37 oops Exp $
+ * $Id$
  *
  * Notice: if return value of API that has '_f' prefix is not NULL,
  *         it is must free memory!

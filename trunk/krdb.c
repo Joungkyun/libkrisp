@@ -1,5 +1,5 @@
 /*
- * $Id: krdb.c,v 1.16 2010-06-24 17:24:34 oops Exp $
+ * $Id$
  */
 
 #include <krispapi.h>

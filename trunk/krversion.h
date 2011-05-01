@@ -1,5 +1,5 @@
 /*
- * $Id: krversion.h,v 1.28 2011-01-14 05:08:35 oops Exp $
+ * $Id$
  */
 
 #ifndef KR_VERSION_H

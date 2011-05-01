@@ -1,5 +1,5 @@
 /*
- * $Id: sqlite.c,v 1.9 2010-09-10 12:44:25 oops Exp $
+ * $Id$
  *
  * libkrisp sqlite2 frontend API
  */
