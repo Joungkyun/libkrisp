@@ -1,5 +1,5 @@
 /*
- * $Id: krispcommon.h,v 1.24.2.2 2010-06-05 11:43:58 oops Exp $
+ * $Id$
  */
 
 #ifndef COMMON_H

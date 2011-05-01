@@ -1,5 +1,5 @@
 /*
- * $Id: krdb.c,v 1.13.2.2 2010-06-05 11:43:58 oops Exp $
+ * $Id$
  */
 
 #define DBERRVAR

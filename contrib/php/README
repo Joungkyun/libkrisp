@@ -1,4 +1,4 @@
-$Id: README,v 1.2 2006-06-20 07:53:17 oops Exp $
+$Id$
 
 class.krisp.php library 는 김칠봉님 (sna2<at>linuxchannel.net) 이 만드신 것을
 sqlite db 를 사용하도록 변경한 버전이다. 원본 코드는

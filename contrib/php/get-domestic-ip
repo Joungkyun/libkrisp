@@ -1,7 +1,7 @@
 #!/usr/bin/php
 <?
 #
-# $Id: get-domestic-ip,v 1.3 2008-03-14 18:53:59 oops Exp $
+# $Id$
 #
 # get Korea ISP information to text format
 #

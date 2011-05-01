@@ -1,7 +1,7 @@
 #!/usr/bin/php
 <?php
 ##
-## $Id: mknetmask.php,v 1.1.1.1 2006-06-08 19:31:53 oops Exp $
+## $Id$
 ##
 ## -- make network / netmask
 ## -- 2005.11.07: bug fixed <san2(at)linuxchannel.net>
