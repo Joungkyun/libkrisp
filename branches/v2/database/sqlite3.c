@@ -1,5 +1,5 @@
 /*
- * $Id: sqlite3.c,v 1.6.2.2 2010-06-05 11:43:58 oops Exp $
+ * $Id$
  */
 
 #include <sys/types.h>

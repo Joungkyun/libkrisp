@@ -1,5 +1,5 @@
 /*
- * $Id: krnet.c,v 1.4.2.1 2010-06-05 10:56:25 oops Exp $
+ * $Id$
  */
 
 #include <krispcommon.h>

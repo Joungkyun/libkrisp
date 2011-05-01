@@ -1,5 +1,5 @@
 /*
- * $Id: krnet.h,v 1.2 2006-06-20 03:32:11 oops Exp $
+ * $Id$
  */
 
 #ifndef KRNET_H

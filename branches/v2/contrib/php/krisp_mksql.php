@@ -1,7 +1,7 @@
 #!/usr/bin/php
 <?
 #
-# $Id: krisp_mksql.php,v 1.15 2008-03-25 05:06:58 oops Exp $
+# $Id$
 #
 # get Korea ISP information to text format and make krisp database sql
 #

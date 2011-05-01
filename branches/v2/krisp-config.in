@@ -1,5 +1,5 @@
 #!/bin/sh
-# $Id: krisp-config.in,v 1.2 2006-06-09 04:35:08 oops Exp $
+# $Id$
 
 prefix="@prefix@"
 exec_prefix="@exec_prefix@"
