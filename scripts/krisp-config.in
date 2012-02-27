@@ -102,7 +102,7 @@ while test $# -gt 0; do
 			echo $CFLAGS
 			;;
 		--cppflags)
-			echo $CPPFLAGS
+			echo -I$includedir $CPPFLAGS
 			;;
 		--ldflags)
 			echo "-L$libdir"
