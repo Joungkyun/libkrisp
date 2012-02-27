@@ -85,8 +85,8 @@ SONAME_VERSION  = @SONAME_VERSION@
 AM_CFLAGS = -Wall
 AM_LDFLAGS = -version-info $(SONAME_INFO)
 
-include_HEADERS = krisp.h krispcommon.h
-noinst_HEADERS = krdb.h krispapi.h krversion.h
+include_HEADERS = krisp.h krispcommon.h krversion.h
+noinst_HEADERS = krdb.h krispapi.h
 
 BUILT_SOURCES = krispcommon.h
 
