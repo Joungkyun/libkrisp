@@ -5,6 +5,7 @@
 #ifndef KR_ISP_H
 #define KR_ISP_H
 
+#include <krversion.h>
 #include <krispcommon.h>
 
 /*

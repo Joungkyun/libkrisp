@@ -634,9 +634,9 @@ oGetopt::$longopt = (object) array (
 	'geoisp' => 'i',
 );
 
-$opt->geoip  = './GeoIPCountryWhois.csv';
+$opt->geoip  = '/usr/share/GeoIP/GeoIPCountryWhois.csv';
 $opt->help   = 0;
-$opt->geoisp = './GeoIPISP.csv';
+$opt->geoisp = '/usr/share/GeoIP/GeoIPISP.csv';
 $opt->verbose = 0;
 
 while ( ($opv = oGetopt::exec ($argc, $argv, 'g:hi:v')) !== false ) {

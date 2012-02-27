@@ -622,7 +622,7 @@ oGetopt::$longopt = (object) array (
 	'krisp' => 'k',
 );
 
-$opt->geoip  = './GeoIPCountryWhois.csv';
+$opt->geoip  = '/usr/share/GeoIP/GeoIPCountryWhois.csv';
 $opt->help   = 0;
 $opt->krisp= './krisp.csv';
 $opt->verbose = 0;
