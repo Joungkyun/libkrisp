@@ -4,6 +4,7 @@ $Id$
 
 * 3.1.3
 Mon, Feb 27 2012 JoungKyun.Kim <http://oops.org>
+	- release 3.1.3
 	- fixed missing krversion.h
 
 Mon, May  2 2011 JoungKyun.Kim <http://oops.org>
