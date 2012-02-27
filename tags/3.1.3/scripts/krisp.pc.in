@@ -1,0 +1,12 @@
+# Package Information for pkg-config
+
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+libdir=@libdir@
+includedir=@includedir@/krisp@COMPAT_VERSION@
+
+Name: libkrisp@COMPAT_VERSION@
+Description: Korean ISP library
+Version: @PACKAGE_VERSION@
+Libs: -L${libdir} -lkrisp@COMPAT_VERSION@
+Cflags: -I${includedir} @CFLAGS@

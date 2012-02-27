@@ -1,0 +1,32 @@
+Source: libkrisp
+Priority: optional
+Maintainer: JoungKyun Kim (OOPS Development) <admin@oops.org>
+Build-Depends: debhelper (>= 7.0.50~), autotools-dev, libipcalc-dev, libsqlite3-dev, chrpath
+Standards-Version: 3.8.4
+Section: libs
+Homepage: http://oops.org/
+
+Package: libkrisp2
+Section: libs
+Architecture: i386 amd64
+Depends: ${shlibs:Depends}, ${misc:Depends}, libsqlite3-0 (>= 3.7.2), krisp-data
+Description: Korean ISP library
+ The libkrisp is library that get Korean IPS information
+ from IP address or domain name.
+
+Package: libkrisp-dev
+Section: libdevel
+Architecture: i386 amd64
+Depends: libkrisp2 (= ${binary:Version})
+Description: Header and object files for development using libkrisp
+ The libkrisp-dev package contains the header and object
+ files necessary for developing programs which use the
+ krisp libraries.
+
+Package: krisp
+Section: utils
+Architecture: i386 amd64
+Depends: ${shlibs:Depends}, libkrisp2 (= ${binary:Version})
+Description: Obtain the Country, ISP of any IP Address
+ This package support to get information of Country and ISP
+ about specify ip address.

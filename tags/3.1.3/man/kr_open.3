@@ -1,0 +1,178 @@
+.TH KR_OPEN 3 "11 Jan 2011"
+
+.SH NAME
+kr_open \- open libkrisp database
+
+.SH SYNOPSIS
+.BI "#include <krisp.h>"
+.br
+.BI "typedef struct " db_argument " {"
+.br
+.BI "    char            " err[1024] ";"
+.br
+.BI "    char            " database[256] ";"
+.br
+.BI "#ifdef HAVE_PTHREAD_H"
+.br
+.BI "    pthread_mutex_t " mutex ";"
+.br
+.BI "#endif"
+.br
+.BI "#if defined(HAVE_LIBSQLITE3)"
+.br
+.BI "    sqlite3 *       " c ";      // db resource"
+.br
+.BI "    sqlite3_stmt *  " vm ";     // sqlite vm"
+.br
+.BI "#else"
+.br
+.BI "    sqlite *        " c ";      // db resource"
+.br
+.BI "    sqlite_vm *     " vm ";     // sqlite vm"
+.br
+.BI "#endif"
+.br
+.BI "    const char **   " rowdata ";"
+.br
+.BI "    const char **   " colname ";"
+.br
+.BI "    char *          " table ";"
+.br
+.BI "    char *          " old_table ";"
+.br
+.BI "#if defined(HAVE_LIBSQLITE)"
+.br
+.BI "    char *          " dberr ";  // vm error message"
+.br
+.BI "#endif"
+.br
+.BI "    int             " rows ";   // vm rows"
+.br
+.BI "    int             " cols ";   // number of columns"
+.br
+.BI " "
+.br
+.BI "    time_t          " db_time_stamp "; // database mtime stamp"
+.br
+.BI "    time_t          " db_stamp_checked "; // record db mtime check time"
+.br
+.BI "    //db mtime stamp check interval. If value is 0, don't check
+.br
+.BI "    time_t          " db_time_stamp_interval ";"
+.br
+.BI " "
+.br
+.BI "    short           " verbose ";"
+.br
+.BI "#ifdef HAVE_PTHREAD_H"
+.br
+.BI "    short           " threadsafe ";"
+.br
+.BI "#endif"
+.br
+.BI "    short           " r ";      // execute result code"
+.br
+.BI "    short           " final ";  // force finalize"
+.br
+.BI "} " KR_API ";"
+.PP
+.BI "bool kr_open (KR_API **" db ", char *" path ", char *" err ")"
+.br
+.BI "bool kr_open_safe (KR_API **" db ", char *" path ", char *" err ")"
+.PP
+
+.SH DESCRIPTION
+.BI kr_open
+api used to open database handle.
+.BI kr_open
+api has three arguments. First argument is
+.BI KR_API
+structure which is used database connection, second is
+sqlite database file path. Third argument has error messages
+when
+.BI kr_open
+api is failed.
+.PP
+
+.BI KR_API
+structure is defined on krispcommon.h, and used as follows.
+.PP
+.BI "KR_API *" db ";"
+.br
+.BI "char *" err[1024] ";"
+.br
+.BI "if ( kr_open (&" db ", NULL, " err ") == false ) {"
+.br
+.BI "    .."
+.br
+.BI "}"
+.PP
+If you call
+.BI kr_open_safe
+api instead of
+.BI kr_open,
+thread lock is create on calling
+.BI kr_search
+api. For this issue, see also thread lock documents
+of libkrisp source code.
+.PP
+
+.SH "RETURN VALUE"
+On success, return true, otherwise return false.
+
+.SH EXAMPLE
+.nf
+#include <krisp.h>
+
+int main (void) {
+    KR_API * db;
+    KRNET_API isp;
+    char * addr = "kns.kornet.net";
+    char * database = NULL;
+    char err[1024];
+
+    if ( kr_open (&db, database, err) == false ) {
+        fprintf (stderr, "ERROR Connect: %s\\n", err);
+        return 1;
+    }
+
+    // If you want to change check interval of database file
+    // modification, uncomment next line. (default is 3600)
+    //db->db_time_stamp_interval = 86400;
+
+    isp.verbose = false;
+    safecpy_256 (isp.ip, addr);
+    if ( kr_search (&isp, db) ) {
+        printf ("ERROR: %s\\n", isp.err);
+        kr_close (&db);
+        return 1;
+    }
+
+    kr_close (&db);
+
+    /*
+     * kr_long2ip is returned in a statically allocated buffer, which
+     * subsequent calls will overwrite.
+     */
+    printf ("%-15s %-15s %-20s", ip, isp.ip, isp.icode);
+    printf ("%-15s ", kr_long2ip (isp.start));
+    printf ("%-15s %s", kr_long2ip (isp.end), isp.iname);
+
+    return 0;
+}
+.fi
+
+.SH AUTHORS
+JoungKyun.Kim <http://oops.org>
+
+.SH BUGS
+Report to QnA bulletin board of http://oops.org
+
+.SH COPYRIGHT
+Copyright (c) 2011 JoungKyun.Kim <http://oops.org>
+
+This api is follows
+.BI LGPL 2.1
+
+.SH "SEE ALSO"
+kr_close(3), kr_search(3), kr_long2ip(3)
