@@ -239,7 +239,7 @@ Class KRNIC_data {
 		curl_setopt ($c, CURLOPT_HEADER, 0);
 		curl_setopt ($c, CURLOPT_NOBODY, 0); 
 		curl_setopt ($c, CURLOPT_HTTPHEADER, $header);
-		curl_setopt ($c, CURL_FAILONERROR, 1);
+		curl_setopt ($c, CURLOPT_FAILONERROR, 1);
 
 		curl_setopt ($c, CURLOPT_SSL_VERIFYPEER, false);
 
