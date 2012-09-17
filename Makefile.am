@@ -57,10 +57,8 @@ EXTRA_DIST = Migration THREADSAFE autogen libkrisp.spec \
 			 debian/patches/01-remove-rpath.patch \
 			 debian/rules
 
-if ! COMPAT
-docdir = $(datadir)/doc/$(PACKAGE)-$(VERSION)
+docdir = $(datadir)/doc/$(PACKAGE)@COMPAT_VERSION@-$(VERSION)
 dist_doc_DATA = Changes README LICENSE
-endif
 
 m4dir = $(datadir)/aclocal
 dist_m4_DATA = m4/krisp@COMPAT_VERSION@.m4
