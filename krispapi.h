@@ -16,8 +16,7 @@
 #include <krisp.h>
 
 #if defined _WIN32 || defined __CYGWIN__
-	#include "win95nt.h"
-	#ifdef KRISP_EXPORTS
+	#ifdef DLL_EXPORT
 		#define KRISP_API __declspec(dllexport)
 	#else
 		#define KRISP_API __declspec(dllimport)

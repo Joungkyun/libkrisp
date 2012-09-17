@@ -3,6 +3,8 @@ Changelog
 $Id$
 
 * 3.1.4
+Tue, Sep 18 2012 JoungKyun.Kim <http://oops.org>
+	- fixed cygwin compile environments
 
 
 * 3.1.3
