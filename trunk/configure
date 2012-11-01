@@ -10713,7 +10713,7 @@ _ACEOF
 	ipcalc_check_failed=0
 
 	if test $ax_ipcalc_argc -gt 0; then
-		ax_ipcalc_first_arg=libtool
+		ax_ipcalc_first_arg=ld
 		ax_ipcalc_second_arg=1
 	fi
 
