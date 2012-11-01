@@ -62,7 +62,7 @@ PACKAGE_DATE=$($DATE +"%a %b %d %Y")
 AC_CHECK_LIB(dl, dlopen,,)
 
 AM_ICONV
-AX_IPCALC(libtool, 1)
+AX_IPCALC(ld, 1)
 AX_SQLITE
 
 AC_CHECK_LIB(pthread, pthread_create,,,)
