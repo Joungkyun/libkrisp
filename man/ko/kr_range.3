@@ -1,7 +1,7 @@
 .TH KR_RANGE 3 "25 Oct 2013"
 
-.SH NAME
-kr_range \- Get ranges of ip address about given Country or ISP.
+.SH 이름
+kr_range \- 지정한 국가나 ISP의 IP 대역을 구한다.
 
 .SH SYNOPSIS
 .BI "#include <krisp.h>"
@@ -24,31 +24,25 @@ kr_range \- Get ranges of ip address about given Country or ISP.
 .br
 .BI "int kr_range (KRNET_REQ_RANGE *" range ", KR_API *" db ");"
 
-.SH DESCRIPTION
+.SH 설명
 .BI kr_range
-api searches whole range of given Country or ISP. Basically
+api는 지정한 국가나 ISP의 IP 대역을 구한다. 기본적으로
 .BI kr_range
-API enable to search with original krisp database.
+API krisp에서 제공하는 database 형식에서만 동작한다.
 
 .PP
 After call the
 .BI kr_rangea
-api, you must free
+api를 호출한 후에는 반드시
+.BI KRNET_REQ_RANGE 구조체의
 .BI ranges
-member of
-.BI KRNET_REQ_RANGE.
+member 메모리를 해제해 주어야 한다.
 
+.SH 반환값
+성공시에 0을 반환하며, 실패시에 1을 반환한다. 검색 결과가 없는것은 성공으로
+간주를 한다.
 
-.SH "RETURN VALUE"
-.PP
-On success, return 
-.BI 0 
-and otherwise return 
-.BI 1. 
-No search result is regared as success. Only DB error 
-is regarded as failure.
-
-.SH EXAMPLE
+.SH 예제
 .nf
 #include <krisp.h>
 
@@ -130,17 +124,18 @@ int main (void) {
 }
 .fi
 
-.SH AUTHORS
-JoungKyun.Kim <http://oops.org>
+.SH 저자
+김정균
 
-.SH BUGS
-Report to QnA bulletin board of http://oops.org
+.SH 버그 리포트
+<http://oops.org> 의 QnA 게시판을 이용한다.
 
-.SH COPYRIGHT
+.SH 저작권
 Copyright (c) 2013 JoungKyun.Kim <http://oops.org>
 
-This api is follows
-.BI LGPL 2.1
+이 API는
+.BI LGPL
+2.1을 따르며, 사용시의 어떠한 문제에 대하여 보증하지 않는다.
 
 .SH "SEE ALSO"
-kr_open(3), kr_close(3), kr_search_ex(3), long2ip(3)
+kr_open(3), kr_close(3), kr_search(3), long2ip(3)
