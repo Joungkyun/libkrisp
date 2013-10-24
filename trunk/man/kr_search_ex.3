@@ -123,12 +123,12 @@ int main (void) {
         }
 
         /*
-         * kr_long2ip is returned in a statically allocated buffer, which
+         * long2ip is returned in a statically allocated buffer, which
          * subsequent calls will overwrite.
          */
         printf ("%-15s %-15s %-20s", ip, isp.ip, u_isp.dummy[0]);
-        printf ("%-15s ", kr_long2ip (u_isp.start));
-        printf ("%-15s %s", kr_long2ip (u_isp.end), u_isp.dummy[1]);
+        printf ("%-15s ", long2ip (u_isp.start));
+        printf ("%-15s %s", long2ip (u_isp.end), u_isp.dummy[1]);
 
         initStruct_ex (&u_isp, true);
     }
@@ -152,4 +152,4 @@ This api is follows
 .BI LGPL 2.1
 
 .SH "SEE ALSO"
-kr_open(3), kr_close(3), kr_search_ex(3), kr_long2ip(3)
+kr_open(3), kr_close(3), kr_search_ex(3), long2ip(3)
