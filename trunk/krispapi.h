@@ -32,12 +32,20 @@
 
 #include <ipcalc.h>
 
+#define KRISP_GET_COUNTRY 0
+#define KRISP_GET_ISP     1
+
 bool _kr_open (KR_API **db, char *file, char *err, bool safe);
 
 /*
  * Fill none isp data
  */
 void kr_noneData (KRNET_API *);
+
+/*
+ * get ip address range of Country or ISP
+ */
+int getRange (KR_API *, KRNET_REQ_RANGE *);
 
 /*
  * Get ISP information of each network from db

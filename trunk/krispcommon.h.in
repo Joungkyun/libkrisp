@@ -132,6 +132,20 @@ typedef struct netinfos {
 	short			verbose;
 } KRNET_API;
 
+typedef struct range {
+	ulong			start;
+	ulong			end;
+} KRNET_RANGE;
+
+typedef struct req_range {
+	char			err[1024];
+	char			data[1024];
+	short			code;
+	short			verbose;
+	int				count;
+	KRNET_RANGE		* ranges;
+} KRNET_REQ_RANGE;
+
 struct cinfo {
 	ulong	ip;
 	ulong	mask;
