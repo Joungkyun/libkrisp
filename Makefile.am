@@ -92,7 +92,7 @@ lib_LTLIBRARIES = libkrisp@COMPAT_VERSION@.la
 libkrisp@COMPAT_VERSION@_la_SOURCES = \
 	krdb.c krisp.c krispapi.c
 
-DISTCLEANFILES += *.bz2
+DISTCLEANFILES += *.bz2 aclocal.m4
 dist-hook:
 	$(PERL) -pi -e \
 			"s/\@PACKAGE_VERSION\@/$(VERSION)/g" \

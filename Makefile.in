@@ -283,7 +283,7 @@ target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-DISTCLEANFILES = $(am__append_1) *.bz2
+DISTCLEANFILES = $(am__append_1) *.bz2 aclocal.m4
 ACLOCAL_AMFLAGS = -I m4
 EXTRA_DIST = Migration THREADSAFE autogen libkrisp.spec \
 			 contrib/database/README \
