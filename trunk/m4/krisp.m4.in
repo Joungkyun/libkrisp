@@ -1,4 +1,4 @@
-dnl Copyright (C) 2011 JoungKyun.Kim <http://oops.org>
+dnl Copyright (C) 2013 JoungKyun.Kim <http://oops.org>
 dnl
 dnl This file is part of libkrisp
 dnl
