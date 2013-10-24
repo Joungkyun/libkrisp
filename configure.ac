@@ -33,9 +33,10 @@ SONAME_INFO="$SONAME_VALUE:$SONAME_REVISION:$SONAME_MINOR"
 AX_COMPAT_OPTION
 
 # Checks for programs.
-AC_PROG_CXX
 AC_PROG_CC
-AC_PROG_CPP
+# For C++
+#AC_PROG_CXX
+#AC_PROG_CPP
 AC_PROG_INSTALL
 AC_PROG_LN_S
 AC_PROG_AWK
@@ -73,6 +74,7 @@ fi
 if test "x$prefix" = "xNONE" ; then
 	prefix=$ac_default_prefix
 fi
+datadir=$(eval echo ${datadir})
 DBPATH="$(eval echo ${datadir}/krisp)$COMPAT_VERSION"
 AC_SUBST(DBPATH)
 AC_DEFINE_UNQUOTED([DBPATH],["$DBPATH"],[define krisp database locate.])
