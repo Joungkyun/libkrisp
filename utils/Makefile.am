@@ -1,5 +1,5 @@
 ## Process this file with automake to produce Makefile.in
-# Copyright (C) 2011 JoungKyun.Kim <http://oops.org>
+# Copyright (C) 2013 JoungKyun.Kim <http://oops.org>
 #
 # This file is part of libipcalc
 #
