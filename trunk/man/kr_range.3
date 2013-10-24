@@ -1,0 +1,160 @@
+.TH KR_RANGE 3 "25 Oct 2013"
+
+.SH NAME
+kr_range \- Get ranges of ip address about given Country or ISP.
+
+typedef struct range {
+	ulong			start;
+	ulong			end;
+} KRNET_RANGE;
+
+typedef struct req_range {
+	char			err[1024];
+	char			data[1024];
+	short			code;
+	short			verbose;
+	int				count;
+	KRNET_RANGE		* ranges;
+} KRNET_REQ_RANGE;
+
+.SH SYNOPSIS
+.BI "#include <krisp.h>"
+.br
+.BI "typedef struct " req_range " {"
+.br
+.BI "    char            " err[1024] ";  // get error messages"
+.br
+.BI "    char            " data[1024] "; // searching name of country or isp"
+.br
+.BI "    short           " code ";       // search type. KRISP_GET_COUNTRY or KRISP_GET_ISP"
+.br
+.BI "    short           " verbose ";    // verbose option"
+.br
+.BI "    int             " count ";      // rows of ranges"
+.br
+.BI "    KRNET_RANGE     " * ranges ";   // data of ranges"
+.br
+.BI "} " KRNET_REQ_RANGE ";"
+.br
+.BI "int kr_range (KRNET_REQ_RANGE *" range ", KR_API *" db ");"
+
+.SH DESCRIPTION
+.BI kr_range
+api searches whole range of given Country or ISP. Basically
+.BI kr_range
+API enable to search with original krisp database.
+
+.PP
+After call the
+.BI kr_rangea
+api, you must free
+.BI ranges
+member of
+.BI KRNET_REQ_RANGE.
+
+
+.SH "RETURN VALUE"
+.PP
+On success, return 
+.BI 0 
+and otherwise return 
+.BI 1. 
+No search result is regared as success. Only DB error 
+is regarded as failure.
+
+.SH EXAMPLE
+.nf
+#include <krisp.h>
+
+int main (void) {
+    KR_API * db;
+    KRNET_API isp;
+    char * addr = "kns.kornet.net";
+    char * database = NULL;
+    char err[1024];
+
+    if ( kr_open (&db, database, err) == false ) {
+        fprintf (stderr, "ERROR Connect: %s\\n", err);
+        return 1;
+    }
+
+    isp.verbose = false;
+    // defined safecpy_256 in krispapi.h
+    safecpy_256 (isp.ip, addr);
+    if ( kr_search (&isp, db) ) {
+        printf ("ERROR: %s\\n", isp.err);
+        kr_close (&db);
+        return 1;
+    }
+
+    /*
+     * long2ip is returned in a statically allocated buffer, which
+     * subsequent calls will overwrite.
+     */
+    printf ("%-15s %-15s %-20s", ip, isp.ip, isp.icode);
+    printf ("%-15s ", long2ip (isp.start));
+    printf ("%-15s %s", long2ip (isp.end), isp.iname);
+
+    //
+    // Get Ranges
+    //
+    {
+        KRNET_REQ_RANGE range;
+        int i;
+        ulong mask;
+        char start[16];
+        char end[16];
+
+        range.code = KRISP_GET_ISP;
+        range.verbose = 0;
+        range.ranges = NULL;
+        range.count = 0;
+
+        memest (range.data, 0, 1024);
+        SAFECPY_1024 (range.data, isp.iname);
+
+        if ( kr_range (&range, db) ) {
+            fprintf (stderr, "ERROR: %s\\n", range.err);
+            SAFEFREE (range.ranges);
+            kr_close (&db);
+            return 1;
+        }
+
+        printf (
+            "\\nRange Traget: %s (%d line%s)\\n\\n",
+            range.data,
+            range.count,
+            range.count ? "s" : ""
+        );
+
+        for ( i=0; i<range.count; i++ ) {
+            long2ip_r (range.ranges[i].start, start);
+            mask = guess_netmask (range.ranges[i].start, range.ranges[i].end);
+    
+            if ( network (range.ranges[i].start, mask) == range.ranges[i].start )
+                printf ("%s/%d\\n", start, long2prefix (mask));
+            else
+                printf ("%s %s\\n", start, long2ip_r (range.ranges[i].end, end));
+        }
+    }
+
+    kr_close (&db);
+
+    return 0;
+}
+.fi
+
+.SH AUTHORS
+JoungKyun.Kim <http://oops.org>
+
+.SH BUGS
+Report to QnA bulletin board of http://oops.org
+
+.SH COPYRIGHT
+Copyright (c) 2013 JoungKyun.Kim <http://oops.org>
+
+This api is follows
+.BI LGPL 2.1
+
+.SH "SEE ALSO"
+kr_open(3), kr_close(3), kr_search_ex(3), long2ip(3)
