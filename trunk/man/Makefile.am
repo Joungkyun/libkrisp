@@ -20,13 +20,13 @@
 
 if ! COMPAT
 EXTRA_DIST = ko/kr_open.3 ko/kr_close.3 ko/kr_search_ex.3 ko/kr_search.3 \
-			 ko/krisplookup.1 ko/krisp_version.3 ko/krispmkdb.1
-dist_man_MANS = kr_open.3 kr_close.3 kr_search_ex.3 kr_search.3 \
+			 ko/kr_range.3 ko/krisplookup.1 ko/krisp_version.3 ko/krispmkdb.1
+dist_man_MANS = kr_open.3 kr_close.3 kr_search_ex.3 kr_search.3 kr_range.3 \
 				krisplookup.1 krisp_version.3 krispmkdb.1
 
 ko_man1dir = $(mandir)/ko/man1
 ko_man1_DATA = ko/krisplookup.1 ko/krispmkdb.1
 ko_man3dir = $(mandir)/ko/man3
 ko_man3_DATA = ko/kr_open.3 ko/kr_close.3 ko/kr_search_ex.3 \
-			   ko/kr_search.3 ko/krisp_version.3
+			   ko/kr_search.3 ko/krisp_version.3 ko/kr_range.3
 endif
