@@ -3,6 +3,9 @@ Changelog
 $Id$
 
 * 3.1.4
+Fri, Oct 25 2013 JoungKyun.Kim <http://oops.org>
+	- fixed opening the wrong path of database
+
 Thu, Nov  1 2012 JoungKyun.Kim <http://oops.org>
 	- fixed libipcalc link
 
