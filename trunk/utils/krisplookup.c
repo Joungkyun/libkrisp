@@ -82,7 +82,7 @@ void usage (char *prog) { // {{{
 	fprintf (stderr, "         -h , --help                  print this message\n");
 	fprintf (stderr, "         -i , --isp                   only print isp code\n");
 	fprintf (stderr, "         -n , --nation                only print nation code\n");
-	fprintf (stderr, "         -r , --range=[country|isp]   Print all range of Country or ISP");
+	fprintf (stderr, "         -r , --range=[country|isp]   Print all range of Country or ISP\n");
 	fprintf (stderr, "                                      about current IP\n\n");
 
 	exit (1);
