@@ -30,6 +30,7 @@ static struct option long_options [] = { // {{{
 
 	/* Options accepting an argument: */
 	{ "datafile",   required_argument, NULL, 'f' },
+	{ "range",		required_argument, NULL, 'r' },
 	{ 0, 0, 0, 0 }
 }; // }}}
 #endif
@@ -80,7 +81,9 @@ void usage (char *prog) { // {{{
 	fprintf (stderr, "         -f path, --datafile=path     set user define database file\n");
 	fprintf (stderr, "         -h , --help                  print this message\n");
 	fprintf (stderr, "         -i , --isp                   only print isp code\n");
-	fprintf (stderr, "         -n , --nation                only print nation code\n\n");
+	fprintf (stderr, "         -n , --nation                only print nation code\n");
+	fprintf (stderr, "         -r , --range=[country|isp]   Print all range of Country or ISP");
+	fprintf (stderr, "                                      about current IP\n\n");
 
 	exit (1);
 } // }}}
@@ -93,13 +96,15 @@ int main (int argc, char ** argv) {
 	char *			datafile = NULL;
 	short			onlyisp = 0;
 	short			onlynation = 0;
+	short			printrange = 0;
+	short			printtype  = KRISP_GET_COUNTRY;
 	bool			verbose = false;
 	char			err[1024];
 
 #ifdef HAVE_GETOPT_LONG
-	while ( (opt = getopt_long (argc, argv, "f:hinv", long_options, (int *) 0)) != EOF ) {
+	while ( (opt = getopt_long (argc, argv, "f:hinr:v", long_options, (int *) 0)) != EOF ) {
 #else
-	while ( (opt = getopt (argc, argv, "f:hinv")) != EOF ) {
+	while ( (opt = getopt (argc, argv, "f:hinr:v")) != EOF ) {
 #endif
 		switch (opt) {
 			case 'f' :
@@ -118,6 +123,18 @@ int main (int argc, char ** argv) {
 					return 1;
 				}
 				onlynation++;
+				break;
+			case 'r' :
+				printrange++;
+
+				if ( ! strcasecmp ("country", optarg) )
+					printtype = KRISP_GET_COUNTRY;
+				else if ( ! strcasecmp ("isp", optarg) )
+					printtype = KRISP_GET_ISP;
+				else {
+					fprintf (stderr, "ERROR: Wrong value of -r option\n");
+					return 1;
+				}
 				break;
 			case 'v' :
 				set_true (verbose);
@@ -207,7 +224,7 @@ noconvert:
 #ifdef HAVE_ICONV_H
 		if ( cd != (iconv_t)(-1) )
 			iconv_close (cd);
-		free (ispname);
+		SAFEFREE (ispname);
 #endif
 
 		printf ("SUBNET    : %s\n", long2ip (isp.netmask));
@@ -222,6 +239,51 @@ noconvert:
 		printf ("DB RANGE  : %s - ", long2ip (isp.start));
 		printf ("%s\n", long2ip (isp.end));
 		printf ("NATION    : %s (%s)\n", isp.cname, isp.ccode);
+	}
+
+	if ( printrange ) {
+		KRNET_REQ_RANGE range;
+		int i;
+		ulong mask;
+		char start[16];
+		char end[16];
+
+		range.code = printtype;
+		range.verbose = verbose;
+		range.ranges = NULL;
+		range.count = 0;
+
+		SAFECPY_1024 (
+			range.data,
+			(printtype == KRISP_GET_COUNTRY) ? isp.ccode : isp.iname
+		);
+
+		if ( kr_range (&range, db) ) {
+			fprintf (stderr, "ERROR: %s\n", range.err);
+			SAFEFREE (range.ranges);
+			kr_close (&db);
+			return 1;
+		}
+
+		printf (
+			"\nRange Traget: %s (%d line%s)\n\n",
+			range.data,
+			range.count,
+			range.count ? "s" : ""
+		);
+
+		for ( i=0; i<range.count; i++ ) {
+			long2ip_r (range.ranges[i].start, start);
+			mask = guess_netmask (range.ranges[i].start, range.ranges[i].end);
+
+			if ( network (range.ranges[i].start, mask) == range.ranges[i].start )
+				printf ("%s/%d\n", start, long2prefix (mask));
+			else
+				printf ("%s %s\n", start, long2ip_r (range.ranges[i].end, end));
+		}
+
+		SAFEFREE (range.ranges);
+		printf ("\n");
 	}
 
 	/* database close */

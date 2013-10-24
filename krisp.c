@@ -273,6 +273,55 @@ KRISP_API int kr_search_ex (KRNET_API_EX *raw, KR_API *db) { // {{{
 } // }}}
 
 /*
+ * if return 1, db error
+ */
+KRISP_API int kr_range (KRNET_REQ_RANGE * range, KR_API * db) { // {{{
+	int				r;
+
+	if ( db == NULL ) {
+		SAFECPY_1024 (range->err, "kr_range:: KR_API *db is null");
+		return 1;
+	}
+
+	if ( range->verbose != 0 && range->verbose != 1 )
+		range->verbose = 0;
+	db->verbose = range->verbose;
+
+	krisp_mutex_lock (db);
+
+	// check database mtime
+	if ( range->verbose )
+		fprintf (stderr, "DEBUG: Check changed %s\n", db->database);
+
+	if ( check_database_mtime (db) == true ) {
+		kr_dbClose (db);
+
+		if ( range->verbose )
+			fprintf (stderr, "DEBUG: *** db reconnect\n");
+
+		if ( kr_dbConnect (db) == false ) {
+			SAFECPY_1024 (range->err, db->err);
+			return 1;
+		}
+	}
+
+	db->table = "krisp";
+
+	// Error process
+	if ( (r = getRange (db, range)) ) {
+		if ( r == -1 ) {
+			SAFECPY_1024 (range->err, db->err);
+			krisp_mutex_unlock (db);
+			return 1;
+		}
+	}
+
+	krisp_mutex_unlock (db);
+
+	return 0;
+} // }}}
+
+/*
  * Local variables:
  * tab-width: 4
  * c-basic-offset: 4

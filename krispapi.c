@@ -198,6 +198,7 @@ int getISPinfo (KR_API * db, RAW_KRNET_API * n) { // {{{
 			db->final = 1;
 		*/
 	}
+	kr_dbFinalize (db);
 
 	if ( r == -1 ) // SQL Error
 		return -1;
@@ -205,6 +206,78 @@ int getISPinfo (KR_API * db, RAW_KRNET_API * n) { // {{{
 		return 1;
 	else if ( n->dummydata == NULL ) // No result
 		return 1;
+
+	return 0;
+} // }}}
+
+int getRange (KR_API * db, KRNET_REQ_RANGE * n) { // {{{
+	char sql[128] = { 0, };
+	int r, i;
+	char * search;
+
+	r = strlen (n->data);
+	search = (char *) malloc (sizeof (char) * (r + 3));
+	r = 0;
+
+	if ( n->code == KRISP_GET_COUNTRY )
+		sprintf (search, "%s|%%", n->data);
+	else
+		sprintf (search, "%%|%s", n->data);
+
+	// get row numbers;
+	sprintf (
+		sql,
+		"SELECT count(*) FROM %s WHERE data LIKE '%s'",
+		db->table, search
+	);
+	if ( n->verbose )
+		fprintf (stderr, "DEBUG: %s\n", sql);
+
+	if ( kr_dbQuery (db, sql) )
+		return -1;
+
+	memset (sql, 0, 128);
+
+	if ( ! kr_dbFetch (db) )
+		n->count = strtolong ((char *) db->rowdata[0]);
+	kr_dbFree (db);
+	kr_dbFinalize (db);
+
+	// no result
+	if ( n->count == 0 )
+		return 1;
+
+	sprintf (
+		sql,
+		"SELECT start, end FROM %s WHERE data LIKE '%s'",
+		db->table, search
+	);
+	if ( n->verbose )
+		fprintf (stderr, "DEBUG: %s\n", sql);
+
+	SAFEFREE (search);
+
+	if ( kr_dbQuery (db, sql) )
+		return -1;
+
+	n->ranges = (KRNET_RANGE *) malloc (sizeof (KRNET_RANGE) * n->count);
+
+	i = 0;
+	while ( ! kr_dbFetch (db) ) {
+		for ( r=0; r<2; r++ ) {
+			switch (r) {
+				case 0 :
+					n->ranges[i].start = strtolong ((char *) db->rowdata[r]);
+					break;
+				case 1 :
+					n->ranges[i].end = strtolong ((char *) db->rowdata[r]);
+					break;
+			}
+		}
+		i++;
+		kr_dbFree (db);
+	}
+	kr_dbFinalize (db);
 
 	return 0;
 } // }}}
