@@ -1,0 +1,43 @@
+.TH KRISP_VERSION 3 "10 Jan 2011"
+
+.SH NAME
+krisp_version \- return version of libkrisp
+
+.SH SYNOPSIS
+.BI "#include <krisp.h>"
+.br
+.BI "char * krisp_version (" void ");"
+.br
+.BI "char * krisp_uversion (" void ");"
+
+.SH DESCRIPTION
+.BI krisp_version
+API retruns version of libkrisp
+.PP
+.BI krisp_uversion
+API returns decimical version. Each version is construct with
+three numbers. For example, 1.1.1 is to return with 001001001.
+
+.SH EXAMPLE
+.nf
+#include <krisp.h>
+
+int main (void) {
+    printf ("%s\\n", krisp_version ());
+    printf ("%s\\n", krisp_uversion ());
+
+    return 0;
+}
+.fi
+
+.SH AUTHORS
+JoungKyun.Kim <http://oops.org>
+
+.SH BUGS
+Report to QnA bulletin board of http://oops.org
+
+.SH COPYRIGHT
+Copyright (c) 2013 JoungKyun.Kim <http://oops.org>
+
+This api is follows
+.BI LGPL 2.1

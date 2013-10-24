@@ -1,0 +1,141 @@
+.TH KR_RANGE 3 "25 Oct 2013"
+
+.SH 이름
+kr_range \- 지정한 국가나 ISP의 IP 대역을 구한다.
+
+.SH SYNOPSIS
+.BI "#include <krisp.h>"
+.br
+.BI "typedef struct " req_range " {"
+.br
+.BI "    char            " err[1024] ";  // get error messages"
+.br
+.BI "    char            " data[1024] "; // searching name of country or isp"
+.br
+.BI "    short           " code ";       // search type. KRISP_GET_COUNTRY or KRISP_GET_ISP"
+.br
+.BI "    short           " verbose ";    // verbose option"
+.br
+.BI "    int             " count ";      // rows of ranges"
+.br
+.BI "    KRNET_RANGE     " * ranges ";   // data of ranges"
+.br
+.BI "} " KRNET_REQ_RANGE ";"
+.br
+.BI "int kr_range (KRNET_REQ_RANGE *" range ", KR_API *" db ");"
+
+.SH 설명
+.BI kr_range
+api는 지정한 국가나 ISP의 IP 대역을 구한다. 기본적으로
+.BI kr_range
+API krisp에서 제공하는 database 형식에서만 동작한다.
+
+.PP
+After call the
+.BI kr_rangea
+api를 호출한 후에는 반드시
+.BI KRNET_REQ_RANGE 구조체의
+.BI ranges
+member 메모리를 해제해 주어야 한다.
+
+.SH 반환값
+성공시에 0을 반환하며, 실패시에 1을 반환한다. 검색 결과가 없는것은 성공으로
+간주를 한다.
+
+.SH 예제
+.nf
+#include <krisp.h>
+
+int main (void) {
+    KR_API * db;
+    KRNET_API isp;
+    char * addr = "kns.kornet.net";
+    char * database = NULL;
+    char err[1024];
+
+    if ( kr_open (&db, database, err) == false ) {
+        fprintf (stderr, "ERROR Connect: %s\\n", err);
+        return 1;
+    }
+
+    isp.verbose = false;
+    // defined safecpy_256 in krispapi.h
+    safecpy_256 (isp.ip, addr);
+    if ( kr_search (&isp, db) ) {
+        printf ("ERROR: %s\\n", isp.err);
+        kr_close (&db);
+        return 1;
+    }
+
+    /*
+     * long2ip is returned in a statically allocated buffer, which
+     * subsequent calls will overwrite.
+     */
+    printf ("%-15s %-15s %-20s", ip, isp.ip, isp.icode);
+    printf ("%-15s ", long2ip (isp.start));
+    printf ("%-15s %s", long2ip (isp.end), isp.iname);
+
+    //
+    // Get Ranges
+    //
+    {
+        KRNET_REQ_RANGE range;
+        int i;
+        ulong mask;
+        char start[16];
+        char end[16];
+
+        range.code = KRISP_GET_ISP;
+        range.verbose = 0;
+        range.ranges = NULL;
+        range.count = 0;
+
+        memest (range.data, 0, 1024);
+        SAFECPY_1024 (range.data, isp.iname);
+
+        if ( kr_range (&range, db) ) {
+            fprintf (stderr, "ERROR: %s\\n", range.err);
+            SAFEFREE (range.ranges);
+            kr_close (&db);
+            return 1;
+        }
+
+        printf (
+            "\\nRange Traget: %s (%d line%s)\\n\\n",
+            range.data,
+            range.count,
+            range.count ? "s" : ""
+        );
+
+        for ( i=0; i<range.count; i++ ) {
+            long2ip_r (range.ranges[i].start, start);
+            mask = guess_netmask (range.ranges[i].start, range.ranges[i].end);
+    
+            if ( network (range.ranges[i].start, mask) == range.ranges[i].start )
+                printf ("%s/%d\\n", start, long2prefix (mask));
+            else
+                printf ("%s %s\\n", start, long2ip_r (range.ranges[i].end, end));
+        }
+    }
+
+    kr_close (&db);
+
+    return 0;
+}
+.fi
+
+.SH 저자
+김정균
+
+.SH 버그 리포트
+<http://oops.org> 의 QnA 게시판을 이용한다.
+
+.SH 저작권
+Copyright (c) 2013 JoungKyun.Kim <http://oops.org>
+
+이 API는
+.BI LGPL
+2.1을 따르며, 사용시의 어떠한 문제에 대하여 보증하지 않는다.
+
+.SH "SEE ALSO"
+kr_open(3), kr_close(3), kr_search(3), long2ip(3)

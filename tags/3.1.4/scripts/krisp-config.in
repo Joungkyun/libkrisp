@@ -1,0 +1,133 @@
+#!/bin/sh
+# $Id$
+
+prog="libkrisp@COMPAT_VERSION@"
+prefix="@prefix@"
+exec_prefix="@exec_prefix@"
+exec_prefix_set=no
+bindir="@static_bindir@"
+libdir="@libdir@"
+datadir="@datadir@"
+includedir="@includedir@/krisp@COMPAT_VERSION@"
+
+local_la_file="@top_srcdir@/src/.libs/${prog}.la"
+la_file="${libdir}/${prog}.la"
+
+CC="@CC@"
+CPP="@CPP@"
+SHELL="@SHELL@"
+CPPFLAGS="@CPPFLAGS@"
+CFLAGS="@CFLAGS@"
+LDFLAGS="@LDFLAGS@"
+LIBS="@LIBS@"
+
+usage()
+{
+	cat << EOF
+Usage: ${prog}-config [OPTION]
+
+Known values for OPTION are:
+  --prefix[=DIR]    change prefix to DIR
+  --includedir      print location where headers are installed
+  --libdir          print location where libraries are installed
+  --cc              print C compiler name
+  --cpp             print C preprocessor name and any required options
+  --cflags          print C compiler flags
+  --cppflags        print cpp flags
+  --includes        print include information
+  --ldflags         print linker flags
+  --libs            print additional libraries to link against
+  --link-ld         print link switch(es) for linking to APR
+  --link-libtool    print the libtool inputs for linking to APR
+  --version         print the APR's version as a dotted triple
+  --help            print this help
+
+When linking with libtool, an application should do something like:
+  LIBS="\`${prog}-config --link-libtool\`"
+or when linking directly:
+  LIBS="\`${prog}-config --link-ld\`"
+
+An application should use the results of --cflags, --cppflags, --includes,
+and --ldflags in their build process.
+EOF
+}
+
+if test $# -eq 0; then
+	usage
+	exit 1
+fi
+
+[ -f "$local_la_file" ] && la_file=$local_la_file
+. $la_file
+
+while test $# -gt 0; do
+	case "$1" in
+		-*=*) optarg=`echo "$1" | sed 's/[-_a-zA-Z0-9]*=//'` ;;
+		*) optarg= ;;
+	esac
+
+	case $1 in
+		--prefix=*)
+			prefix="$optarg"
+			if test "$exec_prefix_set" = no ; then
+				exec_prefix="$optarg"
+			fi
+			;;
+		--prefix)
+			echo "$prefix"
+			;;
+		--exec-prefix=*)
+			exec_prefix="$optarg"
+			exec_prefix_set=yes
+			;;
+		--exec-prefix)
+			echo "$exec_prefix"
+			;;
+		--includedir)
+			echo "${includedir}"
+			;;
+		--defs)
+			echo "${includedir}"
+			;;
+		--libdir)
+			echo "${libdir}"
+			;;
+		--cc)
+			echo $CC
+			;;
+		--cpp)
+			echo $CPP
+			;;
+		--cflags)
+			echo $CFLAGS
+			;;
+		--cppflags)
+			echo -I$includedir $CPPFLAGS
+			;;
+		--ldflags)
+			echo "-L$libdir"
+			;;
+		--libs)
+			echo "-lkrisp ${LIBS}"
+			;;
+		--includes)
+			echo "-I$includedir"
+			;;
+		--link-ld)
+			echo "-L$libdir -lkrisp ${LIBS}"
+			;;
+		--link-libtool)
+			echo $la_file
+			;;
+		--version)
+			echo "@VERSION@"
+			;;
+		*)
+			usage
+			exit 1
+			;;
+	esac
+	shift
+done
+
+exit 0
