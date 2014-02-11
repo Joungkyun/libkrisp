@@ -35,6 +35,8 @@ dnl
 dnl  $Id$
 dnl
 
+dnl Notice! call after AC_PROG_LIBTOOL
+
 AC_SUBST(GCC_MAJOR_VERSION)
 AC_SUBST(GCC_MINOR_VERSION)
 AC_SUBST(GCC_PATCH_VERSION)
@@ -123,8 +125,11 @@ AC_DEFUN([AX_GL_VISIBILITY],
   AX_DLL_EXPORT_CHECK
 ])
 
+AC_SUBST(CYGWIN_DYN_LIB)
+
 AC_DEFUN([AX_DLL_EXPORT_CHECK],
 [
+  AC_REQUIRE([AC_PROG_LIBTOOL])
   HAVE_DLL_EXPORT=0
   AC_MSG_CHECKING([for DLL_EXPORT declarations])
 
@@ -133,7 +138,7 @@ AC_DEFUN([AX_DLL_EXPORT_CHECK],
       HAVE_DLL_EXPORT=1
       case $host_os in
         cygwin*)
-          LIBS="$LIBS -no-undefined"
+          CYGWIN_DYN_LIB="-no-undefined"
           ;;
       esac
       AC_MSG_RESULT([yes])

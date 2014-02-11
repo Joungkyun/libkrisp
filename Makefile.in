@@ -185,6 +185,7 @@ COMPAT_VERSION = @COMPAT_VERSION@
 CPP = @CPP@
 CPPFLAGS = @CPPFLAGS@
 CYGPATH_W = @CYGPATH_W@
+CYGWIN_DYN_LIB = @CYGWIN_DYN_LIB@
 DATE = @DATE@
 DBPATH = @DBPATH@
 DEFS = @DEFS@
@@ -326,7 +327,7 @@ dist_m4_DATA = m4/krisp@COMPAT_VERSION@.m4
 @COMPAT_TRUE@BUILT_SOURCE = m4/krisp@COMPAT_VERSION@.m4
 SUBDIRS = . man scripts test utils
 AM_CFLAGS = -Wall
-AM_LDFLAGS = -version-info $(SONAME_INFO)
+AM_LDFLAGS = -version-info $(SONAME_INFO) @CYGWIN_DYN_LIB@
 include_HEADERS = krisp.h krispcommon.h krversion.h
 noinst_HEADERS = krdb.h krispapi.h
 BUILT_SOURCES = krispcommon.h
@@ -656,7 +657,7 @@ GTAGS:
 
 distclean-tags:
 	-rm -f TAGS ID GTAGS GRTAGS GSYMS GPATH tags
-@COMPAT_TRUE@dist-hook:
+@COMPAT_FALSE@dist-hook:
 
 distdir: $(DISTFILES)
 	$(am__remove_distdir)
@@ -981,8 +982,8 @@ uninstall-am: uninstall-dist_docDATA uninstall-dist_m4DATA \
 distclean-local:
 	rm -rf autom4te.cache test-install
 
-@COMPAT_FALSE@dist-hook:
-@COMPAT_FALSE@	mv $(distdir)/$(PACKAGE).spec $(distdir)/$(PACKAGE)@COMPAT@.spec
+@COMPAT_TRUE@dist-hook:
+@COMPAT_TRUE@	mv $(distdir)/$(PACKAGE).spec $(distdir)/$(PACKAGE)@COMPAT_VERSION@.spec
 
 #dist-hook:
 #	$(PERL) -pi -e \
