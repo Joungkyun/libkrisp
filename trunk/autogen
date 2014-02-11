@@ -17,6 +17,6 @@ if [ -n "$opt" ]; then
 	rm -rf po ABOUT-NLS
 fi
 
-rm -rf autom4te.cache *~
+rm -rf autom4te.cache *~ aclocal.m4
 
 exit 0

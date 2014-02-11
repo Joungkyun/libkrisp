@@ -80,7 +80,7 @@ SONAME_INFO     = @SONAME_INFO@
 SONAME_VERSION  = @SONAME_VERSION@
 
 AM_CFLAGS = -Wall
-AM_LDFLAGS = -version-info $(SONAME_INFO)
+AM_LDFLAGS = -version-info $(SONAME_INFO) @CYGWIN_DYN_LIB@
 
 include_HEADERS = krisp.h krispcommon.h krversion.h
 noinst_HEADERS = krdb.h krispapi.h
@@ -96,9 +96,9 @@ DISTCLEANFILES += *.bz2 aclocal.m4 *~ aclocal.m4
 distclean-local:
 	rm -rf autom4te.cache test-install
 
-if ! COMPAT
+if COMPAT
 dist-hook:
-	mv $(distdir)/$(PACKAGE).spec $(distdir)/$(PACKAGE)@COMPAT@.spec
+	mv $(distdir)/$(PACKAGE).spec $(distdir)/$(PACKAGE)@COMPAT_VERSION@.spec
 endif
 
 #dist-hook:
