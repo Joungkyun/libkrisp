@@ -97,13 +97,18 @@ DISTCLEANFILES += *.bz2 aclocal.m4 *~ aclocal.m4
 distclean-local:
 	rm -rf autom4te.cache test-install
 
+if ! COMPAT
 dist-hook:
-	$(PERL) -pi -e \
-			"s/\@PACKAGE_VERSION\@/$(VERSION)/g" \
-			$(distdir)/$(PACKAGE).spec
-	$(PERL) -pi -e \
-			"s/\@PACKAGE_DATE\@/$(PACKAGE_DATE)/g" \
-			$(distdir)/$(PACKAGE).spec
+	mv $(distdir)/$(PACKAGE).spec $(distdir)/$(PACKAGE)@COMPAT@.spec
+endif
+
+#dist-hook:
+#	$(PERL) -pi -e \
+#			"s/\@PACKAGE_VERSION\@/$(VERSION)/g" \
+#			$(distdir)/$(PACKAGE).spec
+#	$(PERL) -pi -e \
+#			"s/\@PACKAGE_DATE\@/$(PACKAGE_DATE)/g" \
+#			$(distdir)/$(PACKAGE).spec
 
 test-install:
 	$(MAKE) DESTDIR=`pwd`/test-install install

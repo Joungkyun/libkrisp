@@ -36,6 +36,7 @@ dnl  $Id$
 dnl 
 
 AC_SUBST(COMPAT_VERSION)
+AC_SUBST(RPM_COMPAT_DEFINE)
 
 AC_DEFUN([AX_COMPAT_OPTION],
 [
@@ -60,6 +61,7 @@ AC_DEFUN([AX_COMPAT_OPTION],
 
 		AC_MSG_RESULT([$with_compat])
 		COMPAT_VERSION=$with_compat
+		RPM_COMPAT_DEFINE="%define compat $COMPAT_VERSION"
 	fi
 	AM_CONDITIONAL(COMPAT, test "x$with_compat" != "x" && test "$with_compat" != "no")
 ])
