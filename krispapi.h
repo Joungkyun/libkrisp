@@ -16,7 +16,7 @@
 #include <krisp.h>
 
 #if defined _WIN32 || defined __CYGWIN__
-	#ifdef DLL_EXPORT
+	#ifdef HAVE_DLL_EXPORT
 		#define KRISP_API __declspec(dllexport)
 	#else
 		#define KRISP_API __declspec(dllimport)

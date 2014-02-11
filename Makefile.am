@@ -92,7 +92,11 @@ lib_LTLIBRARIES = libkrisp@COMPAT_VERSION@.la
 libkrisp@COMPAT_VERSION@_la_SOURCES = \
 	krdb.c krisp.c krispapi.c
 
-DISTCLEANFILES += *.bz2 aclocal.m4
+DISTCLEANFILES += *.bz2 aclocal.m4 *~ aclocal.m4
+
+distclean-local:
+	rm -rf autom4te.cache test-install
+
 dist-hook:
 	$(PERL) -pi -e \
 			"s/\@PACKAGE_VERSION\@/$(VERSION)/g" \
@@ -102,4 +106,4 @@ dist-hook:
 			$(distdir)/$(PACKAGE).spec
 
 test-install:
-	$(MAKE) DESTDIR=`pwd`/z install
+	$(MAKE) DESTDIR=`pwd`/test-install install
