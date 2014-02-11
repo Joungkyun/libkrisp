@@ -66,6 +66,8 @@ AM_ICONV
 AX_IPCALC(ld, 1)
 AX_SQLITE
 
+AX_DLL_EXPORT_CHECK
+
 AC_CHECK_LIB(pthread, pthread_create,,,)
 if test "x$ac_cv_lib_pthread_pthread_create" != "x"; then
 	CPPFLAGS="$CPPFLAGS -D_REENTRANT"
