@@ -24,7 +24,8 @@ KRISP_API void kr_close (KR_API **db) { // {{{
 
 	krisp_mutex_destroy (*db);
 
-	kr_dbClose (*db);
+	if ( (*db)->c != NULL )
+		kr_dbClose (*db);
 	free (*db);
 	*db = NULL;
 } // }}}
@@ -40,14 +41,67 @@ bool _kr_open (KR_API **db, char *file, char *err, bool safe) { // {{{
 		return false;
 	}
 
+	memset ((*db)->err, 0, 1024);
+	memset ((*db)->database, 0, 256);
+
+#ifdef HAVE_PTHREAD_H
+	(*db)->mutex = NULL;
+#endif
+
+	(*db)->c = NULL;
+	(*db)->vm = NULL;
+
+	(*db)->rowdata = NULL;
+	(*db)->colname = NULL;
+	(*db)->table = NULL;
+	(*db)->old_table = NULL;
+
+#ifdef HAVE_LIBSQLITE
+	(*db)->dberr = NULL;
+#endif
+
+	(*db)->rows = 0;
+	(*db)->cols = 0;
+
+#ifdef HAVE_LIBPTHREAD
+	(*db)->threadsafe = safe;
+	if ( (*db)->threadsafe == true )
+		pthread_mutex_init (&((*db)->mutex), NULL);
+#endif
+
 	SAFECPY_256 ((*db)->database, (file == NULL ) ? DEFAULT_DATABASE : file);
 
 	f.st_size = 0;
 	if ( stat ((*db)->database, &f) == -1 ) {
+#ifdef _WIN32
+		char * WinDIR = getenv ("windir");
+		char originalData[256] = { 0, };
+		int WinCnt;
+
+		if ( WinDIR == NULL )
+			WinDIR = "C:\\Windows";
+
+		char * WinDefData[2] = { "", "\\System32" };
+		SAFECPY_256(originalData, (*db)->database);
+		for ( WinCnt=0; WinCnt<2; WinCnt++ ) {
+			memset ((*db)->database, 0, 256);
+			sprintf ((*db)->database, "%s%s\\krisp.dat", WinDIR, WinDefData[WinCnt]);
+
+			if ( stat ((*db)->database, &f) != -1 )
+				goto endWinDataCheck;
+		}
+
+		SAFECPY_256((*db)->database, originalData);
+#endif
 		sprintf (err, "kr_open:: Can't find database (%s)", (*db)->database);
+		(*db)->c = NULL;
 		kr_close (db);
 		return false;
 	}
+
+#ifdef _WIN32
+endWinDataCheck:
+#endif
 
 	if ( f.st_size < 1 ) {
 		sprintf (err, "kr_open:: %s size is zero", (*db)->database);
@@ -58,12 +112,6 @@ bool _kr_open (KR_API **db, char *file, char *err, bool safe) { // {{{
 	(*db)->db_time_stamp_interval = 0;
 	(*db)->db_time_stamp = f.st_mtime;
 	(*db)->db_stamp_checked = time (NULL);
-
-#ifdef HAVE_LIBPTHREAD
-	(*db)->threadsafe = safe;
-	if ( (*db)->threadsafe == true )
-		pthread_mutex_init (&((*db)->mutex), NULL);
-#endif
 	(*db)->verbose = false;
 
 	if ( kr_dbConnect (*db) == false ) {
@@ -128,7 +176,7 @@ KRISP_API int kr_search (KRNET_API *isp, KR_API *db) { // {{{
 	if ( valid_ip_address (isp->ip, err) ) {
 		SAFECPY_1024 (isp->err, err);
 		krisp_mutex_unlock (db);
-		return 0;
+		return 1;
 	}
 
 	strcpy (raw.ip, isp->ip);

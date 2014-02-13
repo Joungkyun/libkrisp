@@ -20,6 +20,14 @@
 #define FORCE_EUCKR 2
 #endif
 
+#ifdef _WIN32
+	#include <ws2tcpip.h>
+	#define WSA_Cleanup WSACleanup()
+#else
+	#define WSA_Cleanup
+#endif
+
+
 #ifdef HAVE_GETOPT_LONG
 static struct option long_options [] = { // {{{
 	/* Options without arguments: */
@@ -50,7 +58,7 @@ char * confirm_local_charset (void) { // {{{
 		f.st_size = 0;
 		if ( stat (LOCALEALIAS, &f) == -1 )
 			return NULL;
-		
+
 		if ( (fp = fopen (LOCALEALIAS, "r")) == NULL )
 			return NULL;
 
@@ -149,9 +157,21 @@ int main (int argc, char ** argv) {
 		return 1;
 	}
 
+	{
+		WORD wVerReq = MAKEWORD (2, 2); // Call WinSock 2.2
+		WSADATA wsaData;
+		int nErrStatus;
+
+		if ( (nErrStatus = WSAStartup (wVerReq, &wsaData)) != 0 ) {
+			fprintf (stderr, "Error: Failed initialize WSAStartup\n");
+			return 1;
+		}
+	}
+
 	/* database open */
 	if ( kr_open (&db, datafile, err) == false ) {
 		fprintf (stderr, "ERROR Connect: %s\n", err);
+		WSA_Cleanup;
 		return 1;
 	}
 
@@ -165,11 +185,15 @@ int main (int argc, char ** argv) {
 	if ( kr_search (&isp, db) ) {
 		fprintf (stderr, "ERROR: %s\n", isp.err);
 		kr_close (&db);
+		WSA_Cleanup;
 		return 1;
 	}
 
 	if ( verbose )
 		fprintf (stderr, "\n");
+
+	if ( strlen (isp.err) )
+		printf ("Error: %s\n", isp.err);
 
 	if ( onlyisp ) {
 		printf ("%s\n", isp.icode);
@@ -183,7 +207,11 @@ int main (int argc, char ** argv) {
 		size_t	flen, tlen;
 		char *	srcname = (char *) isp.iname;
 
+#if defined _WIN32
+		lcharset = "CP949";
+#else
 		lcharset = confirm_local_charset ();
+#endif
 		flen = strlen (srcname);
 
 		if ( lcharset == NULL || ! strcmp (DB_CHARSET, lcharset) ) {
@@ -262,6 +290,7 @@ noconvert:
 			fprintf (stderr, "ERROR: %s\n", range.err);
 			SAFEFREE (range.ranges);
 			kr_close (&db);
+			WSA_Cleanup;
 			return 1;
 		}
 
@@ -288,6 +317,7 @@ noconvert:
 
 	/* database close */
 	kr_close (&db);
+	WSA_Cleanup;
 
 	return 0;
 }

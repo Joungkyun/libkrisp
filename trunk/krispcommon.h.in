@@ -26,6 +26,10 @@
 #include <unistd.h>
 #include <time.h>
 
+#if defined _WIN32 && ! defined HAVE_CONFIG_H
+	typedef unsigned long ulong;
+#endif
+
 #ifdef HAVE_PTHREAD_H
 	#include <pthread.h>
 #endif
