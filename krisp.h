@@ -6,7 +6,11 @@
 #define KR_ISP_H
 
 #include <krversion.h>
+#if defined _WIN32  && ! defined HAVE_CONFIG_H
+#include <krispcommon.h.in>
+#else
 #include <krispcommon.h>
+#endif
 
 /*
  * KRISP user level function prototype
