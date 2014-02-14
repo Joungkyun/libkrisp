@@ -44,10 +44,6 @@ bool _kr_open (KR_API **db, char *file, char *err, bool safe) { // {{{
 	memset ((*db)->err, 0, 1024);
 	memset ((*db)->database, 0, 256);
 
-#ifdef HAVE_PTHREAD_H
-	(*db)->mutex = NULL;
-#endif
-
 	(*db)->c = NULL;
 	(*db)->vm = NULL;
 

@@ -157,6 +157,7 @@ int main (int argc, char ** argv) {
 		return 1;
 	}
 
+#ifdef _WIN32
 	{
 		WORD wVerReq = MAKEWORD (2, 2); // Call WinSock 2.2
 		WSADATA wsaData;
@@ -167,6 +168,7 @@ int main (int argc, char ** argv) {
 			return 1;
 		}
 	}
+#endif
 
 	/* database open */
 	if ( kr_open (&db, datafile, err) == false ) {
