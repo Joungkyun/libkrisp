@@ -23,7 +23,7 @@ AM_CPPFLAGS = -I$(top_srcdir)
 
 bin_PROGRAMS = krisplookup@COMPAT_VERSION@
 krisplookup@COMPAT_VERSION@_SOURCES = krisplookup.c
-krisplookup@COMPAT_VERSION@_LDADD = ../libkrisp@COMPAT_VERSION@.la
+krisplookup@COMPAT_VERSION@_LDADD = ../libkrisp@COMPAT_VERSION@.la $(LIBICONV)
 
 bin_PROGRAMS += krispmkdb@COMPAT_VERSION@
 krispmkdb@COMPAT_VERSION@_SOURCES = krispmkdb.c

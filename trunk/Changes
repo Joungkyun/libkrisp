@@ -3,6 +3,9 @@ Changelog
 $Id$
 
 * 3.1.5
+Sat, Feb 15 2013 JoungKyun.Kim <http://oops.org>
+	- fixed libiconv link on cygwin
+
 Fri, Feb 14 2013 JoungKyun.Kim <http://oops.org>
 	- support windows native binary
       use MinGW32 with Code::Blocks workspace
