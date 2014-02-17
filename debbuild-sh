@@ -10,7 +10,7 @@ usage() {
 
 do_patch() {
 	echo "* Apply debian patches"
-	plist=debian/patches/*.patch
+	plist=$(ls debian/patches/*.patch 2> /dev/null)
 	for i in $plist
 	do
 		patch -p1 < $i || true
@@ -19,7 +19,7 @@ do_patch() {
 
 do_unpatch() {
 	echo "* Apply debian unpatches"
-	plist="debian/patches/*.patch"
+	plist=$(ls debian/patches/*.patch 2> /dev/null)
 	for i in $plist
 	do
 		patch -suRf -p1 < $i || true
