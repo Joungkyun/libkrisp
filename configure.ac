@@ -66,12 +66,6 @@ AM_ICONV
 AX_IPCALC(ld, 1)
 AX_SQLITE
 
-if test "$enable_rpath" = "no"
-then
-	hardcode_libdir_flag_spec=""
-	runpath_var=DIE_RPATH_DIE
-fi
-
 AC_CHECK_LIB(pthread, pthread_create,,,)
 if test "x$ac_cv_lib_pthread_pthread_create" != "x"; then
 	CPPFLAGS="$CPPFLAGS -D_REENTRANT"
