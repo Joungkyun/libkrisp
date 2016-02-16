@@ -5,8 +5,8 @@
 #ifndef KR_VERSION_H
 #define KR_VERSION_H
 
-#define KRISP_VERSION "3.1.5-dev"
-#define KRISP_UVERSION "003001005-dev"
+#define KRISP_VERSION "3.1.5"
+#define KRISP_UVERSION "003001005"
 
 #endif
 
