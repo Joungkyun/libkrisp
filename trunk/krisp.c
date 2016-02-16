@@ -59,6 +59,7 @@ bool _kr_open (KR_API **db, char *file, char *err, bool safe) { // {{{
 	(*db)->rows = 0;
 	(*db)->cols = 0;
 
+	(*db)->verbose = false;
 #ifdef HAVE_LIBPTHREAD
 	(*db)->threadsafe = safe;
 	if ( (*db)->threadsafe == true )
@@ -108,7 +109,6 @@ endWinDataCheck:
 	(*db)->db_time_stamp_interval = 0;
 	(*db)->db_time_stamp = f.st_mtime;
 	(*db)->db_stamp_checked = time (NULL);
-	(*db)->verbose = false;
 
 	if ( kr_dbConnect (*db) == false ) {
 		SAFECPY_1024 (err, (*db)->err);
