@@ -1,0 +1,86 @@
+#!/bin/bash
+
+CMD='dpkg-buildpackage -rfakeroot -b'
+PROG="libkrisp"
+
+usage() {
+	echo "Usage: $0"
+	exit 1
+}
+
+do_patch() {
+	echo "* Apply debian patches"
+	plist=$(ls debian/patches/*.patch 2> /dev/null)
+	for i in $plist
+	do
+		patch -p1 < $i || true
+	done;
+}
+
+do_unpatch() {
+	echo "* Apply debian unpatches"
+	plist=$(ls debian/patches/*.patch 2> /dev/null)
+	for i in $plist
+	do
+		patch -suRf -p1 < $i || true
+	done
+}
+
+graceful_stop() {
+	echo "**** graceful stop ****"
+	pwd | grep 'debian$'
+	[ $? -eq 0 ] && cd ..
+
+	[ -f "debian/changelog.debbuild" ] && \
+		echo "  * Rollback debian/changelog" && \
+		mv -f debian/changelog.debbuild debian/changelog
+
+	[ -f "Makefile" ] && \
+		echo "  * Source cleaning" && \
+		debian/rules clean
+	[ -n "$PROG" -a -d "debian/$PROG" ] && rm -rf debian/$PROG
+
+	exit 1
+}
+
+trap 'graceful_stop' INT
+
+echo "* $PROG debian package build script"
+echo
+
+[ "$1" = "-h" -o "$1" = "--help" ] && usage
+
+if [ -f "/etc/lsb-release" ]; then
+	source /etc/lsb-release
+	distname="${DISTRIB_CODENAME}"
+else
+	distname="stable"
+fi
+
+if [ $# -eq 0 ]; then
+	echo -n "  Distribution Name [default: ${distname}]: "
+	read _distname
+	[ -n "$_distname" ] && distname="${_distname}"
+else
+	distname=$1
+fi
+
+cd debian
+cp -af changelog changelog.debbuild
+perl -pi -e "s/\) (un)*stable; /\) ${distname}; /g" changelog
+cd -
+
+do_patch
+
+$CMD
+[ $? -ne 0 ] && graceful_stop
+
+do_unpatch
+
+cd debian
+mv -f changelog.debbuild changelog
+cd -
+debian/rules clean
+#make distclean
+
+exit 0

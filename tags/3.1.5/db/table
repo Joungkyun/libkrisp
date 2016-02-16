@@ -1,0 +1,11 @@
+CREATE TABLE krisp
+(
+    start unsigned integer NOT NULL DEFAULT '0',
+    end unsigned integer NOT NULL DEFAULT '0',
+    data varchar,
+    PRIMARY KEY (start DESC),
+    UNIQUE (end)
+);
+
+.sep "\t"
+.imp krisp.csv krisp

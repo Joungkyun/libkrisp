@@ -1,0 +1,113 @@
+.TH KR_SEARCH 3 "22 May 2010"
+
+.SH 이름
+kr_search - libkrisp database 에서 IP 에 대한 정보를 검색하여 반환한다.
+
+.SH 사용법
+.BI "#include <krisp.h>"
+.br
+.BI "typedef struct " netinfos " {"
+.br
+.BI "    char            " err[1024] "; // get error messages"
+.br
+.BI "    char            " ip[256] ";   // given address"
+.br
+.BI "    char            " icode[64] "; // ISP code"
+.br
+.BI "    char            " iname[64] "; // ISP full name"
+.br
+.BI "    char            " ccode[4] ";  // NATION code"
+.br
+.BI "    char            " cname[64] "; // NATION full name"
+.br
+.BI "    ulong           " netmask ";   // network mask of range"
+.br
+.BI "    ulong           " start ";     // start of range"
+.br
+.BI "    ulong           " end ";       // end of range"
+.br
+.BI "    bool            " verbose ";   // verbose option"
+.br
+.BI "} " KRNET_API ";"
+.br
+.BI "int kr_search (KRNET_API *" isp ", KR_API *" db ");"
+
+.SH 설명
+.BI kr_search
+API는 주어진 ip 또는 호스트 이름에 대한 정보를 검색한다.
+.BI kr_search
+API는 기본적으로, data file의 krisp table을 검색한다.
+.PP
+krisp tabel외에 다른 table을 생성하여 관리하기 위하여 libkrisp는
+.BI kr_search_ex
+API를 제공한다. `man 3 kr_search_ex`를 참고하라.
+
+.PP
+.BI kr_search
+API를 호출하기 전에
+.BI KRNET_API
+struct의 ip member를 꼭 초기화 해 주어야 한다.
+.PP
+.BI "strcpy (" isp.ip ", " ipaddress ");"
+.br
+.BI "kr_search (&" isp ", " db ");"
+
+
+.SH 반환값
+성공시에 0을 반환하며, 실패시에 1을 반환한다. 검색 결과가 없는것은 성공으로
+간주를 한다.
+
+.SH 예제
+.nf
+#include <krisp.h>
+
+int main (void) {
+    KR_API * db;
+    KRNET_API isp;
+    char * addr = "kns.kornet.net";
+    char * database = NULL;
+    char err[1024];
+
+    if ( kr_open (&db, database, err) == false ) {
+        fprintf (stderr, "ERROR Connect: %s\\n", err);
+        return 1;
+    }
+
+    isp.verbose = false;
+    // defined safecpy_256 in krispapi.h
+    safecpy_256 (isp.ip, addr);
+    if ( kr_search (&isp, db) ) {
+        printf ("ERROR: %s\\n", isp.err);
+        kr_close (&db);
+        return 1;
+    }
+
+    kr_close (&db);
+
+    /*
+     * long2ip is returned in a statically allocated buffer, which
+     * subsequent calls will overwrite.
+     */
+    printf ("%-15s %-15s %-20s", ip, isp.ip, isp.icode);
+    printf ("%-15s ", long2ip (isp.start));
+    printf ("%-15s %s", long2ip (isp.end), isp.iname);
+
+    return 0;
+}
+.fi
+
+.SH 저자
+김정균
+
+.SH 버그 리포트
+<http://oops.org> 의 QnA 게시판을 이용한다.
+
+.SH 저작권
+Copyright (c) 2013 JoungKyun.Kim <http://oops.org>
+
+이 API는
+.BI LGPL
+을 따르며, 사용시의 어떠한 문제에 대하여 보증하지 않는다.
+
+.SH "참고"
+kr_open(3), kr_close(3), kr_search_ex(3), long2ip(3)

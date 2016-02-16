@@ -1,0 +1,155 @@
+.TH KR_SEARCH_EX 3 "11 Jan 2011"
+
+.SH NAME
+kr_search_ex \- search user defined table name of krisp database.
+
+.SH SYNOPSIS
+.BI "#include <krisp.h>"
+.sp
+.BI "typedef struct raw_netinfos {"
+.br
+.BI "    char    "  err[1024] "; // get error meassages"
+.br
+.BI "    char    "  ip[16] ";    // given address"
+.br
+.BI "    char ** "  dummy ";     // array of 3th field with pipe seperator of table"
+.br
+.BI "    char *  "  dummydata "; // 3th field strings with pipe seperator of table"
+.br
+.BI "    ulong   "  start ";     // start of range"
+.br
+.BI "    ulong   "  end ";       // end of range"
+.br
+.BI "    bool    "  verbose ";   // verbose option. need initialize"
+.br
+.BI "    short   "  size ";      // size of dummy member
+.br
+.BI "} KRNET_API_EX;"
+.sp
+.BI "int kr_search_ex (KRNET_API_EX *" u_isp ", KR_API *" db ");"
+
+.SH DESCRIPTION
+.BI kr_search
+api searches onlly `krisp' table, but
+.BI kr_searhc_ex
+api is supported to search user defined table name. In other words,
+you can add other table on krisp database.
+.PP
+table scheme of user defined table is follow:
+.PP
+.BI "CREATE TABLE ‘user_table_name‘"
+.br
+.BI "("
+.br
+.BI "    " start " integer NOT NULL DEFAULT ‘0‘,"
+.br
+.BI "    " end " integer NOT NULL DEFAULT ‘0‘,"
+.br
+.BI "    " data " varchar,"
+.br
+.BI "    PRIMARY KEY (" start " DESC),"
+.br
+.BI "    UNIQUE (" end ")"
+.br
+.BI ");"
+
+.PP
+All of libkrisp table scheme must have upper scheme.
+
+.PP
+Before call the
+.BI kr_search_ex
+api, ip member of
+.BI KR_API
+struct is must initialized just like
+.BI kr_search
+api.
+
+.PP
+.BI kr_search_ex
+api internally allocate memory to dummy and dummydata member of
+.BI KRNET_API_EX
+struct, so after use
+.BI KRNET_API_EX
+struct, you must call
+.BI initStruct_ex
+api. On use loop, you must call per loop.
+
+.PP
+.BI "strcpy (" u_isp.ip ", " ipaddress ");"
+.br
+.BI ""db->table " = " user_define_table ";"
+.sp
+.BI "kr_search_ex (&" u_isp ", " db ");"
+.br
+.BI "initStruct_ex (&" u_isp ", " true ");"
+
+.SH "RETURN VALUE"
+.PP
+On success, return
+.BI 0
+and otherwise return
+.BI 1.
+No search result is regared as success. Only DB error
+is regarded as failure.
+
+.SH EXAMPLE
+.nf
+#include <krisp.h>
+
+int main (void) {
+    KR_API * db;
+    KRNET_API_EX u_isp;
+    char * addr[] = {"kns.kornet.net", "ns.dacom.co.kr"};
+    char * database = NULL;
+    char err[1024];
+
+    if ( kr_open (&db, database, err) == false ) {
+        fprintf (stderr, "ERROR Connect: %s\\n", err);
+        return 1;
+    }
+
+    u_isp.verbose = false;
+    db->table = "geocipy";
+
+    for ( r=0; r<2; r++ ) {
+        // defined safecpy_256 in krispapi.h
+        safecpy_256 (isp.ip, addr);
+        if ( kr_search_ex (&u_isp, db) ) {
+            printf ("ERROR: %s\\n", u_isp.err);
+            initStruct_ex (&u_isp, true);
+            kr_close (&db);
+            return 1;
+        }
+
+        /*
+         * long2ip is returned in a statically allocated buffer, which
+         * subsequent calls will overwrite.
+         */
+        printf ("%-15s %-15s %-20s", ip, isp.ip, u_isp.dummy[0]);
+        printf ("%-15s ", long2ip (u_isp.start));
+        printf ("%-15s %s", long2ip (u_isp.end), u_isp.dummy[1]);
+
+        initStruct_ex (&u_isp, true);
+    }
+
+    kr_close (&db);
+
+    return 0;
+}
+.fi
+
+.SH AUTHORS
+JoungKyun.Kim <http://oops.org>
+
+.SH BUGS
+Report to QnA bulletin board of http://oops.org
+
+.SH COPYRIGHT
+Copyright (c) 2013 JoungKyun.Kim <http://oops.org>
+
+This api is follows
+.BI LGPL 2.1
+
+.SH "SEE ALSO"
+kr_open(3), kr_close(3), kr_search_ex(3), long2ip(3)

@@ -1,0 +1,22 @@
+#!/bin/sh
+#
+# $Id$
+# require autoconf > 2.59 & automake > 1.8
+#
+
+echo "This is required gettext or gettext-devel packages!!"
+
+opt=
+
+[ "$1" = "--install" ] && opt="$1"
+
+rm -f configure
+autoreconf $opt
+
+if [ -n "$opt" ]; then
+	rm -rf po ABOUT-NLS
+fi
+
+rm -rf autom4te.cache *~ aclocal.m4
+
+exit 0
