@@ -9,6 +9,7 @@ Sat, Feb 15 2013 JoungKyun.Kim <http://oops.org>
 Fri, Feb 14 2013 JoungKyun.Kim <http://oops.org>
 	- support windows native binary
       use MinGW32 with Code::Blocks workspace
+	- fixed wrong db close when database file not found
 
 Tue, Feb 11 2013 JoungKyun.Kim <http://oops.org>
 	- fixed build error and shared library on cygwin
