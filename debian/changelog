@@ -3,6 +3,7 @@ libkrisp (3.1.5-1) stable; urgency=low
   * support windows native binary
     use MinGW32 with Code Blocks workspace
   * fixed build error and shared library on cygwin
+  * fixed access uninitialized variable
 
  -- JoungKyun Kim (OOPS Development) <admin@oops.org>  Fri, 14 Feb 2014 04:21:16 +0900
 
