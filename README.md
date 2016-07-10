@@ -2,7 +2,7 @@ libkrisp - Korea ISP library
 ====
 
 
-***libkrisp***는 [APNIC](https://www.apnic.net/)에서 [KRNIC(KISA)](http://kisa.or.kr)에 할당한 IP와 KRNIC에서 관리 대행자(ISP등) 및 독립 사용자에게 할당한 정보를 관리하는 library 입니다.
+***libkrisp***는 [APNIC](https://www.apnic.net/)에서 [KRNIC(KISA)](http://kisa.or.kr)에 할당한 IP와 KRNIC에서 관리 대행자(ISP등) 및 독립 사용자에게 할당한 정보를 관리하는 library 입니다. <u>현재 ***IPv4***만 제공 하고 있습니다!!</u>
 
 이 library를 이용하여 한국에 할당된 IP에 대한 다음의 정보를 얻을 수 있습니다.
 
