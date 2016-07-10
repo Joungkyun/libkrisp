@@ -63,6 +63,8 @@ User define database tool
 다음 krisp.csv (krisp-geoip.csv가 아닙니다.)과 geoip-geoisp-merge.csv-YYYYMMDD 를 merge 합니다.
 
 ```bash
+[root@host work]$ wget -U mozilla 'http://mirror.oops.org/pub/oops/libkrisp/data/v2/krisp.csv.gz'
+[root@host work]$ gzip -d krisp.csv.gz
 [root@host work]$ php /usr/local/bin/krisp/krisp-geoisp.php -k krisp.csv -g geoip-geoisp-merge.csv-YYYYMMDD
 [root@host work]$ php /usr/local/bin/krisp/vaccum.php krisp-geoisp-merge.csv-YYYYMMDD
 [root@host work]$ mv krisp-geoisp-merge.csv-YYYYMMDD-vaccum krisp.csv
