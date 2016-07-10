@@ -30,9 +30,11 @@ NATION    : Korea, Republic of (KR)
 
 기본 제공 되는 [KISA](http://kisa.or.kr) database는 한국의 IP 및 ISP 정보만을 가지고 있어 빠르게 탐색할 수 있는 장점이 있지만 외국의 IP 대역에 대해서는 처리를 하지 못하기 때문에, 별도로 geoip lite를 merge 하여 외국의 IP 정보를 관리하도록 합니다. (단 외국 IP의 경우 ISP 정보는 가지고 있지 않습니다.)
 
-***libkrisp***의 database는 다음 URL에서 2006년 부터 현재까지의 database가 배포되고 있습니다.
+***libkrisp***의 database는 다음 URL에서 2006년 부터 현재까지의 database가 매월 1회씩 배포되고 있습니다.
 
   * http://mirror.oops.org/pub/oops/libkrisp/data/
+
+[database 갱신 문서](db/README.md)를 참조 하십시오.
 
 또한, [MaxMind]([http://maxmind.com)의 GeoIP 또는 GeoIPISP 상용 데이터를 구매를 하여 ***libkrisp*** database에 merge를 할 수 있으며, CSV format 을 잘 맞추면 임의의 데이터를 구성하여 사용할 수도 있습니다.
 
