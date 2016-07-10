@@ -36,7 +36,7 @@ NATION    : Korea, Republic of (KR)
 
 [database 갱신 문서](db/README.md)를 참조 하십시오.
 
-또한, [MaxMind]([http://maxmind.com)의 GeoIP 또는 GeoIPISP 상용 데이터를 구매를 하여 ***libkrisp*** database에 merge를 할 수 있으며, CSV format 을 잘 맞추면 임의의 데이터를 구성하여 사용할 수도 있습니다.
+또한, [MaxMind]([http://maxmind.com)의 GeoIP 또는 GeoIPISP 상용 데이터를 구매를 하여 ***libkrisp*** database에 merge를 할 수 있으며, CSV format 을 잘 맞추면 임의의 데이터를 구성하여 사용할 수도 있습니다. 이에 관해서는 [User deinfe database tool 문서](contrib/database/README.md)를 참고 하십시오.
 
 ## Requirements
 
