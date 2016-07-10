@@ -80,9 +80,12 @@ int main (void) {
     
     printf ("%-15s %-15s %-20s", ip, isp.ip, isp.icode);
     // long2ip_r is include libipcalc.
-    printf ("%-15s ", long2ip_r (isp.start));
-    printf ("%-15s %s", long2ip_r (isp.end), isp.iname);
-
+    {
+        char ip[16] = { 0, };
+        printf ("%-15s ", long2ip_r (isp.start, ip));
+        printf ("%-15s %s", long2ip_r (isp.end, ip), isp.iname);
+    }
+    
     return 0;
 }
 ```
