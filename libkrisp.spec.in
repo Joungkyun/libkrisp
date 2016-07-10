@@ -12,8 +12,8 @@ License: LGPL
 Group: System Environment/Libraries
 Requires: %{sqlitepkgname} libipcalc
 BuildRequires: %{sqlitepkgname}-devel libipcalc-devel
-Source0: ftp://mirror.oops.org/pub/oops/${name}/%{name}-%{version}.tar.bz2
-URL: http://devel.oops.org
+Source0: https://github.com/Joungkyun/libkrisp/archive/3.1.5.tar.gz/#%{name}-%{version}.tar.gz
+URL: https://github.com/joungkyun/libkrisp
 Buildroot: /var/tmp/%{name}-%{version}-root
 
 %description
@@ -71,7 +71,7 @@ sed -i 's|^runpath_var=LD_RUN_PATH|runpath_var=DIE_RPATH_DIE|g' libtool
 
 %files
 %defattr(0755,root,root)
-%doc Changes LICENSE README
+%doc Changes LICENSE README.md
 %{_bindir}/krisplookup%{?compat}
 %{_bindir}/krispmkdb%{?compat}
 %{_libdir}/libkrisp%{?compat}.so.*

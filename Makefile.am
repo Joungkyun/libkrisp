@@ -18,13 +18,14 @@
 
 # $Id$
 
+AUTOMAKE_OPTIONS = foreign
 DISTCLEANFILES =
 ACLOCAL_AMFLAGS = -I m4
 
 includedir = @includedir@/krisp@COMPAT_VERSION@
 
 EXTRA_DIST = Migration THREADSAFE autogen libkrisp.spec \
-			 contrib/database/README \
+			 contrib/database/README.md \
 			 contrib/database/geo-krisp.php \
 			 contrib/database/geocity.php \
 			 contrib/database/geoip-geoisp.php \
@@ -32,7 +33,7 @@ EXTRA_DIST = Migration THREADSAFE autogen libkrisp.spec \
 			 contrib/database/krisp-geoip.php \
 			 contrib/database/krisp-geoisp.php \
 			 contrib/database/vaccum.php \
-			 contrib/krnic/README \
+			 contrib/krnic/README.md \
 			 contrib/krnic/krisp-data.php \
 			 contrib/krnic/krnic-data.php \
 			 contrib/lib/ValidIP.php \
@@ -40,7 +41,7 @@ EXTRA_DIST = Migration THREADSAFE autogen libkrisp.spec \
 			 database/sqlite.c \
 			 database/sqlite3.c \
 			 db/CurrentVersions \
-			 db/README \
+			 db/README.md \
 			 db/krisp.csv \
 			 db/table \
 			 debbuild-sh \
@@ -57,7 +58,7 @@ EXTRA_DIST = Migration THREADSAFE autogen libkrisp.spec \
 			 debian/patches \
 			 debian/rules
 
-dist_doc_DATA = Changes README LICENSE
+dist_doc_DATA = Changes README.md LICENSE
 
 m4dir = $(datadir)/aclocal
 dist_m4_DATA = m4/krisp@COMPAT_VERSION@.m4

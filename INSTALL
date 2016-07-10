@@ -43,7 +43,7 @@ source를 빌드한다. -j 옵션을 이용하여 병렬 빌드를 할 수 있�
 
 5. make data
 
-더이상 빌드시 지원을 하지 않는다. data 생성은 db/README 문서를 참조하도록 한다.
+더이상 빌드시 지원을 하지 않는다. data 생성은 db/README.md 문서를 참조하도록 한다.
 
 
 6. make isntall
