@@ -53,7 +53,6 @@ EXTRA_DIST = Migration THREADSAFE autogen libkrisp.spec \
 			 debian/libkrisp-dev.install \
 			 debian/libkrisp2.dirs \
 			 debian/libkrisp2.install \
-			 debian/patches \
 			 debian/rules
 
 dist_doc_DATA = Changes README.md LICENSE
