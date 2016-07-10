@@ -31,7 +31,7 @@ Firs, download ***krisp*** database
 
 ```bash
     [root@host ~]$ # blocking wget user agent, be carefull.
-    [root@host ~]$ wget -U mozilla 'http://mirror.oops.org/pub/oops/libkrisp/data/v2/krisp-geoip.csv.gz
+    [root@host ~]$ wget -U mozilla 'http://mirror.oops.org/pub/oops/libkrisp/data/v2/krisp-geoip.csv.gz`
 ```
 
 And, uncompress download database.
