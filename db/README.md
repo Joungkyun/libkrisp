@@ -1,7 +1,7 @@
 libkrisp Database management
 ===
 
-KRISP database used two external databases. One is ***[KRNIC(KISA)](http://kisa.or.kr) isp database and another is GeoLiteCountry database in [Maxmind](http://maxmind.com), available from http://maxmind.com.
+KRISP database used two external databases. One is ***[KRNIC(KISA)](http://kisa.or.kr)*** isp database and another is GeoLiteCountry database in [Maxmind](http://maxmind.com), available from http://maxmind.com.
 
 ## Database update cycle
 
