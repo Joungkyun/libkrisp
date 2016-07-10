@@ -1,6 +1,6 @@
 dnl 
 dnl                       Written by JoungKyun.Kim
-dnl            Copyright (c) 2013 JoungKyun.Kim <http://oops.org>
+dnl            Copyright (c) 2016 JoungKyun.Kim <http://oops.org>
 dnl 
 dnl ----------------------------------------------------------------------------
 dnl Redistribution and use in source and binary forms, with or without
@@ -32,8 +32,6 @@ dnl POSSIBILITY OF SUCH DAMAGE.
 dnl ----------------------------------------------------------------------------
 dnl  This file is part of olibc.
 dnl
-dnl  $Id$
-dnl 
 
 AC_SUBST(COMPAT_VERSION)
 AC_SUBST(RPM_COMPAT_DEFINE)

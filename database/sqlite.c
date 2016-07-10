@@ -1,6 +1,4 @@
 /*
- * $Id$
- *
  * libkrisp sqlite2 frontend API
  */
 

@@ -1,4 +1,4 @@
-dnl Copyright (C) 2013 JoungKyun.Kim <http://oops.org>
+dnl Copyright (C) 2016 JoungKyun.Kim <http://oops.org>
 dnl
 dnl This file is part of libipcalc
 dnl
@@ -15,7 +15,6 @@ dnl
 dnl You should have received a copy of the GNU Lesser General Public License
 dnl along with this program.  If not, see <http://www.gnu.org/licenses/>.
 dnl
-dnl $Id$
 
 AC_DEFUN([AX_IPCALC_WITH],
 [

@@ -1,5 +1,4 @@
 #!/bin/sh
-# $Id$
 
 prog="libkrisp@COMPAT_VERSION@"
 prefix="@prefix@"

@@ -1,6 +1,6 @@
 dnl
 dnl                       Written by JoungKyun.Kim
-dnl            Copyright (c) 2011 JoungKyun.Kim <http://oops.org>
+dnl            Copyright (c) 2016 JoungKyun.Kim <http://oops.org>
 dnl
 dnl ----------------------------------------------------------------------------
 dnl Redistribution and use in source and binary forms, with or without
@@ -31,8 +31,6 @@ dnl ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 dnl POSSIBILITY OF SUCH DAMAGE.
 dnl ----------------------------------------------------------------------------
 dnl  This file is part of olibc.
-dnl
-dnl  $Id$
 dnl
 
 dnl Notice! call after AC_PROG_LIBTOOL

@@ -1,6 +1,5 @@
 #!/bin/sh
 #
-# $Id$
 # require autoconf > 2.59 & automake > 1.8
 #
 
