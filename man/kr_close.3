@@ -46,8 +46,10 @@ int main (void) {
     kr_close (&db);
 
     /*
+     * long2ip is include libipcalc.
+     * https://github.com/Joungkyun/libipcalc/wiki/API-long2ip
      * long2ip is returned in a statically allocated buffer, which
-     * subsequent calls will overwrite.
+     * subsequent calls will overwrite. For thread safe, use long2ip_r.
      */
     printf ("%-15s %-15s %-20s", ip, isp.ip, isp.icode);
     printf ("%-15s ", long2ip (isp.start));
@@ -70,4 +72,4 @@ This api is follows
 .BI LGPL 2.1
 
 .SH "SEE ALSO"
-kr_open(3), kr_search(3), long2ip(3)
+kr_open(3), kr_search(3)

@@ -85,8 +85,10 @@ int main (void) {
     kr_close (&db);
 
     /*
+     * long2ip is include libipcalc.
+     * https://github.com/Joungkyun/libipcalc/wiki/API-long2ip
      * long2ip is returned in a statically allocated buffer, which
-     * subsequent calls will overwrite.
+     * subsequent calls will overwrite. For thread safe, use long2ip_r.
      */
     printf ("%-15s %-15s %-20s", ip, isp.ip, isp.icode);
     printf ("%-15s ", long2ip (isp.start));

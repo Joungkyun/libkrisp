@@ -32,7 +32,7 @@ API krisp에서 제공하는 database 형식에서만 동작한다.
 
 .PP
 After call the
-.BI kr_rangea
+.BI kr_range
 api를 호출한 후에는 반드시
 .BI KRNET_REQ_RANGE 구조체의
 .BI ranges
@@ -68,8 +68,10 @@ int main (void) {
     }
 
     /*
+     * long2ip is include libipcalc.
+     * https://github.com/Joungkyun/libipcalc/wiki/API-long2ip
      * long2ip is returned in a statically allocated buffer, which
-     * subsequent calls will overwrite.
+     * subsequent calls will overwrite. For thread safe, use long2ip_r.
      */
     printf ("%-15s %-15s %-20s", ip, isp.ip, isp.icode);
     printf ("%-15s ", long2ip (isp.start));

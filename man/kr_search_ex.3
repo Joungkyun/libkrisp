@@ -123,8 +123,10 @@ int main (void) {
         }
 
         /*
+         * long2ip is include libipcalc.
+         * https://github.com/Joungkyun/libipcalc/wiki/API-long2ip
          * long2ip is returned in a statically allocated buffer, which
-         * subsequent calls will overwrite.
+         * subsequent calls will overwrite. For thread safe, use long2ip_r.
          */
         printf ("%-15s %-15s %-20s", ip, isp.ip, u_isp.dummy[0]);
         printf ("%-15s ", long2ip (u_isp.start));
