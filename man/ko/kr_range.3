@@ -28,12 +28,11 @@ kr_range \- 지정한 국가나 ISP의 IP 대역을 구한다.
 .BI kr_range
 api는 지정한 국가나 ISP의 IP 대역을 구한다. 기본적으로
 .BI kr_range
-API krisp에서 제공하는 database 형식에서만 동작한다.
+API는 krisp에서 제공하는 database 형식에서만 동작한다.
 
 .PP
-After call the
 .BI kr_range
-api를 호출한 후에는 반드시
+api를 호출한 후, 반드시
 .BI KRNET_REQ_RANGE 구조체의
 .BI ranges
 member 메모리를 해제해 주어야 한다.
