@@ -45,7 +45,7 @@ NATION    : Korea, Republic of (KR)
 
 ## API Usage
 
-간단한 사용법은 아래와 같습니다. (자세한 사항은 ```man 3 kr_search``` 를 참고 하십시오.)
+간단한 사용법은 아래와 같습니다. API 사용법에 대해서는 man page 또는 [wiki](https://github.com/Joungkyun/libkrisp/wiki) page를 참조 하십시오.
 
 ```c
 #include <krisp.h>
