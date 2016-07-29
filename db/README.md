@@ -59,7 +59,8 @@ The scheme file is located in current directory by named 'table'
     .sep "\t"
     .imp krisp-geoisp.csv krisp
     EOF
-    [root@host ~]$ sqlite3 krisp-geoip.dat < ./table
+    [root@host ~]$ # build krisp-geoip.dat
+    [root@host ~]$ sqlite3 krisp-geoip.dat < ./scheme
 ```
 
 Last, move data file to libkrisp data directory. ($prefix/share/krisp)
