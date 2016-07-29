@@ -21,13 +21,13 @@ Each database has features as follows:
    * enable ISP inforamtion
    * small size (< 1MB)
  * ***krisp-geoip.csv.gz***
-   * world wide IP information
+   * world wide Country information
    * only Korean ISP information eanbled
    * big size (>20MB)
 
 ## Database building
 
-Firs, download ***krisp*** database
+First, download ***krisp*** database
 
 ```bash
     [root@host ~]$ # blocking wget user agent, be carefull.
@@ -36,8 +36,8 @@ Firs, download ***krisp*** database
 
 And, uncompress download database.
 
-```base
-     gzip -d krisp-geoip.csv.gz
+```bash
+    [root@host ~]$ gzip -d krisp-geoip.csv.gz
 ```
 
 And, build database with libkrisp scheme in libkrisp source
@@ -45,7 +45,21 @@ And, build database with libkrisp scheme in libkrisp source
 The scheme file is located in current directory by named 'table'
 
 ```bash
-    sqlite3 krisp-geoip.dat < ./table
+    [root@host ~]$ # make scheme
+    [root@host ~]$ cat <<EOF > scheme
+    CREATE TABLE krisp
+    (
+        start unsigned integer NOT NULL DEFAULT '0',
+        end unsigned integer NOT NULL DEFAULT '0',
+        data varchar,
+        PRIMARY KEY (start DESC),
+        UNIQUE (end)
+    );
+
+    .sep "\t"
+    .imp krisp-geoisp.csv krisp
+    EOF
+    [root@host ~]$ sqlite3 krisp-geoip.dat < ./table
 ```
 
 Last, move data file to libkrisp data directory. ($prefix/share/krisp)
