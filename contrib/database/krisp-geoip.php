@@ -123,6 +123,8 @@ Class KRISP_GEOIP_MERGE // {{{
 				if ( ($carray = each ($geoip)) == false )
 					break;
 				list ($ckey, $cvalue) = $carray;
+
+				$c = new stdClass;
 				$c->start = $ckey;
 				$c->end   = $cvalue[END_LONG];
 				$c->code  = $cvalue[COUNTRY_CODE];
@@ -136,6 +138,7 @@ Class KRISP_GEOIP_MERGE // {{{
 
 				if ( ($iarray = each ($krisp)) !== false ) {
 					list ($ikey, $ivalue) = $iarray;
+					$i = new stdClass;
 					$i->start      = $ikey;
 					$i->end        = $ivalue[END_LONG];
 					$i->isp_code   = $ivalue[ISP_CODE];
@@ -483,6 +486,9 @@ Class KRISP_GEOIP_MERGE // {{{
 			if ( $rsize < 6 )
 				continue;
 
+			if ( $buf[0] == 'beginIp' )
+				continue;
+
 			if ( $rsize > 6 )
 				for ( $i=6; $i<$rsize; $i++ )
 					$buf[5] .= ',' . $buf[$i];
@@ -637,6 +643,7 @@ oGetopt::$longopt = (object) array (
 	'krisp' => 'k',
 );
 
+$opt = new stdClass;
 $opt->geoip  = '/usr/share/GeoIP/GeoIPCountryWhois.csv';
 $opt->help   = 0;
 $opt->krisp= './krisp.csv';

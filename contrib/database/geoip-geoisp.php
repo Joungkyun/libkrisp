@@ -122,6 +122,7 @@ Class GEOIP_GEOISP_MERGE // {{{
 				if ( ($carray = each ($geoip)) == false )
 					break;
 				list ($ckey, $cvalue) = $carray;
+				$c = new stdClass;
 				$c->start = $ckey;
 				$c->end   = $cvalue[END_LONG];
 				$c->code  = $cvalue[COUNTRY_CODE];
@@ -135,6 +136,7 @@ Class GEOIP_GEOISP_MERGE // {{{
 
 				if ( ($iarray = each ($geoisp)) !== false ) {
 					list ($ikey, $ivalue) = $iarray;
+					$i = new stdClass;
 					$i->start = $ikey;
 					$i->end   = $ivalue[END_LONG];
 					$i->isp   = $ivalue[ISP_NAME];
@@ -488,11 +490,15 @@ Class GEOIP_GEOISP_MERGE // {{{
 		$O = '';
 		while ( ($buffer = fgets ($fp, 1024)) !== false ) {
 			self::progress ($lno++);
+			$buffer = iconv ('iso-8859-1', 'utf8', $buffer);
 			$buffer = preg_replace ('/"/', '', trim ($buffer));
 			$buf = explode (',', $buffer);
 
 			$rsize = count ($buf);
 			if ( $rsize < 6 )
+				continue;
+
+			if ( $buf[0] == 'beginIp' )
 				continue;
 
 			if ( $rsize > 6 )
@@ -649,6 +655,7 @@ oGetopt::$longopt = (object) array (
 	'geoisp' => 'i',
 );
 
+$opt = new stdClass;
 $opt->geoip  = '/usr/share/GeoIP/GeoIPCountryWhois.csv';
 $opt->help   = 0;
 $opt->geoisp = '/usr/share/GeoIP/GeoIPISP.csv';
