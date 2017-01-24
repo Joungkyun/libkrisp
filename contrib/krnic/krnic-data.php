@@ -22,10 +22,10 @@
  */
 
 
-define ('KRIP_DATA', 'http://ip.kisa.or.kr/ip_cate_stat/stat_05_04_toexcel.act');
-define ('KRISP_DATA', 'http://ip.kisa.or.kr/ip_cate_stat/stat_06_02_toexcel.act');
-#define ('KRIP_DATA', 'krip.txt');
-#define ('KRISP_DATA', 'krisp.txt');
+define ('KRIP_DATA', 'http://www.krnic.or.kr/jsp/infoboard/stats/ipv4AddrListExcel.jsp');
+define ('KRISP_DATA', 'http://www.krnic.or.kr/jsp/business/management/ispListIpv4Excel.jsp');
+#define ('KRIP_DATA', 'ip.xls');
+#define ('KRISP_DATA', 'isp.xls');
 
 function banner () {
 	global $argv;
@@ -66,7 +66,11 @@ class nDom {
 
 		#$context = file_get_contents ($f);
 		#$context = KRNIC_data::get ($f);
-		$context = KRNIC_data::getPage ($f);
+		if ( preg_match ('!^https?://!i', $f) )
+			$context = KRNIC_data::getPage ($f);
+		else
+			$context = file_get_contents ($f);
+
 		if ( $context === FALSE ) {
 			error_log ("ERROR: URL open failed ($f)", 0);
 			exit (1);
@@ -102,12 +106,12 @@ class nDom {
 				# 첫번째 tr 은 테이블 헤더, skip
 				switch (self::$MODE) {
 					case self::KRIP_MODE :
-						$start_tr = 3;
-						$td_skip  = array (3, 4);
-						$td_max   = 5;
+						$start_tr = 1;
+						$td_skip  = array (3);
+						$td_max   = 4;
 						break;
 					case self::KRISP_MODE :
-						$start_tr = 2;
+						$start_tr = 1;
 						$td_skip  = array (5);
 						$td_max   = 6;
 						break;
@@ -148,10 +152,10 @@ class nDom {
 	}
 
 	function str ($stream) {
-		if ( self::$encoding == 'utf8')
+		if ( self::$encoding != 'utf-8')
 			return $stream->textContent;
 
-		return trim (iconv ('utf8', self::$encoding, $stream->textContent));
+		return trim (iconv ('utf-8', 'iso-8859-1', $stream->textContent));
 	}
 
 	function decode_entities ($str) {
