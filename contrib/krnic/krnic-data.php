@@ -22,8 +22,10 @@
  */
 
 
-define ('KRIP_DATA', 'http://www.krnic.or.kr/jsp/infoboard/stats/ipv4AddrListExcel.jsp');
-define ('KRISP_DATA', 'http://www.krnic.or.kr/jsp/business/management/ispListIpv4Excel.jsp');
+#define ('KRIP_DATA', 'http://krnic.or.kr/jsp/infoboard/stats/ipv4AddrListExcel.jsp');
+define ('KRIP_DATA', 'https://xn--3e0bx5euxnjje69i70af08bea817g.xn--3e0b707e/jsp/infoboard/stats/ipv4AddrListExcel.jsp');
+#define ('KRISP_DATA', 'http://krnic.or.kr/jsp/business/management/ispListIpv4Excel.jsp');
+define ('KRISP_DATA', 'https://xn--3e0bx5euxnjje69i70af08bea817g.xn--3e0b707e/jsp/business/management/ispListIpv4Excel.jsp');
 #define ('KRIP_DATA', 'ip.xls');
 #define ('KRISP_DATA', 'isp.xls');
 
