@@ -2,7 +2,7 @@ libkrisp - Korea ISP library
 ====
 
 
-***libkrisp***는 [APNIC](https://www.apnic.net/)에서 [KRNIC(KISA)](http://kisa.or.kr)에 할당한 IP와 KRNIC에서 관리 대행자(ISP등) 및 독립 사용자에게 할당한 정보를 관리하는 library 입니다. <u>현재 ***IPv4***만 제공 하고 있습니다!!</u>
+***libkrisp*** 는 [APNIC](https://www.apnic.net/)에서 [KRNIC(KISA)](http://kisa.or.kr)에 할당한 IP와 KRNIC에서 관리 대행자(ISP등) 및 독립 사용자에게 할당한 정보를 관리하는 library 입니다. <u>현재 ***IPv4*** 만 제공 하고 있습니다!!</u>
 
 이 library를 이용하여 한국에 할당된 IP에 대한 다음의 정보를 얻을 수 있습니다.
 
@@ -17,9 +17,9 @@ NATION    : Korea, Republic of (KR)
 [root@host ~]$
 ```
 
-***libkrisp***에서 공식적을 제공을 하는 database는 다음 [KISA](http://kisa.or.kr)에서 공개한 데이터 베이스를 기본 database로 사용을 합니다.
+***libkrisp*** 에서 공식적을 제공을 하는 database는 다음 [KISA](http://kisa.or.kr)에서 공개한 데이터 베이스를 기본 database로 사용을 합니다.
 
-***libkrisp***는 2개의 외부 database를 이용 합니다. 기본 database로는 다음 [KISA](http://kisa.or.kr)에서 공개한 데이터 베이스를 기본 database로 사용을 합니다.
+***libkrisp*** 는 2개의 외부 database를 이용 합니다. 기본 database로는 다음 [KISA](http://kisa.or.kr)에서 공개한 데이터 베이스를 기본 database로 사용을 합니다.
 
  * [KISA 국내 IPv4주소 목록](http://www.krnic.or.kr/jsp/infoboard/stats/interProCurrent.jsp)
  * [KISA 관리대행자별 IPv4주소 목록](http://www.krnic.or.kr/jsp/business/management/isCurrentIpv4.jsp)
@@ -30,7 +30,7 @@ NATION    : Korea, Republic of (KR)
 
 기본 제공 되는 [KISA](http://kisa.or.kr) database는 한국의 IP 및 ISP 정보만을 가지고 있어 빠르게 탐색할 수 있는 장점이 있지만 외국의 IP 대역에 대해서는 처리를 하지 못하기 때문에, 별도로 geoip lite를 merge 하여 외국의 IP 정보를 관리하도록 합니다. (단 외국 IP의 경우 ISP 정보는 가지고 있지 않습니다.)
 
-***libkrisp***의 database는 다음 URL에서 2006년 부터 현재까지의 database가 매월 1회씩 배포되고 있습니다.
+***libkrisp*** 의 database는 다음 URL에서 2006년 부터 현재까지의 database가 매월 1회씩 배포되고 있습니다.
 
   * http://mirror.oops.org/pub/oops/libkrisp/data/
 
