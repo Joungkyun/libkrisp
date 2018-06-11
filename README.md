@@ -17,7 +17,7 @@ NATION    : Korea, Republic of (KR)
 [root@host ~]$
 ```
 
-***libkrisp*** 에서 공식적을 제공을 하는 database는 다음 [KISA](http://kisa.or.kr)에서 공개한 데이터 베이스를 기본 database로 사용을 합니다.
+***libkrisp*** 에서 공식적으로 제공을 하는 database는 다음 [KISA](http://kisa.or.kr)에서 공개한 데이터 베이스를 기본 database로 사용을 합니다.
 
 ***libkrisp*** 는 2개의 외부 database를 이용 합니다. 기본 database로는 다음 [KISA](http://kisa.or.kr)에서 공개한 데이터 베이스를 기본 database로 사용을 합니다.
 
